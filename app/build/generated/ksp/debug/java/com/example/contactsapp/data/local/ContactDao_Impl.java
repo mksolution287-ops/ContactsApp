@@ -39,7 +39,7 @@ public final class ContactDao_Impl implements ContactDao {
 
   private final EntityDeletionOrUpdateAdapter<Contact> __deletionAdapterOfContact;
 
-  private final EntityDeletionOrUpdateAdapter<Contact> __updateAdapterOfContact;
+  private final SharedSQLiteStatement __preparedStmtOfUpdateContact;
 
   private final SharedSQLiteStatement __preparedStmtOfDeleteContactById;
 
@@ -53,7 +53,7 @@ public final class ContactDao_Impl implements ContactDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR REPLACE INTO `contacts` (`id`,`name`,`phoneNumber`,`email`,`profileImageUri`,`isFavorite`,`deviceContactId`,`createdAt`,`updatedAt`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?)";
+        return "INSERT OR REPLACE INTO `contacts` (`id`,`name`,`phoneNumber`,`email`,`profileImageUri`,`isFavorite`,`deviceContactId`,`last_updated_at`,`createdAt`,`updatedAt`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?)";
       }
 
       @Override
@@ -75,8 +75,9 @@ public final class ContactDao_Impl implements ContactDao {
         } else {
           statement.bindString(7, entity.getDeviceContactId());
         }
-        statement.bindLong(8, entity.getCreatedAt());
-        statement.bindLong(9, entity.getUpdatedAt());
+        statement.bindLong(8, entity.getLastUpdatedAt());
+        statement.bindLong(9, entity.getCreatedAt());
+        statement.bindLong(10, entity.getUpdatedAt());
       }
     };
     this.__deletionAdapterOfContact = new EntityDeletionOrUpdateAdapter<Contact>(__db) {
@@ -92,35 +93,20 @@ public final class ContactDao_Impl implements ContactDao {
         statement.bindLong(1, entity.getId());
       }
     };
-    this.__updateAdapterOfContact = new EntityDeletionOrUpdateAdapter<Contact>(__db) {
+    this.__preparedStmtOfUpdateContact = new SharedSQLiteStatement(__db) {
       @Override
       @NonNull
-      protected String createQuery() {
-        return "UPDATE OR ABORT `contacts` SET `id` = ?,`name` = ?,`phoneNumber` = ?,`email` = ?,`profileImageUri` = ?,`isFavorite` = ?,`deviceContactId` = ?,`createdAt` = ?,`updatedAt` = ? WHERE `id` = ?";
-      }
-
-      @Override
-      protected void bind(@NonNull final SupportSQLiteStatement statement,
-          @NonNull final Contact entity) {
-        statement.bindLong(1, entity.getId());
-        statement.bindString(2, entity.getName());
-        statement.bindString(3, entity.getPhoneNumber());
-        statement.bindString(4, entity.getEmail());
-        if (entity.getProfileImageUri() == null) {
-          statement.bindNull(5);
-        } else {
-          statement.bindString(5, entity.getProfileImageUri());
-        }
-        final int _tmp = entity.isFavorite() ? 1 : 0;
-        statement.bindLong(6, _tmp);
-        if (entity.getDeviceContactId() == null) {
-          statement.bindNull(7);
-        } else {
-          statement.bindString(7, entity.getDeviceContactId());
-        }
-        statement.bindLong(8, entity.getCreatedAt());
-        statement.bindLong(9, entity.getUpdatedAt());
-        statement.bindLong(10, entity.getId());
+      public String createQuery() {
+        final String _query = "\n"
+                + "    UPDATE contacts SET\n"
+                + "        name = ?,\n"
+                + "        phoneNumber = ?,\n"
+                + "        email = ?,\n"
+                + "        profileImageUri = ?,\n"
+                + "        isFavorite = ?,\n"
+                + "        updatedAt = ?\n"
+                + "    WHERE id = ?\n";
+        return _query;
       }
     };
     this.__preparedStmtOfDeleteContactById = new SharedSQLiteStatement(__db) {
@@ -205,18 +191,44 @@ public final class ContactDao_Impl implements ContactDao {
   }
 
   @Override
-  public Object updateContact(final Contact contact, final Continuation<? super Unit> $completion) {
+  public Object updateContact(final long id, final String name, final String phone,
+      final String email, final String image, final boolean favorite, final long updatedAt,
+      final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
       public Unit call() throws Exception {
-        __db.beginTransaction();
+        final SupportSQLiteStatement _stmt = __preparedStmtOfUpdateContact.acquire();
+        int _argIndex = 1;
+        _stmt.bindString(_argIndex, name);
+        _argIndex = 2;
+        _stmt.bindString(_argIndex, phone);
+        _argIndex = 3;
+        _stmt.bindString(_argIndex, email);
+        _argIndex = 4;
+        if (image == null) {
+          _stmt.bindNull(_argIndex);
+        } else {
+          _stmt.bindString(_argIndex, image);
+        }
+        _argIndex = 5;
+        final int _tmp = favorite ? 1 : 0;
+        _stmt.bindLong(_argIndex, _tmp);
+        _argIndex = 6;
+        _stmt.bindLong(_argIndex, updatedAt);
+        _argIndex = 7;
+        _stmt.bindLong(_argIndex, id);
         try {
-          __updateAdapterOfContact.handle(contact);
-          __db.setTransactionSuccessful();
-          return Unit.INSTANCE;
+          __db.beginTransaction();
+          try {
+            _stmt.executeUpdateDelete();
+            __db.setTransactionSuccessful();
+            return Unit.INSTANCE;
+          } finally {
+            __db.endTransaction();
+          }
         } finally {
-          __db.endTransaction();
+          __preparedStmtOfUpdateContact.release(_stmt);
         }
       }
     }, $completion);
@@ -316,6 +328,7 @@ public final class ContactDao_Impl implements ContactDao {
           final int _cursorIndexOfProfileImageUri = CursorUtil.getColumnIndexOrThrow(_cursor, "profileImageUri");
           final int _cursorIndexOfIsFavorite = CursorUtil.getColumnIndexOrThrow(_cursor, "isFavorite");
           final int _cursorIndexOfDeviceContactId = CursorUtil.getColumnIndexOrThrow(_cursor, "deviceContactId");
+          final int _cursorIndexOfLastUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "last_updated_at");
           final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final int _cursorIndexOfUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "updatedAt");
           final List<Contact> _result = new ArrayList<Contact>(_cursor.getCount());
@@ -345,11 +358,13 @@ public final class ContactDao_Impl implements ContactDao {
             } else {
               _tmpDeviceContactId = _cursor.getString(_cursorIndexOfDeviceContactId);
             }
+            final long _tmpLastUpdatedAt;
+            _tmpLastUpdatedAt = _cursor.getLong(_cursorIndexOfLastUpdatedAt);
             final long _tmpCreatedAt;
             _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
             final long _tmpUpdatedAt;
             _tmpUpdatedAt = _cursor.getLong(_cursorIndexOfUpdatedAt);
-            _item = new Contact(_tmpId,_tmpName,_tmpPhoneNumber,_tmpEmail,_tmpProfileImageUri,_tmpIsFavorite,_tmpDeviceContactId,_tmpCreatedAt,_tmpUpdatedAt);
+            _item = new Contact(_tmpId,_tmpName,_tmpPhoneNumber,_tmpEmail,_tmpProfileImageUri,_tmpIsFavorite,_tmpDeviceContactId,_tmpLastUpdatedAt,_tmpCreatedAt,_tmpUpdatedAt);
             _result.add(_item);
           }
           return _result;
@@ -382,6 +397,7 @@ public final class ContactDao_Impl implements ContactDao {
           final int _cursorIndexOfProfileImageUri = CursorUtil.getColumnIndexOrThrow(_cursor, "profileImageUri");
           final int _cursorIndexOfIsFavorite = CursorUtil.getColumnIndexOrThrow(_cursor, "isFavorite");
           final int _cursorIndexOfDeviceContactId = CursorUtil.getColumnIndexOrThrow(_cursor, "deviceContactId");
+          final int _cursorIndexOfLastUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "last_updated_at");
           final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final int _cursorIndexOfUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "updatedAt");
           final List<Contact> _result = new ArrayList<Contact>(_cursor.getCount());
@@ -411,11 +427,13 @@ public final class ContactDao_Impl implements ContactDao {
             } else {
               _tmpDeviceContactId = _cursor.getString(_cursorIndexOfDeviceContactId);
             }
+            final long _tmpLastUpdatedAt;
+            _tmpLastUpdatedAt = _cursor.getLong(_cursorIndexOfLastUpdatedAt);
             final long _tmpCreatedAt;
             _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
             final long _tmpUpdatedAt;
             _tmpUpdatedAt = _cursor.getLong(_cursorIndexOfUpdatedAt);
-            _item = new Contact(_tmpId,_tmpName,_tmpPhoneNumber,_tmpEmail,_tmpProfileImageUri,_tmpIsFavorite,_tmpDeviceContactId,_tmpCreatedAt,_tmpUpdatedAt);
+            _item = new Contact(_tmpId,_tmpName,_tmpPhoneNumber,_tmpEmail,_tmpProfileImageUri,_tmpIsFavorite,_tmpDeviceContactId,_tmpLastUpdatedAt,_tmpCreatedAt,_tmpUpdatedAt);
             _result.add(_item);
           }
           return _result;
@@ -451,6 +469,7 @@ public final class ContactDao_Impl implements ContactDao {
           final int _cursorIndexOfProfileImageUri = CursorUtil.getColumnIndexOrThrow(_cursor, "profileImageUri");
           final int _cursorIndexOfIsFavorite = CursorUtil.getColumnIndexOrThrow(_cursor, "isFavorite");
           final int _cursorIndexOfDeviceContactId = CursorUtil.getColumnIndexOrThrow(_cursor, "deviceContactId");
+          final int _cursorIndexOfLastUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "last_updated_at");
           final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final int _cursorIndexOfUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "updatedAt");
           final Contact _result;
@@ -479,11 +498,13 @@ public final class ContactDao_Impl implements ContactDao {
             } else {
               _tmpDeviceContactId = _cursor.getString(_cursorIndexOfDeviceContactId);
             }
+            final long _tmpLastUpdatedAt;
+            _tmpLastUpdatedAt = _cursor.getLong(_cursorIndexOfLastUpdatedAt);
             final long _tmpCreatedAt;
             _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
             final long _tmpUpdatedAt;
             _tmpUpdatedAt = _cursor.getLong(_cursorIndexOfUpdatedAt);
-            _result = new Contact(_tmpId,_tmpName,_tmpPhoneNumber,_tmpEmail,_tmpProfileImageUri,_tmpIsFavorite,_tmpDeviceContactId,_tmpCreatedAt,_tmpUpdatedAt);
+            _result = new Contact(_tmpId,_tmpName,_tmpPhoneNumber,_tmpEmail,_tmpProfileImageUri,_tmpIsFavorite,_tmpDeviceContactId,_tmpLastUpdatedAt,_tmpCreatedAt,_tmpUpdatedAt);
           } else {
             _result = null;
           }
@@ -517,6 +538,7 @@ public final class ContactDao_Impl implements ContactDao {
           final int _cursorIndexOfProfileImageUri = CursorUtil.getColumnIndexOrThrow(_cursor, "profileImageUri");
           final int _cursorIndexOfIsFavorite = CursorUtil.getColumnIndexOrThrow(_cursor, "isFavorite");
           final int _cursorIndexOfDeviceContactId = CursorUtil.getColumnIndexOrThrow(_cursor, "deviceContactId");
+          final int _cursorIndexOfLastUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "last_updated_at");
           final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final int _cursorIndexOfUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "updatedAt");
           final Contact _result;
@@ -545,11 +567,13 @@ public final class ContactDao_Impl implements ContactDao {
             } else {
               _tmpDeviceContactId = _cursor.getString(_cursorIndexOfDeviceContactId);
             }
+            final long _tmpLastUpdatedAt;
+            _tmpLastUpdatedAt = _cursor.getLong(_cursorIndexOfLastUpdatedAt);
             final long _tmpCreatedAt;
             _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
             final long _tmpUpdatedAt;
             _tmpUpdatedAt = _cursor.getLong(_cursorIndexOfUpdatedAt);
-            _result = new Contact(_tmpId,_tmpName,_tmpPhoneNumber,_tmpEmail,_tmpProfileImageUri,_tmpIsFavorite,_tmpDeviceContactId,_tmpCreatedAt,_tmpUpdatedAt);
+            _result = new Contact(_tmpId,_tmpName,_tmpPhoneNumber,_tmpEmail,_tmpProfileImageUri,_tmpIsFavorite,_tmpDeviceContactId,_tmpLastUpdatedAt,_tmpCreatedAt,_tmpUpdatedAt);
           } else {
             _result = null;
           }
@@ -585,6 +609,7 @@ public final class ContactDao_Impl implements ContactDao {
           final int _cursorIndexOfProfileImageUri = CursorUtil.getColumnIndexOrThrow(_cursor, "profileImageUri");
           final int _cursorIndexOfIsFavorite = CursorUtil.getColumnIndexOrThrow(_cursor, "isFavorite");
           final int _cursorIndexOfDeviceContactId = CursorUtil.getColumnIndexOrThrow(_cursor, "deviceContactId");
+          final int _cursorIndexOfLastUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "last_updated_at");
           final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final int _cursorIndexOfUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "updatedAt");
           final List<Contact> _result = new ArrayList<Contact>(_cursor.getCount());
@@ -614,11 +639,13 @@ public final class ContactDao_Impl implements ContactDao {
             } else {
               _tmpDeviceContactId = _cursor.getString(_cursorIndexOfDeviceContactId);
             }
+            final long _tmpLastUpdatedAt;
+            _tmpLastUpdatedAt = _cursor.getLong(_cursorIndexOfLastUpdatedAt);
             final long _tmpCreatedAt;
             _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
             final long _tmpUpdatedAt;
             _tmpUpdatedAt = _cursor.getLong(_cursorIndexOfUpdatedAt);
-            _item = new Contact(_tmpId,_tmpName,_tmpPhoneNumber,_tmpEmail,_tmpProfileImageUri,_tmpIsFavorite,_tmpDeviceContactId,_tmpCreatedAt,_tmpUpdatedAt);
+            _item = new Contact(_tmpId,_tmpName,_tmpPhoneNumber,_tmpEmail,_tmpProfileImageUri,_tmpIsFavorite,_tmpDeviceContactId,_tmpLastUpdatedAt,_tmpCreatedAt,_tmpUpdatedAt);
             _result.add(_item);
           }
           return _result;
@@ -632,6 +659,150 @@ public final class ContactDao_Impl implements ContactDao {
         _statement.release();
       }
     });
+  }
+
+  @Override
+  public Flow<Contact> observeContactByPhone(final String number) {
+    final String _sql = "SELECT * FROM contacts WHERE phoneNumber = ? LIMIT 1";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindString(_argIndex, number);
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"contacts"}, new Callable<Contact>() {
+      @Override
+      @Nullable
+      public Contact call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
+          final int _cursorIndexOfPhoneNumber = CursorUtil.getColumnIndexOrThrow(_cursor, "phoneNumber");
+          final int _cursorIndexOfEmail = CursorUtil.getColumnIndexOrThrow(_cursor, "email");
+          final int _cursorIndexOfProfileImageUri = CursorUtil.getColumnIndexOrThrow(_cursor, "profileImageUri");
+          final int _cursorIndexOfIsFavorite = CursorUtil.getColumnIndexOrThrow(_cursor, "isFavorite");
+          final int _cursorIndexOfDeviceContactId = CursorUtil.getColumnIndexOrThrow(_cursor, "deviceContactId");
+          final int _cursorIndexOfLastUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "last_updated_at");
+          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
+          final int _cursorIndexOfUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "updatedAt");
+          final Contact _result;
+          if (_cursor.moveToFirst()) {
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final String _tmpName;
+            _tmpName = _cursor.getString(_cursorIndexOfName);
+            final String _tmpPhoneNumber;
+            _tmpPhoneNumber = _cursor.getString(_cursorIndexOfPhoneNumber);
+            final String _tmpEmail;
+            _tmpEmail = _cursor.getString(_cursorIndexOfEmail);
+            final String _tmpProfileImageUri;
+            if (_cursor.isNull(_cursorIndexOfProfileImageUri)) {
+              _tmpProfileImageUri = null;
+            } else {
+              _tmpProfileImageUri = _cursor.getString(_cursorIndexOfProfileImageUri);
+            }
+            final boolean _tmpIsFavorite;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfIsFavorite);
+            _tmpIsFavorite = _tmp != 0;
+            final String _tmpDeviceContactId;
+            if (_cursor.isNull(_cursorIndexOfDeviceContactId)) {
+              _tmpDeviceContactId = null;
+            } else {
+              _tmpDeviceContactId = _cursor.getString(_cursorIndexOfDeviceContactId);
+            }
+            final long _tmpLastUpdatedAt;
+            _tmpLastUpdatedAt = _cursor.getLong(_cursorIndexOfLastUpdatedAt);
+            final long _tmpCreatedAt;
+            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
+            final long _tmpUpdatedAt;
+            _tmpUpdatedAt = _cursor.getLong(_cursorIndexOfUpdatedAt);
+            _result = new Contact(_tmpId,_tmpName,_tmpPhoneNumber,_tmpEmail,_tmpProfileImageUri,_tmpIsFavorite,_tmpDeviceContactId,_tmpLastUpdatedAt,_tmpCreatedAt,_tmpUpdatedAt);
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public Object getByDeviceContactId(final String deviceId,
+      final Continuation<? super Contact> $completion) {
+    final String _sql = "SELECT * FROM contacts WHERE deviceContactId = ? LIMIT 1";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    if (deviceId == null) {
+      _statement.bindNull(_argIndex);
+    } else {
+      _statement.bindString(_argIndex, deviceId);
+    }
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<Contact>() {
+      @Override
+      @Nullable
+      public Contact call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
+          final int _cursorIndexOfPhoneNumber = CursorUtil.getColumnIndexOrThrow(_cursor, "phoneNumber");
+          final int _cursorIndexOfEmail = CursorUtil.getColumnIndexOrThrow(_cursor, "email");
+          final int _cursorIndexOfProfileImageUri = CursorUtil.getColumnIndexOrThrow(_cursor, "profileImageUri");
+          final int _cursorIndexOfIsFavorite = CursorUtil.getColumnIndexOrThrow(_cursor, "isFavorite");
+          final int _cursorIndexOfDeviceContactId = CursorUtil.getColumnIndexOrThrow(_cursor, "deviceContactId");
+          final int _cursorIndexOfLastUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "last_updated_at");
+          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
+          final int _cursorIndexOfUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "updatedAt");
+          final Contact _result;
+          if (_cursor.moveToFirst()) {
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final String _tmpName;
+            _tmpName = _cursor.getString(_cursorIndexOfName);
+            final String _tmpPhoneNumber;
+            _tmpPhoneNumber = _cursor.getString(_cursorIndexOfPhoneNumber);
+            final String _tmpEmail;
+            _tmpEmail = _cursor.getString(_cursorIndexOfEmail);
+            final String _tmpProfileImageUri;
+            if (_cursor.isNull(_cursorIndexOfProfileImageUri)) {
+              _tmpProfileImageUri = null;
+            } else {
+              _tmpProfileImageUri = _cursor.getString(_cursorIndexOfProfileImageUri);
+            }
+            final boolean _tmpIsFavorite;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfIsFavorite);
+            _tmpIsFavorite = _tmp != 0;
+            final String _tmpDeviceContactId;
+            if (_cursor.isNull(_cursorIndexOfDeviceContactId)) {
+              _tmpDeviceContactId = null;
+            } else {
+              _tmpDeviceContactId = _cursor.getString(_cursorIndexOfDeviceContactId);
+            }
+            final long _tmpLastUpdatedAt;
+            _tmpLastUpdatedAt = _cursor.getLong(_cursorIndexOfLastUpdatedAt);
+            final long _tmpCreatedAt;
+            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
+            final long _tmpUpdatedAt;
+            _tmpUpdatedAt = _cursor.getLong(_cursorIndexOfUpdatedAt);
+            _result = new Contact(_tmpId,_tmpName,_tmpPhoneNumber,_tmpEmail,_tmpProfileImageUri,_tmpIsFavorite,_tmpDeviceContactId,_tmpLastUpdatedAt,_tmpCreatedAt,_tmpUpdatedAt);
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
   }
 
   @NonNull

@@ -1,7 +1,9 @@
 package com.example.contactsapp.data.local;
 
 import android.database.Cursor;
+import android.os.CancellationSignal;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.CoroutinesRoom;
 import androidx.room.EntityInsertionAdapter;
 import androidx.room.RoomDatabase;
@@ -12,6 +14,7 @@ import androidx.room.util.DBUtil;
 import androidx.sqlite.db.SupportSQLiteStatement;
 import com.example.contactsapp.data.model.CallLog;
 import com.example.contactsapp.data.model.CallType;
+import com.example.contactsapp.data.model.Contact;
 import java.lang.Class;
 import java.lang.Exception;
 import java.lang.Integer;
@@ -350,6 +353,75 @@ public final class CallLogDao_Impl implements CallLogDao {
         _statement.release();
       }
     });
+  }
+
+  @Override
+  public Object getContactByDeviceId(final String deviceId,
+      final Continuation<? super Contact> $completion) {
+    final String _sql = "SELECT * FROM contacts WHERE deviceContactId = ? LIMIT 1";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindString(_argIndex, deviceId);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<Contact>() {
+      @Override
+      @Nullable
+      public Contact call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
+          final int _cursorIndexOfPhoneNumber = CursorUtil.getColumnIndexOrThrow(_cursor, "phoneNumber");
+          final int _cursorIndexOfEmail = CursorUtil.getColumnIndexOrThrow(_cursor, "email");
+          final int _cursorIndexOfProfileImageUri = CursorUtil.getColumnIndexOrThrow(_cursor, "profileImageUri");
+          final int _cursorIndexOfIsFavorite = CursorUtil.getColumnIndexOrThrow(_cursor, "isFavorite");
+          final int _cursorIndexOfDeviceContactId = CursorUtil.getColumnIndexOrThrow(_cursor, "deviceContactId");
+          final int _cursorIndexOfLastUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "last_updated_at");
+          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
+          final int _cursorIndexOfUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "updatedAt");
+          final Contact _result;
+          if (_cursor.moveToFirst()) {
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final String _tmpName;
+            _tmpName = _cursor.getString(_cursorIndexOfName);
+            final String _tmpPhoneNumber;
+            _tmpPhoneNumber = _cursor.getString(_cursorIndexOfPhoneNumber);
+            final String _tmpEmail;
+            _tmpEmail = _cursor.getString(_cursorIndexOfEmail);
+            final String _tmpProfileImageUri;
+            if (_cursor.isNull(_cursorIndexOfProfileImageUri)) {
+              _tmpProfileImageUri = null;
+            } else {
+              _tmpProfileImageUri = _cursor.getString(_cursorIndexOfProfileImageUri);
+            }
+            final boolean _tmpIsFavorite;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfIsFavorite);
+            _tmpIsFavorite = _tmp != 0;
+            final String _tmpDeviceContactId;
+            if (_cursor.isNull(_cursorIndexOfDeviceContactId)) {
+              _tmpDeviceContactId = null;
+            } else {
+              _tmpDeviceContactId = _cursor.getString(_cursorIndexOfDeviceContactId);
+            }
+            final long _tmpLastUpdatedAt;
+            _tmpLastUpdatedAt = _cursor.getLong(_cursorIndexOfLastUpdatedAt);
+            final long _tmpCreatedAt;
+            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
+            final long _tmpUpdatedAt;
+            _tmpUpdatedAt = _cursor.getLong(_cursorIndexOfUpdatedAt);
+            _result = new Contact(_tmpId,_tmpName,_tmpPhoneNumber,_tmpEmail,_tmpProfileImageUri,_tmpIsFavorite,_tmpDeviceContactId,_tmpLastUpdatedAt,_tmpCreatedAt,_tmpUpdatedAt);
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
   }
 
   @NonNull

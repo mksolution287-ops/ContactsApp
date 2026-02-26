@@ -27,14 +27,52 @@ class ContactRepository(
     suspend fun insertContact(contact: Contact): Long {
         return contactDao.insertContact(contact)
     }
-    
-    suspend fun insertContacts(contacts: List<Contact>) {
-        contactDao.insertContacts(contacts)
+
+    suspend fun insertContacts(incoming: List<Contact>) {
+        incoming.forEach { systemContact ->
+            val local = contactDao.getByDeviceContactId(systemContact.deviceContactId)
+
+            when {
+                local == null -> {
+                    // New contact from system
+                    contactDao.insertContact(systemContact)
+                }
+
+                systemContact.lastUpdatedAt > local.lastUpdatedAt -> {
+                    // System contact is newer → update local
+                    contactDao.updateContact(
+                        id = local.id,
+                        name = systemContact.name,
+                        phone = systemContact.phoneNumber,
+                        email = systemContact.email,
+                        image = systemContact.profileImageUri,
+                        favorite = local.isFavorite, // preserve user choice
+                        updatedAt = systemContact.lastUpdatedAt
+                    )
+                }
+
+                else -> {
+                    // ❌ Local contact is newer → IGNORE system
+                    // This is the bug fix
+                }
+            }
+        }
     }
     
-    suspend fun updateContact(contact: Contact) {
-        contactDao.updateContact(contact.copy(updatedAt = System.currentTimeMillis()))
-    }
+//    suspend fun updateContact(contact: Contact) {
+//        contactDao.updateContact(contact.copy(updatedAt = System.currentTimeMillis()))
+//    }
+suspend fun updateContact(contact: Contact) {
+    contactDao.updateContact(
+        id = contact.id,
+        name = contact.name,
+        phone = contact.phoneNumber,
+        email = contact.email,
+        image = contact.profileImageUri,
+        favorite = contact.isFavorite,
+        updatedAt = System.currentTimeMillis()
+    )
+}
     
     suspend fun deleteContact(contact: Contact) {
         contactDao.deleteContact(contact)

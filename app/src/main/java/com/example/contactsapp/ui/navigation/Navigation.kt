@@ -1,6 +1,8 @@
 package com.example.contactsapp.ui.navigation
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -39,11 +41,13 @@ data class BottomNavItem(
     val badgeCount: Int = 0
 )
 
+@SuppressLint("MissingPermission")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContactNavigation(
     navController: NavHostController,
-    viewModel: ContactViewModel
+    viewModel: ContactViewModel,
+//    calllogviewmodel: CallLogViewModel
 ) {
     val contacts        by viewModel.contacts.collectAsState()
     val searchQuery     by viewModel.searchQuery.collectAsState()
@@ -258,10 +262,12 @@ fun ContactNavigation(
                         callHistory    = callHistory,  // ← ADD THIS
                         onSave = { updated ->
                             scope.launch {
+                                Log.d("ContactSave", "onSave called isNew=$isNew contact=$updated")
                                 if (isNew) {
                                     viewModel.addContact(updated)
                                     viewModel.dialPadClear()
                                 } else {
+                                    Log.d("ContactSave", "Calling updateContact id=${updated.id}")
                                     viewModel.updateContact(updated)
                                 }
                                 navController.popBackStack()
@@ -274,7 +280,7 @@ fun ContactNavigation(
                             }
                         },
                         onBack = { navController.popBackStack() },
-                        onCallNow = { viewModel.makeCall(context,it) }
+                        onCallNow = @androidx.annotation.RequiresPermission(android.Manifest.permission.CALL_PHONE) { viewModel.makeCall(context,it) }
                     )
                 }
             }

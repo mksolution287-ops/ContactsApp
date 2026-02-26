@@ -3,6 +3,7 @@ package com.example.contactsapp.data.local
 import androidx.room.*
 import com.example.contactsapp.data.model.CallLog
 import com.example.contactsapp.data.model.CallType
+import com.example.contactsapp.data.model.Contact
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -28,4 +29,9 @@ interface CallLogDao {
 
     @Query("SELECT COUNT(*) FROM call_logs WHERE callType = 'MISSED'")
     fun getMissedCallCount(): Flow<Int>
+
+    @Query("SELECT * FROM contacts WHERE deviceContactId = :deviceId LIMIT 1")
+    suspend fun getContactByDeviceId(deviceId: String): Contact?
+
+
 }

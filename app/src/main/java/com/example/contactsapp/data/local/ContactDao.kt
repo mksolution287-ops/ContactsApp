@@ -24,12 +24,37 @@ interface ContactDao {
     
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertContact(contact: Contact): Long
-    
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertContacts(contacts: List<Contact>)
+
+    @Query("SELECT * FROM contacts WHERE phoneNumber = :number LIMIT 1")
+    fun observeContactByPhone(number: String): Flow<Contact?>
     
-    @Update
-    suspend fun updateContact(contact: Contact)
+//    @Update
+//    suspend fun updateContact(contact: Contact)
+@Query("""
+    UPDATE contacts SET
+        name = :name,
+        phoneNumber = :phone,
+        email = :email,
+        profileImageUri = :image,
+        isFavorite = :favorite,
+        updatedAt = :updatedAt
+    WHERE id = :id
+""")
+suspend fun updateContact(
+    id: Long,
+    name: String,
+    phone: String,
+    email: String,
+    image: String?,
+    favorite: Boolean,
+    updatedAt: Long,
+)
+
+    @Query("SELECT * FROM contacts WHERE deviceContactId = :deviceId LIMIT 1")
+    suspend fun getByDeviceContactId(deviceId: String?): Contact?
     
     @Delete
     suspend fun deleteContact(contact: Contact)

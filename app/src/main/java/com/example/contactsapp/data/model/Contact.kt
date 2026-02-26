@@ -1,6 +1,7 @@
 package com.example.contactsapp.data.model
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
@@ -16,6 +17,8 @@ data class Contact(
     val profileImageUri: String? = null,
     val isFavorite: Boolean = false,
     val deviceContactId: String? = null, // To sync with device contacts
+    @ColumnInfo(name = "last_updated_at")
+    val lastUpdatedAt: Long = System.currentTimeMillis(),
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis()
 ) : Parcelable {

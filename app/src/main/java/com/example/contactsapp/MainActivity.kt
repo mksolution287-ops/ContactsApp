@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.telecom.Call
 import android.telecom.PhoneAccount
 import android.telecom.PhoneAccountHandle
 import android.telecom.TelecomManager
@@ -79,6 +80,13 @@ class MainActivity : ComponentActivity() {
                     app.callLogRepository, app.settingsRepository
                 )
             )
+//            val callLogViewModel: CallLogViewModel = viewModel(
+//                factory = CallLogViewModelFactory(
+//                    application,
+//                    app.callLogRepository,
+//                    app.contactRepository
+//                )
+//            )
             val settings by viewModel.settings.collectAsState()
 
             ContactsAppTheme(appTheme = settings.theme, accentColor = settings.accentColor) {
@@ -86,6 +94,7 @@ class MainActivity : ComponentActivity() {
                     add(Manifest.permission.READ_CONTACTS)
                     add(Manifest.permission.CALL_PHONE)
                     add(Manifest.permission.READ_CALL_LOG)
+                    add(Manifest.permission.WRITE_CONTACTS)
                     add(Manifest.permission.READ_PHONE_STATE)
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
                         add(Manifest.permission.READ_MEDIA_IMAGES)
@@ -195,7 +204,8 @@ class MainActivity : ComponentActivity() {
                                 val navController = rememberNavController()
                                 ContactNavigation(
                                     navController = navController,
-                                    viewModel = viewModel
+                                    viewModel = viewModel,
+//                                    calllogviewmodel = callLogViewModel
                                 )
                             }
                         }

@@ -1,6 +1,7 @@
 package com.example.contactsapp.ui.screens
 
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -274,17 +275,25 @@ fun ContactDetailScreen(
                     Button(
                         onClick = {
                             if (name.isNotBlank() && phoneNumber.isNotBlank()) {
-                                onSave(
-                                    if (isNewContact) Contact(
-                                        name = name.trim(), phoneNumber = phoneNumber.trim(),
-                                        email = email.trim(), profileImageUri = profileImageUri,
-                                        isFavorite = isFavorite
-                                    ) else contact!!.copy(
-                                        name = name.trim(), phoneNumber = phoneNumber.trim(),
-                                        email = email.trim(), profileImageUri = profileImageUri,
-                                        isFavorite = isFavorite
+                                val updated = if (isNewContact) {
+                                    Contact(
+                                        name            = name.trim(),
+                                        phoneNumber     = phoneNumber.trim(),
+                                        email           = email.trim(),
+                                        profileImageUri = profileImageUri,
+                                        isFavorite      = isFavorite
                                     )
-                                )
+                                } else {
+                                    contact!!.copy(
+                                        name            = name.trim(),
+                                        phoneNumber     = phoneNumber.trim(),
+                                        email           = email.trim(),
+                                        profileImageUri = profileImageUri,
+                                        isFavorite      = isFavorite
+                                    )
+                                }
+                                Log.d("ContactSave", "Save button clicked, contact=$updated id=${updated.id}")
+                                onSave(updated)
                             }
                         },
                         modifier = Modifier.fillMaxWidth().height(54.dp),

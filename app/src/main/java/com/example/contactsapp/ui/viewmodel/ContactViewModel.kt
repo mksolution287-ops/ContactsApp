@@ -2,11 +2,13 @@ package com.example.contactsapp.ui.viewmodel
 
 import android.Manifest
 import android.app.Application
+import android.content.ContentProviderOperation
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.telecom.TelecomManager
 import android.util.Log
 import androidx.annotation.RequiresPermission
@@ -99,8 +101,33 @@ class ContactViewModel(
         }
     }
 
-    fun addContact(c: Contact)    = viewModelScope.launch { contactRepository.insertContact(c) }
-    fun updateContact(c: Contact) = viewModelScope.launch { contactRepository.updateContact(c) }
+    fun addContact(c: Contact) = viewModelScope.launch {
+        val id = contactRepository.insertContact(c)
+        Log.d("ContactSave", "Inserted contact id=$id name=${c.name}")
+    }
+
+//    fun updateContact(c: Contact) = viewModelScope.launch {
+//        Log.d("ContactSave", "Updating contact id=${c.id} name=${c.name}")
+//        contactRepository.updateContact(c)
+//        Log.d("ContactSave", "Update complete for id=${c.id}")
+//    }
+
+    fun updateContact(c: Contact) = viewModelScope.launch {
+        // 1️⃣ Update system contact FIRST
+        updateSystemContact(
+            context = getApplication(),
+            phone = c.phoneNumber,
+            newName = c.name
+        )
+
+        // 2️⃣ Update local Room DB
+        contactRepository.updateContact(
+            c.copy(lastUpdatedAt = System.currentTimeMillis())
+        )
+    }
+
+
+
     fun deleteContact(c: Contact) = viewModelScope.launch { contactRepository.deleteContact(c) }
     fun toggleFavorite(id: Long, current: Boolean) =
         viewModelScope.launch { contactRepository.toggleFavorite(id, !current) }
@@ -215,6 +242,48 @@ class ContactViewModel(
             contact.phoneNumber.replace(Regex("[^0-9+]"), "")
                 .contains(dialedNumber.replace(Regex("[^0-9+]"), ""))
         }.take(5) // Limit to 5 suggestions
+    }
+
+    fun updateSystemContact(
+        context: Context,
+        phone: String,
+        newName: String
+    ) {
+        val resolver = context.contentResolver
+
+        val cursor = resolver.query(
+            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+            arrayOf(ContactsContract.CommonDataKinds.Phone.CONTACT_ID),
+            "${ContactsContract.CommonDataKinds.Phone.NUMBER} = ?",
+            arrayOf(phone),
+            null
+        )
+
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val contactId = it.getLong(0)
+
+                val ops = ArrayList<ContentProviderOperation>()
+
+                ops.add(
+                    ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+                        .withSelection(
+                            "${ContactsContract.Data.CONTACT_ID}=? AND ${ContactsContract.Data.MIMETYPE}=?",
+                            arrayOf(
+                                contactId.toString(),
+                                ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE
+                            )
+                        )
+                        .withValue(
+                            ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
+                            newName
+                        )
+                        .build()
+                )
+
+                resolver.applyBatch(ContactsContract.AUTHORITY, ops)
+            }
+        }
     }
 
     fun setTheme(t: AppTheme)          { settingsRepository.updateTheme(t) }

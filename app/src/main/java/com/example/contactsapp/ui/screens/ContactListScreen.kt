@@ -34,6 +34,7 @@ fun ContactListScreen(
     onAddContact: () -> Unit,
     onCallContact: (String) -> Unit
 ) {
+
     Box(modifier = Modifier.fillMaxSize()) {
         when {
             isLoading -> {
