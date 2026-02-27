@@ -20,8 +20,10 @@ import com.example.contactsapp.data.repository.ContactRepository
 import com.example.contactsapp.data.repository.SettingsRepository
 import com.example.contactsapp.util.DeviceCallLogHelper
 import com.example.contactsapp.util.DeviceContactsHelper
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ContactViewModel(
     application: Application,
@@ -102,8 +104,97 @@ class ContactViewModel(
     }
 
     fun addContact(c: Contact) = viewModelScope.launch {
-        val id = contactRepository.insertContact(c)
+        // 1️⃣ Write to Android system contacts first
+        withContext(Dispatchers.IO) {
+            addSystemContact(getApplication(), c)
+        }
+
+        // 2️⃣ Insert into Room with a future timestamp so sync never overwrites it
+        val id = contactRepository.insertContact(
+            c.copy(lastUpdatedAt = System.currentTimeMillis() + 5000L)
+        )
         Log.d("ContactSave", "Inserted contact id=$id name=${c.name}")
+    }
+
+    fun addSystemContact(context: Context, contact: Contact) {
+        val resolver = context.contentResolver
+        val ops      = ArrayList<ContentProviderOperation>()
+
+        // Step 1: Insert a new RawContact row
+        ops.add(
+            ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
+                .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+                .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
+                .build()
+        )
+
+        // Step 2: Insert StructuredName (display name + given name)
+        ops.add(
+            ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                .withValue(
+                    ContactsContract.Data.MIMETYPE,
+                    ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE
+                )
+                .withValue(
+                    ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
+                    contact.name
+                )
+                .withValue(
+                    ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME,
+                    contact.name
+                )
+                .build()
+        )
+
+        // Step 3: Insert phone number
+        if (contact.phoneNumber.isNotBlank()) {
+            ops.add(
+                ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                    .withValue(
+                        ContactsContract.Data.MIMETYPE,
+                        ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE
+                    )
+                    .withValue(
+                        ContactsContract.CommonDataKinds.Phone.NUMBER,
+                        contact.phoneNumber
+                    )
+                    .withValue(
+                        ContactsContract.CommonDataKinds.Phone.TYPE,
+                        ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE
+                    )
+                    .build()
+            )
+        }
+
+        // Step 4: Insert email if provided
+        if (contact.email.isNotBlank()) {
+            ops.add(
+                ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                    .withValue(
+                        ContactsContract.Data.MIMETYPE,
+                        ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE
+                    )
+                    .withValue(
+                        ContactsContract.CommonDataKinds.Email.DATA,
+                        contact.email
+                    )
+                    .withValue(
+                        ContactsContract.CommonDataKinds.Email.TYPE,
+                        ContactsContract.CommonDataKinds.Email.TYPE_HOME
+                    )
+                    .build()
+            )
+        }
+
+        try {
+            val results = resolver.applyBatch(ContactsContract.AUTHORITY, ops)
+            Log.d("addSystemContact", "Created system contact name=${contact.name} results=${results.size}")
+        } catch (e: Exception) {
+            Log.e("addSystemContact", "Failed to create system contact", e)
+        }
     }
 
 //    fun updateContact(c: Contact) = viewModelScope.launch {
@@ -124,16 +215,106 @@ class ContactViewModel(
         contactRepository.updateContact(
             c.copy(lastUpdatedAt = System.currentTimeMillis())
         )
+
+        // 3️⃣ Update contactName in all matching call logs
+        callLogRepository.updateContactNameByPhone(
+            phone = c.phoneNumber,
+            newName = c.name
+        )
+
     }
 
 
 
-    fun deleteContact(c: Contact) = viewModelScope.launch { contactRepository.deleteContact(c) }
+    fun deleteContact(c: Contact) = viewModelScope.launch {
+        // 1️⃣ Delete from Android system contacts
+        withContext(Dispatchers.IO) {
+            deleteSystemContact(getApplication(), c.phoneNumber)
+        }
+
+        // 2️⃣ Delete from Room
+        contactRepository.deleteContact(c)
+    }
+
+    fun deleteSystemContact(context: Context, phone: String) {
+        val resolver        = context.contentResolver
+        val normalizedInput = phone.replace(Regex("[^0-9+]"), "")
+
+        // Find contactId via normalized last-10-digit match
+        var rawContactId: Long? = null
+
+        val phoneCursor = resolver.query(
+            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+            arrayOf(
+                ContactsContract.CommonDataKinds.Phone.RAW_CONTACT_ID,
+                ContactsContract.CommonDataKinds.Phone.NUMBER
+            ),
+            null, null, null
+        )
+
+        phoneCursor?.use {
+            while (it.moveToNext()) {
+                val storedRaw  = it.getString(1) ?: continue
+                val storedNorm = storedRaw.replace(Regex("[^0-9+]"), "")
+                if (storedNorm.takeLast(10) == normalizedInput.takeLast(10)) {
+                    rawContactId = it.getLong(0)
+                    break
+                }
+            }
+        }
+
+        if (rawContactId == null) {
+            Log.w("deleteSystemContact", "No system contact found for phone=$phone")
+            return
+        }
+
+        // Delete by RAW_CONTACT_ID — cascades to all Data rows automatically
+        val deleteUri = android.content.ContentUris.withAppendedId(
+            ContactsContract.RawContacts.CONTENT_URI,
+            rawContactId!!
+        )
+
+        try {
+            val rows = resolver.delete(deleteUri, null, null)
+            Log.d("deleteSystemContact", "Deleted $rows raw contact row(s) for phone=$phone")
+        } catch (e: Exception) {
+            Log.e("deleteSystemContact", "Failed to delete system contact", e)
+        }
+    }
+
+    fun deleteCallLog(id: Long) = viewModelScope.launch {
+        // Get the log before deleting so we have phone + timestamp
+        val log = callLogRepository.getCallLogById(id)
+
+        // Delete from Room
+        callLogRepository.deleteCallLog(id)
+
+        // Delete from system call log
+        if (log != null) {
+            withContext(Dispatchers.IO) {
+                deleteSystemCallLog(getApplication(), log.phoneNumber, log.timestamp)
+            }
+        }
+    }
+
+    fun deleteSystemCallLog(context: Context, phoneNumber: String, timestamp: Long) {
+        try {
+            val deleted = context.contentResolver.delete(
+                android.provider.CallLog.Calls.CONTENT_URI,
+                "${android.provider.CallLog.Calls.NUMBER} = ? AND ${android.provider.CallLog.Calls.DATE} = ?",
+                arrayOf(phoneNumber, timestamp.toString())
+            )
+            Log.d("deleteSystemCallLog", "Deleted $deleted system call log(s) for $phoneNumber")
+        } catch (e: Exception) {
+            Log.e("deleteSystemCallLog", "Failed to delete system call log", e)
+        }
+    }
+
     fun toggleFavorite(id: Long, current: Boolean) =
         viewModelScope.launch { contactRepository.toggleFavorite(id, !current) }
     suspend fun getContactById(id: Long): Contact? = contactRepository.getContactById(id)
 
-    fun deleteCallLog(id: Long) = viewModelScope.launch { callLogRepository.deleteCallLog(id) }
+//    fun deleteCallLog(id: Long) = viewModelScope.launch { callLogRepository.deleteCallLog(id) }
     fun clearAllCallLogs()      = viewModelScope.launch { callLogRepository.deleteAllCallLogs() }
 
     fun dialPadAppend(c: String) { _dialPadNumber.value += c }
@@ -285,6 +466,15 @@ class ContactViewModel(
             }
         }
     }
+
+    val allResolvedCallLogs: StateFlow<List<ResolvedCallLog>> =
+        callLogRepository.getAllResolvedCallLogs()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val missedResolvedCalls: StateFlow<List<ResolvedCallLog>> =
+        callLogRepository.getMissedResolvedCalls()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
 
     fun setTheme(t: AppTheme)          { settingsRepository.updateTheme(t) }
     fun setAccentColor(c: AccentColor) { settingsRepository.updateAccentColor(c) }

@@ -34,14 +34,16 @@ public final class ContactDatabase_Impl extends ContactDatabase {
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(5) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(6) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `contacts` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `phoneNumber` TEXT NOT NULL, `email` TEXT NOT NULL, `profileImageUri` TEXT, `isFavorite` INTEGER NOT NULL, `deviceContactId` TEXT, `last_updated_at` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL)");
+        db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_contacts_phoneNumber` ON `contacts` (`phoneNumber`)");
+        db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_contacts_deviceContactId` ON `contacts` (`deviceContactId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `call_logs` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `contactName` TEXT NOT NULL, `phoneNumber` TEXT NOT NULL, `callType` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `durationSeconds` INTEGER NOT NULL, `profileImageUri` TEXT)");
         db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_call_logs_phoneNumber_timestamp` ON `call_logs` (`phoneNumber`, `timestamp`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '03085f39a141b954a04644bd7234d151')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0ae1e088837d4994522107a68efbb763')");
       }
 
       @Override
@@ -103,7 +105,9 @@ public final class ContactDatabase_Impl extends ContactDatabase {
         _columnsContacts.put("createdAt", new TableInfo.Column("createdAt", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsContacts.put("updatedAt", new TableInfo.Column("updatedAt", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysContacts = new HashSet<TableInfo.ForeignKey>(0);
-        final HashSet<TableInfo.Index> _indicesContacts = new HashSet<TableInfo.Index>(0);
+        final HashSet<TableInfo.Index> _indicesContacts = new HashSet<TableInfo.Index>(2);
+        _indicesContacts.add(new TableInfo.Index("index_contacts_phoneNumber", true, Arrays.asList("phoneNumber"), Arrays.asList("ASC")));
+        _indicesContacts.add(new TableInfo.Index("index_contacts_deviceContactId", true, Arrays.asList("deviceContactId"), Arrays.asList("ASC")));
         final TableInfo _infoContacts = new TableInfo("contacts", _columnsContacts, _foreignKeysContacts, _indicesContacts);
         final TableInfo _existingContacts = TableInfo.read(db, "contacts");
         if (!_infoContacts.equals(_existingContacts)) {
@@ -131,7 +135,7 @@ public final class ContactDatabase_Impl extends ContactDatabase {
         }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "03085f39a141b954a04644bd7234d151", "7d8133e975c7ecb05ae94d1bae5ecfd0");
+    }, "0ae1e088837d4994522107a68efbb763", "144d4a89fba088757e4bf3047a2898ed");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;

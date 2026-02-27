@@ -311,14 +311,7 @@ fun ActiveCallScreen(
     var keypadInput by remember { mutableStateOf("") }
 
 
-//    DisposableEffect(Unit) {
-//        val listener = {
-//            isMuted   = CallManager.isMuted()
-//            isSpeaker = CallManager.isSpeakerOn()
-//        }
-//        CallManager.addListener(listener)
-//        onDispose { CallManager.removeListener(listener) }
-//    }
+
     var isMuted   by remember { mutableStateOf(CallManager.isMuted()) }
     var isSpeaker by remember { mutableStateOf(CallManager.isSpeakerOn()) }
 

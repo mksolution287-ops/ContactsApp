@@ -2,6 +2,7 @@ package com.example.contactsapp.data.repository
 
 import com.example.contactsapp.data.local.CallLogDao
 import com.example.contactsapp.data.model.CallLog
+import com.example.contactsapp.data.model.ResolvedCallLog
 import kotlinx.coroutines.flow.Flow
 
 class CallLogRepository(private val callLogDao: CallLogDao) {
@@ -20,4 +21,17 @@ class CallLogRepository(private val callLogDao: CallLogDao) {
     suspend fun deleteCallLog(id: Long) = callLogDao.deleteCallLog(id)
 
     suspend fun deleteAllCallLogs() = callLogDao.deleteAllCallLogs()
+
+    suspend fun getCallLogById(id: Long): CallLog? =
+        callLogDao.getCallLogById(id)
+
+    suspend fun updateContactNameByPhone(phone: String, newName: String) {
+        callLogDao.updateContactNameByPhone(phone, newName)
+    }
+
+    fun getAllResolvedCallLogs(): Flow<List<ResolvedCallLog>> =
+        callLogDao.getAllResolvedCallLogs()
+
+    fun getMissedResolvedCalls(): Flow<List<ResolvedCallLog>> =
+        callLogDao.getMissedResolvedCalls()
 }

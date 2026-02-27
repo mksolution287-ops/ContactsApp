@@ -96,7 +96,7 @@ fun DialPadScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
-                .padding(horizontal = 24.dp, vertical = 16.dp).background(color = MaterialTheme.colorScheme.background),
+                .padding(horizontal = 10.dp, vertical = 16.dp).background(color = MaterialTheme.colorScheme.background),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Number display
@@ -322,6 +322,7 @@ private fun DialKey(
     val interactionSource = remember { MutableInteractionSource() }
 
     Box(
+
         modifier = Modifier
             .size(60.dp)
             .clip(CircleShape)

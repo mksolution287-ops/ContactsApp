@@ -40,18 +40,18 @@ fun ContactDetailScreen(
     onBack: () -> Unit,
     onCallNow: (String) -> Unit = {}
 ) {
-    var name             by remember { mutableStateOf("") }
+    var name             by remember { mutableStateOf(contact?.name ?: "") }
     var phoneNumber      by remember { mutableStateOf(prefilledPhone ?: "") }
-    var email            by remember { mutableStateOf("") }
+    var email            by remember { mutableStateOf(contact?.email ?: "") }
     var profileImageUri  by remember { mutableStateOf<String?>(null) }
-    var isFavorite       by remember { mutableStateOf(false) }
+    var isFavorite       by remember { mutableStateOf(contact?.isFavorite ?: false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     // ← ADD THIS: Edit mode state
     var isEditMode by remember { mutableStateOf(isNewContact) }
 
     // Populate fields when contact data arrives
-    LaunchedEffect(contact) {
+    LaunchedEffect(contact?.id, contact?.name) {
         contact?.let {
             name            = it.name
             phoneNumber     = it.phoneNumber

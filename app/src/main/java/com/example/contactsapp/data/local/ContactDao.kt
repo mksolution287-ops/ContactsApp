@@ -22,10 +22,10 @@ interface ContactDao {
     @Query("SELECT * FROM contacts WHERE name LIKE '%' || :query || '%' OR phoneNumber LIKE '%' || :query || '%' OR email LIKE '%' || :query || '%' ORDER BY name COLLATE NOCASE ASC")
     fun searchContacts(query: String): Flow<List<Contact>>
     
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertContact(contact: Contact): Long
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertContacts(contacts: List<Contact>)
 
     @Query("SELECT * FROM contacts WHERE phoneNumber = :number LIMIT 1")
@@ -67,4 +67,12 @@ suspend fun updateContact(
     
     @Query("UPDATE contacts SET isFavorite = :isFavorite WHERE id = :id")
     suspend fun updateFavoriteStatus(id: Long, isFavorite: Boolean)
+
+    @Query("""
+    SELECT * FROM contacts
+    WHERE REPLACE(REPLACE(REPLACE(phoneNumber, '+', ''), ' ', ''), '-', '')
+    LIKE '%' || :number || '%'
+    LIMIT 1
+""")
+    suspend fun getContactByPhoneLoose(number: String): Contact?
 }

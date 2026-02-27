@@ -21,7 +21,7 @@ class DeviceContactsHelper(private val context: Context) {
                     ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                     ContactsContract.CommonDataKinds.Phone.NUMBER,
                     ContactsContract.CommonDataKinds.Phone.PHOTO_URI,
-                    ContactsContract.Contacts.CONTACT_LAST_UPDATED_TIMESTAMP // ✅ IMPORTANT
+                    ContactsContract.Contacts.CONTACT_LAST_UPDATED_TIMESTAMP
                 ),
                 null,
                 null,

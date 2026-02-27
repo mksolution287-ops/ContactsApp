@@ -53,8 +53,8 @@ fun ContactNavigation(
     val searchQuery     by viewModel.searchQuery.collectAsState()
     val showFavOnly     by viewModel.showFavoritesOnly.collectAsState()
     val isLoading       by viewModel.isLoading.collectAsState()
-    val allLogs         by viewModel.allCallLogs.collectAsState()
-    val missedLogs      by viewModel.missedCalls.collectAsState()
+//    val allLogs         by viewModel.allCallLogs.collectAsState()
+//    val missedLogs      by viewModel.missedCalls.collectAsState()
     val missedCount     by viewModel.missedCallCount.collectAsState()
     val dialNumber      by viewModel.dialPadNumber.collectAsState()
     val settings        by viewModel.settings.collectAsState()
@@ -62,6 +62,9 @@ fun ContactNavigation(
     val currentBack by navController.currentBackStackEntryAsState()
     val currentRoute = currentBack?.destination?.route
     val context = LocalContext.current
+
+    val allLogs    by viewModel.allResolvedCallLogs.collectAsState()
+    val missedLogs by viewModel.missedResolvedCalls.collectAsState()
 
 
     val bottomItems = listOf(
@@ -164,7 +167,7 @@ fun ContactNavigation(
                         scope.launch {
                             val contact = viewModel.contactRepository.getContactByPhone(phoneNumber)
                             if (contact != null) {
-                                // Navigate to existing contact
+                                viewModel.dialPadClear()
                                 navController.navigate(Routes.contactDetail(contact.id))
                             } else {
                                 // Navigate to create new contact with pre-filled phone

@@ -95,6 +95,7 @@ class MainActivity : ComponentActivity() {
                     add(Manifest.permission.CALL_PHONE)
                     add(Manifest.permission.READ_CALL_LOG)
                     add(Manifest.permission.WRITE_CONTACTS)
+                    add(Manifest.permission.WRITE_CALL_LOG)
                     add(Manifest.permission.READ_PHONE_STATE)
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
                         add(Manifest.permission.READ_MEDIA_IMAGES)

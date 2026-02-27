@@ -21,15 +21,14 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.contactsapp.data.model.CallLog
 import com.example.contactsapp.data.model.CallType
+import com.example.contactsapp.data.model.ResolvedCallLog  // ← only ResolvedCallLog, no CallLog import
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -38,8 +37,8 @@ enum class CallLogFilter { ALL, MISSED, INCOMING, OUTGOING }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CallLogsScreen(
-    allLogs: List<CallLog>,
-    missedLogs: List<CallLog>,
+    allLogs: List<ResolvedCallLog>,
+    missedLogs: List<ResolvedCallLog>,
     onCallBack: (String) -> Unit,
     onDeleteLog: (Long) -> Unit,
     onClearAll: () -> Unit,
@@ -59,7 +58,6 @@ fun CallLogsScreen(
     val incomingCount = allLogs.count { it.callType == CallType.INCOMING }
     val outgoingCount = allLogs.count { it.callType == CallType.OUTGOING }
 
-
     Column(modifier = Modifier.fillMaxSize()) {
 
         LazyRow(
@@ -78,17 +76,12 @@ fun CallLogsScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.History,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp)
-                            )
+                            Icon(Icons.Default.History, null, modifier = Modifier.size(16.dp))
                             Text("All (${allLogs.size})")
                         }
                     }
                 )
             }
-
             item {
                 FilterChip(
                     selected = filter == CallLogFilter.MISSED,
@@ -99,8 +92,7 @@ fun CallLogsScreen(
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Icon(
-                                imageVector = Icons.Default.PhoneMissed,
-                                contentDescription = null,
+                                Icons.Default.PhoneMissed, null,
                                 modifier = Modifier.size(16.dp),
                                 tint = if (missedLogs.isNotEmpty())
                                     MaterialTheme.colorScheme.error
@@ -112,8 +104,6 @@ fun CallLogsScreen(
                     }
                 )
             }
-
-            // ← ADD THIS: Incoming filter
             item {
                 FilterChip(
                     selected = filter == CallLogFilter.INCOMING,
@@ -124,8 +114,7 @@ fun CallLogsScreen(
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Icon(
-                                imageVector = Icons.Default.CallReceived,
-                                contentDescription = null,
+                                Icons.Default.CallReceived, null,
                                 modifier = Modifier.size(16.dp),
                                 tint = MaterialTheme.colorScheme.primary
                             )
@@ -134,8 +123,6 @@ fun CallLogsScreen(
                     }
                 )
             }
-
-            // ← ADD THIS: Outgoing filter
             item {
                 FilterChip(
                     selected = filter == CallLogFilter.OUTGOING,
@@ -146,8 +133,7 @@ fun CallLogsScreen(
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Icon(
-                                imageVector = Icons.Default.CallMade,
-                                contentDescription = null,
+                                Icons.Default.CallMade, null,
                                 modifier = Modifier.size(16.dp),
                                 tint = Color(0xFF10B981)
                             )
@@ -166,20 +152,13 @@ fun CallLogsScreen(
             horizontalArrangement = Arrangement.End
         ) {
             IconButton(onClick = onSyncLogs) {
-                Icon(
-                    Icons.Default.Sync,
-                    contentDescription = "Sync call logs",
-                    tint = MaterialTheme.colorScheme.primary
-                )
+                Icon(Icons.Default.Sync, contentDescription = "Sync call logs",
+                    tint = MaterialTheme.colorScheme.primary)
             }
-
             if (allLogs.isNotEmpty()) {
                 IconButton(onClick = { showClearDialog = true }) {
-                    Icon(
-                        Icons.Default.DeleteSweep,
-                        contentDescription = "Clear all",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    Icon(Icons.Default.DeleteSweep, contentDescription = "Clear all",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         }
@@ -191,7 +170,6 @@ fun CallLogsScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(bottom = 16.dp)
             ) {
-                // Group by date
                 val grouped = displayed.groupBy { log ->
                     when {
                         isToday(log.timestamp)     -> "Today"
@@ -212,7 +190,7 @@ fun CallLogsScreen(
                     }
                     items(logs, key = { it.id }) { log ->
                         CallLogItem(
-                            log = log,
+                            log        = log,
                             onCallBack = { onCallBack(log.phoneNumber) },
                             onDelete   = { onDeleteLog(log.id) },
                             onClick    = { onContactClick(log.phoneNumber) }
@@ -231,15 +209,11 @@ fun CallLogsScreen(
             confirmButton = {
                 TextButton(
                     onClick = { showClearDialog = false; onClearAll() },
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = MaterialTheme.colorScheme.error
-                    )
+                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
                 ) { Text("Clear All") }
             },
             dismissButton = {
-                TextButton(onClick = { showClearDialog = false }) {
-                    Text("Cancel")
-                }
+                TextButton(onClick = { showClearDialog = false }) { Text("Cancel") }
             }
         )
     }
@@ -248,19 +222,15 @@ fun CallLogsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CallLogItem(
-    log: CallLog,
+    log: ResolvedCallLog,   // ← was CallLog, now ResolvedCallLog
     onCallBack: () -> Unit,
     onDelete: () -> Unit,
     onClick: () -> Unit
 ) {
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = {
-            if (it == SwipeToDismissBoxValue.EndToStart) {
-                onDelete()
-                true
-            } else {
-                false
-            }
+            if (it == SwipeToDismissBoxValue.EndToStart) { onDelete(); true }
+            else false
         }
     )
 
@@ -274,11 +244,7 @@ private fun CallLogItem(
                     .padding(end = 24.dp),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                Icon(
-                    Icons.Default.Delete,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.error
-                )
+                Icon(Icons.Default.Delete, null, tint = MaterialTheme.colorScheme.error)
             }
         },
         enableDismissFromStartToEnd = false
@@ -296,7 +262,6 @@ private fun CallLogItem(
                 modifier = Modifier.padding(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Profile image/avatar (like contacts screen)
                 Box(
                     modifier = Modifier
                         .size(44.dp)
@@ -335,7 +300,6 @@ private fun CallLogItem(
                         horizontalArrangement = Arrangement.spacedBy(6.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Call type icon (small indicator)
                         Icon(
                             imageVector = callTypeIcon(log.callType),
                             contentDescription = null,
@@ -348,11 +312,8 @@ private fun CallLogItem(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         if (log.durationSeconds > 0) {
-                            Text(
-                                "·",
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                style = MaterialTheme.typography.bodySmall
-                            )
+                            Text("·", color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                style = MaterialTheme.typography.bodySmall)
                             Text(
                                 text = log.getFormattedDuration(),
                                 style = MaterialTheme.typography.bodySmall,
@@ -363,11 +324,8 @@ private fun CallLogItem(
                 }
 
                 IconButton(onClick = onCallBack) {
-                    Icon(
-                        Icons.Default.Call,
-                        contentDescription = "Call back",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
+                    Icon(Icons.Default.Call, contentDescription = "Call back",
+                        tint = MaterialTheme.colorScheme.primary)
                 }
             }
         }
@@ -376,10 +334,7 @@ private fun CallLogItem(
 
 @Composable
 private fun CallLogEmptyState(filter: CallLogFilter) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(
                 imageVector = when (filter) {

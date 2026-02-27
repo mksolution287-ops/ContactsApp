@@ -78,14 +78,21 @@ suspend fun updateContact(contact: Contact) {
         contactDao.deleteContact(contact)
     }
 
-    suspend fun getContactByPhone(number: String): Contact? {
-        return contactDao.getContactByPhone(number)
-    }
+//    suspend fun getContactByPhone(number: String): Contact? {
+//        return contactDao.getContactByPhone(number)
+//    }
+suspend fun getContactByPhone(number: String): Contact? {
+    val normalized = normalizePhone(number)
+    return contactDao.getContactByPhoneLoose(normalized)
+}
     
     suspend fun deleteContactById(id: Long) {
         contactDao.deleteContactById(id)
     }
-    
+
+    fun normalizePhone(number: String): String {
+        return number.filter { it.isDigit() }.takeLast(10)
+    }
     suspend fun toggleFavorite(id: Long, isFavorite: Boolean) {
         contactDao.updateFavoriteStatus(id, isFavorite)
     }

@@ -3,11 +3,16 @@ package com.example.contactsapp.data.model
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Entity(tableName = "contacts")
+@Entity(tableName = "contacts",
+    indices = [
+        Index(value = ["phoneNumber"], unique = true),      // ← prevents duplicate phone numbers
+        Index(value = ["deviceContactId"], unique = true)   // ← prevents duplicate device contacts
+    ])
 data class Contact(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,

@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:2:1-132:12
-INJECTED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:2:1-132:12
-INJECTED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:2:1-132:12
-INJECTED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:2:1-132:12
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:2:1-128:12
+INJECTED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:2:1-128:12
+INJECTED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:2:1-128:12
+INJECTED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:2:1-128:12
 MERGED from [androidx.navigation:navigation-common:2.7.6] C:\Users\Well\.gradle\caches\transforms-3\50f5d9fc519b88183edc344044784cba\transformed\navigation-common-2.7.6\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.navigation:navigation-runtime:2.7.6] C:\Users\Well\.gradle\caches\transforms-3\c6ea0bf0fbd99b39672a8c2e65a1eec8\transformed\navigation-runtime-2.7.6\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.navigation:navigation-common-ktx:2.7.6] C:\Users\Well\.gradle\caches\transforms-3\95cd1ff56e2279b78db56b27261e9a4d\transformed\navigation-common-ktx-2.7.6\AndroidManifest.xml:2:1-7:12
@@ -89,71 +89,59 @@ uses-permission#android.permission.POST_NOTIFICATIONS
 ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:9:5-77
 	android:name
 		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:9:22-74
+uses-permission#android.permission.FOREGROUND_SERVICE
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:10:5-76
+	android:name
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:10:22-74
 uses-permission#android.permission.READ_CONTACTS
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:10:5-72
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:11:5-72
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:10:22-69
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:11:22-69
 uses-permission#android.permission.WRITE_CONTACTS
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:11:5-73
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:12:5-73
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:11:22-70
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:12:22-70
+uses-permission#android.permission.WRITE_CALL_LOG
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:13:5-72
+	android:name
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:13:22-70
 uses-permission#android.permission.CALL_PHONE
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:12:5-69
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:14:5-69
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:12:22-66
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:14:22-66
 uses-permission#android.permission.READ_PHONE_STATE
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:13:5-75
-	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:13:22-72
-uses-permission#android.permission.PROCESS_OUTGOING_CALLS
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:14:5-80
-	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:14:22-78
-uses-permission#android.permission.MANAGE_OWN_CALLS
 ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:15:5-75
 	android:name
 		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:15:22-72
+uses-permission#android.permission.MANAGE_OWN_CALLS
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:16:5-75
+	android:name
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:16:22-72
 uses-permission#android.permission.READ_CALL_LOG
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:16:5-72
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:17:5-72
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:16:22-69
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:17:22-69
 uses-permission#android.permission.READ_EXTERNAL_STORAGE
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:17:5-18:38
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:18:5-19:38
 	android:maxSdkVersion
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:18:9-35
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:19:9-35
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:17:22-77
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:18:22-77
 uses-permission#android.permission.READ_MEDIA_IMAGES
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:19:5-76
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:20:5-76
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:19:22-73
-uses-permission#android.permission.FOREGROUND_SERVICE
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:21:5-77
-	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:21:22-74
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:20:22-73
 uses-permission#android.permission.USE_FULL_SCREEN_INTENT
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:22:5-81
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:21:5-81
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:22:22-78
-uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:23:5-81
-	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:23:22-78
-uses-permission#android.permission.VIBRATE
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:24:5-66
-	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:24:22-63
-uses-permission#android.permission.DISABLE_KEYGUARD
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:25:5-75
-	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:25:22-72
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:21:22-78
 uses-permission#android.permission.WAKE_LOCK
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:26:5-68
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:22:5-68
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:26:22-65
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:22:22-65
 application
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:28:5-130:19
-INJECTED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:28:5-130:19
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:24:5-126:19
+INJECTED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:24:5-126:19
 MERGED from [androidx.compose.ui:ui-test-manifest:1.6.3] C:\Users\Well\.gradle\caches\transforms-3\11639b451feedb2c29b58e1db47ced93\transformed\jetified-ui-test-manifest-1.6.3\AndroidManifest.xml:22:5-26:19
 MERGED from [androidx.compose.ui:ui-test-manifest:1.6.3] C:\Users\Well\.gradle\caches\transforms-3\11639b451feedb2c29b58e1db47ced93\transformed\jetified-ui-test-manifest-1.6.3\AndroidManifest.xml:22:5-26:19
 MERGED from [androidx.compose.ui:ui-tooling-android:1.6.3] C:\Users\Well\.gradle\caches\transforms-3\40ba3b6561880bf925ed455b1d47d425\transformed\jetified-ui-tooling-release\AndroidManifest.xml:22:5-26:19
@@ -177,147 +165,147 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\Well\.gradle\cache
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.12.0] C:\Users\Well\.gradle\caches\transforms-3\d134fa8430e096d4ca6098dacb8022ac\transformed\core-1.12.0\AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:36:9-35
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:32:9-35
 	android:label
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:34:9-41
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:30:9-41
 	android:fullBackupContent
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:32:9-54
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:28:9-54
 	android:roundIcon
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:35:9-54
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:31:9-54
 	tools:targetApi
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:38:9-29
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:34:9-29
 	android:icon
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:33:9-43
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:29:9-43
 	android:allowBackup
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:30:9-35
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:26:9-35
 	android:theme
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:37:9-49
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:33:9-49
 	android:dataExtractionRules
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:31:9-65
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:27:9-65
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:29:9-44
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:25:9-44
 activity#com.example.contactsapp.IncomingCallActivity
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:40:9-47:56
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:36:9-43:56
 	android:turnScreenOn
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:44:13-40
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:40:13-40
 	android:excludeFromRecents
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:45:13-46
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:41:13-46
 	android:launchMode
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:46:13-48
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:42:13-48
 	android:exported
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:42:13-36
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:38:13-36
 	android:showOnLockScreen
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:43:13-44
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:39:13-44
 	android:theme
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:47:13-53
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:43:13-53
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:41:13-49
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:37:13-49
 receiver#com.example.contactsapp.CallActionReceiver
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:49:9-51:40
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:45:9-47:40
 	android:exported
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:51:13-37
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:47:13-37
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:50:13-47
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:46:13-47
 service#com.example.contactsapp.CallService
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:53:9-63:19
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:49:9-59:19
 	android:exported
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:56:13-36
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:52:13-36
 	android:permission
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:55:13-72
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:51:13-72
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:54:13-40
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:50:13-40
 intent-filter#action:name:android.telecom.InCallService
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:57:13-59:29
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:53:13-55:29
 action#android.telecom.InCallService
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:58:17-72
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:54:17-72
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:58:25-69
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:54:25-69
 meta-data#android.telecom.IN_CALL_SERVICE_UI
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:60:13-62:40
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:56:13-58:40
 	android:value
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:62:17-37
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:58:17-37
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:61:17-66
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:57:17-66
 service#com.example.contactsapp.CallConnectionService
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:65:9-72:19
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:61:9-68:19
 	android:exported
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:68:13-36
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:64:13-36
 	android:permission
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:67:13-84
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:63:13-84
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:66:13-50
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:62:13-50
 intent-filter#action:name:android.telecom.ConnectionService
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:69:13-71:29
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:65:13-67:29
 action#android.telecom.ConnectionService
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:70:17-76
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:66:17-76
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:70:25-73
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:66:25-73
 activity#com.example.contactsapp.MainActivity
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:73:9-129:20
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:69:9-125:20
 	android:windowSoftInputMode
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:77:13-55
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:73:13-55
 	android:exported
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:75:13-36
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:71:13-36
 	android:theme
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:76:13-53
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:72:13-53
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:74:13-41
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:70:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:80:13-83:29
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:76:13-79:29
 action#android.intent.action.MAIN
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:81:17-69
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:77:17-69
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:81:25-66
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:77:25-66
 category#android.intent.category.LAUNCHER
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:82:17-77
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:78:17-77
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:82:27-74
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:78:27-74
 intent-filter#action:name:android.intent.action.DIAL+category:name:android.intent.category.APP_DIALER+category:name:android.intent.category.BROWSABLE+category:name:android.intent.category.DEFAULT+data:scheme:tel
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:86:13-92:29
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:82:13-88:29
 action#android.intent.action.DIAL
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:87:17-69
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:83:17-69
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:87:25-66
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:83:25-66
 category#android.intent.category.DEFAULT
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:88:17-76
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:84:17-76
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:88:27-73
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:84:27-73
 category#android.intent.category.BROWSABLE
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:89:17-78
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:17-78
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:89:27-75
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:27-75
 category#android.intent.category.APP_DIALER
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:90:17-79
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:86:17-79
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:90:27-76
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:86:27-76
 data
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:91:17-46
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:87:17-46
 	android:scheme
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:91:23-43
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:87:23-43
 	android:mimeType
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:118:23-72
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:114:23-72
 intent-filter#action:name:android.intent.action.DIAL+category:name:android.intent.category.DEFAULT
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:95:13-98:29
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:91:13-94:29
 intent-filter#action:name:android.intent.action.DIAL+category:name:android.intent.category.DEFAULT+data:scheme:voicemail
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:101:13-105:29
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:97:13-101:29
 intent-filter#action:name:android.intent.action.CALL+category:name:android.intent.category.DEFAULT+data:scheme:tel
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:108:13-112:29
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:104:13-108:29
 action#android.intent.action.CALL
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:109:17-69
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:105:17-69
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:109:25-66
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:105:25-66
 intent-filter#action:name:android.intent.action.VIEW+category:name:android.intent.category.DEFAULT+data:mimeType:vnd.android.cursor.dir/contact
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:115:13-119:29
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:111:13-115:29
 action#android.intent.action.VIEW
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:116:17-69
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:112:17-69
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:116:25-66
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:112:25-66
 intent-filter#action:name:android.intent.action.PICK+category:name:android.intent.category.DEFAULT+data:mimeType:vnd.android.cursor.dir/contact+data:mimeType:vnd.android.cursor.dir/phone_v2
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:122:13-127:29
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:118:13-123:29
 action#android.intent.action.PICK
-ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:123:17-69
+ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:119:17-69
 	android:name
-		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:123:25-66
+		ADDED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:119:25-66
 uses-sdk
 INJECTED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml
