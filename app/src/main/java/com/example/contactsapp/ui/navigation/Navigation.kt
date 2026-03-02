@@ -130,7 +130,7 @@ fun ContactNavigation(
     ) { padding ->
         NavHost(
             navController  = navController,
-            startDestination = Routes.CONTACTS,
+            startDestination = Routes.RECENTS,
             modifier       = Modifier.padding(padding)
         ) {
             // ── Contacts list ────────────────────────────────────────────
@@ -153,10 +153,11 @@ fun ContactNavigation(
                     allLogs    = allLogs,
                     missedLogs = missedLogs,
                     onCallBack = { number ->
-                        viewModel.dialPadSetNumber(number)
-                        navController.navigate(Routes.DIALER) {
-                            launchSingleTop = true
-                        }
+//                        viewModel.dialPadSetNumber(number)
+//                        navController.navigate(Routes.DIALER) {
+//                            launchSingleTop = true
+//                        }
+                        viewModel.makeCall(context = context ,number)
                     },
                     onDeleteLog = viewModel::deleteCallLog,
                     onClearAll  = viewModel::clearAllCallLogs,

@@ -441,18 +441,18 @@ fun ActiveCallScreen(
                     Spacer(Modifier.height(16.dp))
 
                     // View profile button
-                    Surface(
-                        shape = RoundedCornerShape(50),
-                        color = Color.White.copy(alpha = 0.15f),
-                        modifier = Modifier.clickable { /* open contact */ }
-                    ) {
-                        Text(
-                            "View profile",
-                            color    = Color.White,
-                            fontSize = 14.sp,
-                            modifier = Modifier.padding(horizontal = 28.dp, vertical = 10.dp)
-                        )
-                    }
+//                    Surface(
+//                        shape = RoundedCornerShape(50),
+//                        color = Color.White.copy(alpha = 0.15f),
+//                        modifier = Modifier.clickable { /* open contact */ }
+//                    ) {
+//                        Text(
+//                            "View profile",
+//                            color    = Color.White,
+//                            fontSize = 14.sp,
+//                            modifier = Modifier.padding(horizontal = 28.dp, vertical = 10.dp)
+//                        )
+//                    }
                 }
             }
 

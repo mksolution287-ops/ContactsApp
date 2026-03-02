@@ -3,6 +3,7 @@ package com.example.contactsapp.ui.screens
 import android.app.role.RoleManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.telecom.TelecomManager
@@ -10,6 +11,8 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -22,14 +25,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.contactsapp.data.model.AccentColor
 import com.example.contactsapp.data.model.AppSettings
 import com.example.contactsapp.data.model.AppTheme
@@ -44,6 +50,7 @@ fun SettingsScreen(
     onConfirmDeleteChange: (Boolean) -> Unit
 ) {
     val context = LocalContext.current
+    var visible by remember { mutableStateOf(false) }
     var isDefaultApp by remember { mutableStateOf(isDefaultDialerApp(context)) }
 
     val defaultDialerLauncher =
@@ -211,6 +218,25 @@ fun SettingsScreen(
 //                value = "Room DB (local)"
 //            )
 //        }
+        Spacer(modifier = Modifier.height(8.dp))
+
+// ── Legal ────────────────────────────────────────────────────────────
+        SettingsSection(title = "Legal") {
+            SettingsLinkRow(
+                icon = Icons.Default.Description,
+                title = "Terms & Conditions",
+                url = "https://sites.google.com/view/mksolutionappstermsandcondtion/home",
+                context = context
+            )
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+            SettingsLinkRow(
+                icon = Icons.Default.PrivacyTip,
+                title = "Privacy Policy",
+                url = "https://sites.google.com/view/mksolutioncontactdilaerprivacy/home",
+                context = context
+            )
+        }
+
     }
 }
 
@@ -426,6 +452,45 @@ private fun SettingsToggleRow(
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange
+        )
+    }
+}
+@Composable
+private fun SettingsLinkRow(
+    icon: ImageVector,
+    title: String,
+    url: String,
+    context: Context
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                context.startActivity(
+                    Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                )
+            }
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(22.dp)
+        )
+        Spacer(modifier = Modifier.width(12.dp))
+        Text(
+            text = title,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.weight(1f)
+        )
+        Icon(
+            imageVector = Icons.Default.ChevronRight,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(20.dp)
         )
     }
 }

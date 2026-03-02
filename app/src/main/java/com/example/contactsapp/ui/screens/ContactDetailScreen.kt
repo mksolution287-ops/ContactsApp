@@ -1,6 +1,8 @@
 package com.example.contactsapp.ui.screens
 
+import android.Manifest
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -27,14 +29,17 @@ import coil.compose.AsyncImage
 import com.example.contactsapp.data.model.CallLog
 import com.example.contactsapp.data.model.CallType
 import com.example.contactsapp.data.model.Contact
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun ContactDetailScreen(
     contact: Contact?,
     isNewContact: Boolean,
     prefilledPhone: String? = null,
-    callHistory: List<CallLog> = emptyList(),  // ← ADD THIS
+    callHistory: List<CallLog> = emptyList(),
     onSave: (Contact) -> Unit,
     onDelete: () -> Unit,
     onBack: () -> Unit,
@@ -46,11 +51,41 @@ fun ContactDetailScreen(
     var profileImageUri  by remember { mutableStateOf<String?>(null) }
     var isFavorite       by remember { mutableStateOf(contact?.isFavorite ?: false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var isEditMode       by remember { mutableStateOf(isNewContact) }
 
-    // ← ADD THIS: Edit mode state
-    var isEditMode by remember { mutableStateOf(isNewContact) }
+    // ── Photo permission ──────────────────────────────────────────────────────
+    val photoPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        Manifest.permission.READ_MEDIA_IMAGES
+    else
+        Manifest.permission.READ_EXTERNAL_STORAGE
 
-    // Populate fields when contact data arrives
+    val photoPermissionState = rememberPermissionState(photoPermission)
+
+    // Track if picker should open once permission is granted
+    var pendingPickerOpen by remember { mutableStateOf(false) }
+
+    val imagePicker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let { profileImageUri = it.toString() }
+    }
+
+    // Auto-open picker if permission was just granted after a request
+    LaunchedEffect(photoPermissionState.status.isGranted) {
+        if (photoPermissionState.status.isGranted && pendingPickerOpen) {
+            pendingPickerOpen = false
+            imagePicker.launch("image/*")
+        }
+    }
+
+    val onPickImage: () -> Unit = {
+        if (photoPermissionState.status.isGranted) {
+            imagePicker.launch("image/*")
+        } else {
+            pendingPickerOpen = true
+            photoPermissionState.launchPermissionRequest()
+        }
+    }
+
+    // ── Populate fields when contact data arrives ─────────────────────────────
     LaunchedEffect(contact?.id, contact?.name) {
         contact?.let {
             name            = it.name
@@ -65,10 +100,6 @@ fun ContactDetailScreen(
         if (isNewContact && prefilledPhone != null && phoneNumber.isEmpty()) {
             phoneNumber = prefilledPhone
         }
-    }
-
-    val imagePicker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        uri?.let { profileImageUri = it.toString() }
     }
 
     Scaffold(
@@ -88,25 +119,28 @@ fun ContactDetailScreen(
                     }
                 },
                 actions = {
-                    // ← UPDATE THIS: Show different actions based on mode
                     if (!isNewContact) {
                         if (isEditMode) {
-                            // In edit mode - show delete
                             IconButton(onClick = { showDeleteDialog = true }) {
-                                Icon(Icons.Default.Delete, "Delete",
-                                    tint = MaterialTheme.colorScheme.error)
+                                Icon(
+                                    Icons.Default.Delete, "Delete",
+                                    tint = MaterialTheme.colorScheme.error
+                                )
                             }
                         } else {
-                            // In view mode - show call and edit
                             if (phoneNumber.isNotBlank()) {
                                 IconButton(onClick = { onCallNow(phoneNumber) }) {
-                                    Icon(Icons.Default.Call, "Call",
-                                        tint = MaterialTheme.colorScheme.primary)
+                                    Icon(
+                                        Icons.Default.Call, "Call",
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
                                 }
                             }
                             IconButton(onClick = { isEditMode = true }) {
-                                Icon(Icons.Default.Edit, "Edit",
-                                    tint = MaterialTheme.colorScheme.primary)
+                                Icon(
+                                    Icons.Default.Edit, "Edit",
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
                             }
                         }
                     }
@@ -136,7 +170,7 @@ fun ContactDetailScreen(
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
                         .then(
-                            if (isEditMode) Modifier.clickable { imagePicker.launch("image/*") }
+                            if (isEditMode) Modifier.clickable { onPickImage() }
                             else Modifier
                         ),
                     contentAlignment = Alignment.Center
@@ -145,15 +179,19 @@ fun ContactDetailScreen(
                         AsyncImage(
                             model = profileImageUri,
                             contentDescription = null,
-                            modifier = Modifier.size(110.dp).clip(CircleShape),
+                            modifier = Modifier
+                                .size(110.dp)
+                                .clip(CircleShape),
                             contentScale = ContentScale.Crop
                         )
                     } else {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             if (isEditMode) {
-                                Icon(Icons.Default.CameraAlt, null,
+                                Icon(
+                                    Icons.Default.CameraAlt, null,
                                     tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(28.dp))
+                                    modifier = Modifier.size(28.dp)
+                                )
                                 Spacer(Modifier.height(4.dp))
                             }
                             Text(
@@ -167,11 +205,12 @@ fun ContactDetailScreen(
                 }
             }
 
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
             ) {
-                // ← ADD THIS: Show call history in view mode
+                // Call history in view mode
                 if (!isEditMode && callHistory.isNotEmpty()) {
                     CallHistorySection(callHistory = callHistory)
                     Spacer(Modifier.height(24.dp))
@@ -212,16 +251,18 @@ fun ContactDetailScreen(
                     Spacer(Modifier.height(20.dp))
                 }
 
-                // ← UPDATE FIELDS: Read-only in view mode, editable in edit mode
+                // Name field
                 OutlinedTextField(
                     value = name,
                     onValueChange = { if (isEditMode) name = it },
                     label = { Text("Name") },
-                    leadingIcon = { Icon(Icons.Default.Person, null, tint = MaterialTheme.colorScheme.primary) },
+                    leadingIcon = {
+                        Icon(Icons.Default.Person, null, tint = MaterialTheme.colorScheme.primary)
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     singleLine = true,
-                    enabled = isEditMode,  // ← ADD THIS
+                    enabled = isEditMode,
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor   = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -232,15 +273,18 @@ fun ContactDetailScreen(
 
                 Spacer(Modifier.height(12.dp))
 
+                // Phone field
                 OutlinedTextField(
                     value = phoneNumber,
                     onValueChange = { if (isEditMode) phoneNumber = it },
                     label = { Text("Phone Number") },
-                    leadingIcon = { Icon(Icons.Default.Phone, null, tint = MaterialTheme.colorScheme.primary) },
+                    leadingIcon = {
+                        Icon(Icons.Default.Phone, null, tint = MaterialTheme.colorScheme.primary)
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     singleLine = true,
-                    enabled = isEditMode,  // ← ADD THIS
+                    enabled = isEditMode,
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor   = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -251,15 +295,18 @@ fun ContactDetailScreen(
 
                 Spacer(Modifier.height(12.dp))
 
+                // Email field
                 OutlinedTextField(
                     value = email,
                     onValueChange = { if (isEditMode) email = it },
                     label = { Text("Email (optional)") },
-                    leadingIcon = { Icon(Icons.Default.Email, null, tint = MaterialTheme.colorScheme.primary) },
+                    leadingIcon = {
+                        Icon(Icons.Default.Email, null, tint = MaterialTheme.colorScheme.primary)
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     singleLine = true,
-                    enabled = isEditMode,  // ← ADD THIS
+                    enabled = isEditMode,
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor   = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -270,7 +317,7 @@ fun ContactDetailScreen(
 
                 Spacer(Modifier.height(28.dp))
 
-                // ← UPDATE BUTTON: Only show in edit mode
+                // Save button - only in edit mode
                 if (isEditMode) {
                     Button(
                         onClick = {
@@ -296,7 +343,9 @@ fun ContactDetailScreen(
                                 onSave(updated)
                             }
                         },
-                        modifier = Modifier.fillMaxWidth().height(54.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(54.dp),
                         enabled = name.isNotBlank() && phoneNumber.isNotBlank(),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
@@ -321,7 +370,9 @@ fun ContactDetailScreen(
             confirmButton = {
                 TextButton(
                     onClick = { showDeleteDialog = false; onDelete() },
-                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    )
                 ) { Text("Delete") }
             },
             dismissButton = {
@@ -331,7 +382,8 @@ fun ContactDetailScreen(
     }
 }
 
-// ← ADD THIS NEW COMPOSABLE: Call history section
+// ── Call history section ──────────────────────────────────────────────────────
+
 @Composable
 private fun CallHistorySection(callHistory: List<CallLog>) {
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -410,14 +462,14 @@ private fun CallHistoryItem(log: CallLog) {
 }
 
 private fun formatTime(ts: Long): String {
-    val now = System.currentTimeMillis()
+    val now  = System.currentTimeMillis()
     val diff = now - ts
 
     return when {
-        diff < 60_000 -> "Just now"
-        diff < 3600_000 -> "${diff / 60_000}m ago"
-        diff < 86400_000 -> "${diff / 3600_000}h ago"
-        diff < 172800_000 -> "Yesterday"
+        diff < 60_000      -> "Just now"
+        diff < 3_600_000   -> "${diff / 60_000}m ago"
+        diff < 86_400_000  -> "${diff / 3_600_000}h ago"
+        diff < 172_800_000 -> "Yesterday"
         else -> {
             val fmt = java.text.SimpleDateFormat("MMM d", java.util.Locale.getDefault())
             fmt.format(java.util.Date(ts))
