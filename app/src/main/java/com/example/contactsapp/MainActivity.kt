@@ -371,7 +371,7 @@ private fun SplashScreen() {
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.telephone),
+                    imageVector = Icons.Default.Call,
                     contentDescription = null,
                     tint = Color.White,
                     modifier = Modifier.size(52.dp)
@@ -619,6 +619,49 @@ private fun PermissionScreen(
                         }
                     }
                 }
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp, bottom = 10.dp)
+                            .alpha(taglineAlpha),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "By tapping Grant Permissions, you accept our",
+                            color = Color(0xFF607D8B),
+                            fontSize = 12.sp,
+                            textAlign = TextAlign.Center
+                        )
+                        Row(horizontalArrangement = Arrangement.Center) {
+                            Text(
+                                text = "Terms & Conditions",
+                                color = Color(0xFF0466FA),
+                                fontSize = 12.sp,
+                                modifier = Modifier.clickable {
+                                    context.startActivity(
+                                        Intent(Intent.ACTION_VIEW, Uri.parse("https://sites.google.com/view/mksolutionappstermsandcondtion/home"))
+                                    )
+                                }
+                            )
+                            Text(
+                                text = "  ·  ",
+                                color = Color(0xFF607D8B),
+                                fontSize = 12.sp
+                            )
+                            Text(
+                                text = "Privacy Policy",
+                                color = Color(0xFF0466FA),
+                                fontSize = 12.sp,
+                                modifier = Modifier.clickable {
+                                    context.startActivity(
+                                        Intent(Intent.ACTION_VIEW, Uri.parse("https://sites.google.com/view/mksolutioncontactdilaerprivacy/home"))
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
 
                 // CTA Button
                 item {
@@ -660,50 +703,6 @@ private fun PermissionScreen(
                             textAlign = TextAlign.Center,
                             lineHeight = 18.sp
                         )
-                    }
-                }
-
-                item {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp, bottom = 32.dp)
-                            .alpha(taglineAlpha),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "By tapping Grant Permissions, you accept our",
-                            color = Color(0xFF607D8B),
-                            fontSize = 12.sp,
-                            textAlign = TextAlign.Center
-                        )
-                        Row(horizontalArrangement = Arrangement.Center) {
-                            Text(
-                                text = "Terms & Conditions",
-                                color = Color(0xFF0466FA),
-                                fontSize = 12.sp,
-                                modifier = Modifier.clickable {
-                                    context.startActivity(
-                                        Intent(Intent.ACTION_VIEW, Uri.parse("https://sites.google.com/view/mksolutionappstermsandcondtion/home"))
-                                    )
-                                }
-                            )
-                            Text(
-                                text = "  ·  ",
-                                color = Color(0xFF607D8B),
-                                fontSize = 12.sp
-                            )
-                            Text(
-                                text = "Privacy Policy",
-                                color = Color(0xFF0466FA),
-                                fontSize = 12.sp,
-                                modifier = Modifier.clickable {
-                                    context.startActivity(
-                                        Intent(Intent.ACTION_VIEW, Uri.parse("https://sites.google.com/view/mksolutioncontactdilaerprivacy/home"))
-                                    )
-                                }
-                            )
-                        }
                     }
                 }
             }
