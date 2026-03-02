@@ -10,11 +10,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.contactsapp"
+    namespace = "com.mktech.contactsapp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.contactsapp"
+        applicationId = "com.mktech.contactsapp"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

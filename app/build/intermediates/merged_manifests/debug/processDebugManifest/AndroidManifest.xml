@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.contactsapp"
+    package="com.mktech.contactsapp"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -28,13 +28,13 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <permission
-        android:name="com.example.contactsapp.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        android:name="com.mktech.contactsapp.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.example.contactsapp.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+    <uses-permission android:name="com.mktech.contactsapp.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
 
     <application
-        android:name="com.example.contactsapp.ContactsApplication"
+        android:name="com.mktech.contactsapp.ContactsApplication"
         android:allowBackup="true"
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -48,7 +48,7 @@
         android:testOnly="true"
         android:theme="@style/Theme.ContactsApp" >
         <activity
-            android:name="com.example.contactsapp.IncomingCallActivity"
+            android:name="com.mktech.contactsapp.IncomingCallActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:launchMode="singleInstance"
@@ -57,11 +57,11 @@
             android:turnScreenOn="true" />
 
         <receiver
-            android:name="com.example.contactsapp.CallActionReceiver"
+            android:name="com.mktech.contactsapp.CallActionReceiver"
             android:exported="false" />
 
         <service
-            android:name="com.example.contactsapp.CallService"
+            android:name="com.mktech.contactsapp.CallService"
             android:exported="true"
             android:permission="android.permission.BIND_INCALL_SERVICE" >
             <intent-filter>
@@ -73,7 +73,7 @@
                 android:value="true" />
         </service>
         <service
-            android:name="com.example.contactsapp.CallConnectionService"
+            android:name="com.mktech.contactsapp.CallConnectionService"
             android:exported="true"
             android:permission="android.permission.BIND_TELECOM_CONNECTION_SERVICE" >
             <intent-filter>
@@ -82,7 +82,7 @@
         </service>
 
         <activity
-            android:name="com.example.contactsapp.MainActivity"
+            android:name="com.mktech.contactsapp.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.ContactsApp"
             android:windowSoftInputMode="adjustResize" >
@@ -158,7 +158,7 @@
 
         <provider
             android:name="androidx.startup.InitializationProvider"
-            android:authorities="com.example.contactsapp.androidx-startup"
+            android:authorities="com.mktech.contactsapp.androidx-startup"
             android:exported="false" >
             <meta-data
                 android:name="androidx.emoji2.text.EmojiCompatInitializer"

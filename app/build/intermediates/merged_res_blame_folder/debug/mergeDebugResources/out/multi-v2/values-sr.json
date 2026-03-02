@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.contactsapp-mergeDebugResources-58:/values-sr/values-sr.xml",
+            "outputFile": "com.mktech.contactsapp-mergeDebugResources-58:/values-sr/values-sr.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Well\\.gradle\\caches\\transforms-3\\a5cb20eef53abdb5a27c7961df0dd990\\transformed\\jetified-foundation-release\\res\\values-sr\\values-sr.xml",

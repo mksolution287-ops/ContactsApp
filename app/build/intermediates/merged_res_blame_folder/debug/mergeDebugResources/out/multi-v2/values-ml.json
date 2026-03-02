@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.contactsapp-mergeDebugResources-58:/values-ml/values-ml.xml",
+            "outputFile": "com.mktech.contactsapp-mergeDebugResources-58:/values-ml/values-ml.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Well\\.gradle\\caches\\transforms-3\\6766ec5797621481835e333a200c9c62\\transformed\\jetified-material3-release\\res\\values-ml\\values-ml.xml",

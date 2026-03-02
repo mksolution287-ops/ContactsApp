@@ -7,7 +7,7 @@
     <string name="com.google.firebase.crashlytics.version_control_info">""</string>
     <string name="gcm_defaultSenderId" translatable="false">222409537385</string>
     <string name="google_api_key" translatable="false">AIzaSyBPBAPJuHMJ-rCeW5h8wGHuHYpxWNmZ9Qw</string>
-    <string name="google_app_id" translatable="false">1:222409537385:android:8c16a80a8c9c78cf56aff8</string>
+    <string name="google_app_id" translatable="false">1:222409537385:android:af3a8e9d50475c2a56aff8</string>
     <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBPBAPJuHMJ-rCeW5h8wGHuHYpxWNmZ9Qw</string>
     <string name="google_storage_bucket" translatable="false">contact-1e9a6.firebasestorage.app</string>
     <string name="project_id" translatable="false">contact-1e9a6</string>
