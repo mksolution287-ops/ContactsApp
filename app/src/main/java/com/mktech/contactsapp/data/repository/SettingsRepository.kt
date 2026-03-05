@@ -21,7 +21,7 @@ class SettingsRepository(context: Context) {
         theme = AppTheme.valueOf(prefs.getString("theme", AppTheme.SYSTEM.name)!!),
         accentColor = AccentColor.valueOf(prefs.getString("accent_color", AccentColor.INDIGO.name)!!),
         sortByFirstName = prefs.getBoolean("sort_first_name", true),
-        showPhoneNumberInList = prefs.getBoolean("show_phone_in_list", true),
+        showPhoneNumberInList = prefs.getBoolean("show_phone_in_list", false),
         confirmBeforeDelete = prefs.getBoolean("confirm_delete", true)
     )
 

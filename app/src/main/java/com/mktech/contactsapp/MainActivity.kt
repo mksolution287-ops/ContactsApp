@@ -34,6 +34,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -140,11 +141,33 @@ class MainActivity : ComponentActivity() {
                 }
 
                 // Only hide splash after delay — do NOT auto-launch permission dialog
+//                LaunchedEffect(Unit) {
+//                    delay(2800)
+//                    showSplash = false
+//                }
+//
+//                LaunchedEffect(permsState.allPermissionsGranted) {
+//                    if (permsState.allPermissionsGranted) {
+//                        viewModel.loadDeviceContacts()
+//                        viewModel.loadDeviceCallLogs()
+//                    }
+//                }
+                // REPLACE the two LaunchedEffect(Unit) blocks with this single one:
                 LaunchedEffect(Unit) {
                     delay(2800)
                     showSplash = false
                 }
 
+// Request permissions only after default dialer is resolved
+                LaunchedEffect(isDefaultDialer.value, defaultSkipped) {
+                    if (isDefaultDialer.value || defaultSkipped) {
+                        if (!permsState.allPermissionsGranted) {
+                            permsState.launchMultiplePermissionRequest()
+                        }
+                    }
+                }
+
+                // Load data only after permissions granted
                 LaunchedEffect(permsState.allPermissionsGranted) {
                     if (permsState.allPermissionsGranted) {
                         viewModel.loadDeviceContacts()
@@ -158,8 +181,8 @@ class MainActivity : ComponentActivity() {
 
                 val currentScreen = when {
                     showSplash                                 -> "splash"
-                    !requiredPermissionsGranted                -> "permission"
                     !isDefaultDialer.value && !defaultSkipped -> "set_default"
+                    !requiredPermissionsGranted                -> "permission"
                     else                                       -> "main"
                 }
 
@@ -366,9 +389,10 @@ private fun SplashScreen() {
                         Brush.linearGradient(
                             colors = listOf(Color(0xFF1976D2), Color(0xFF42A5F5))
                         ),
-                        CircleShape
+                        shape = RoundedCornerShape(30.dp)
                     ),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
+
             ) {
                 Icon(
                     imageVector = Icons.Default.Call,

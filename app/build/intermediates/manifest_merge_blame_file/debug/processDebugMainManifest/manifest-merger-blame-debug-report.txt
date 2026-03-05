@@ -1,12 +1,12 @@
 1<?xml version="1.0" encoding="utf-8"?>
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
 3    package="com.mktech.contactsapp"
-4    android:versionCode="1"
-5    android:versionName="1.0" >
+4    android:versionCode="3"
+5    android:versionName="1.2" >
 6
 7    <uses-sdk
 8        android:minSdkVersion="26"
-9        android:targetSdkVersion="34" />
+9        android:targetSdkVersion="36" />
 10
 11    <uses-feature
 11-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:5:5-7:36
@@ -87,282 +87,281 @@
 46-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:31:9-54
 47        android:supportsRtl="true"
 47-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:32:9-35
-48        android:testOnly="true"
-49        android:theme="@style/Theme.ContactsApp" >
-49-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:33:9-49
-50        <activity
-50-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:37:9-44:56
-51            android:name="com.mktech.contactsapp.IncomingCallActivity"
-51-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:38:13-49
-52            android:excludeFromRecents="true"
-52-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:42:13-46
-53            android:exported="true"
-53-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:39:13-36
-54            android:launchMode="singleInstance"
-54-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:43:13-48
-55            android:showOnLockScreen="true"
-55-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:40:13-44
-56            android:theme="@style/Theme.ContactsApp"
-56-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:44:13-53
-57            android:turnScreenOn="true" />
-57-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:41:13-40
-58
-59        <receiver
-59-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:46:9-48:40
-60            android:name="com.mktech.contactsapp.CallActionReceiver"
-60-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:47:13-47
-61            android:exported="false" />
-61-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:48:13-37
-62
-63        <service
-63-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:50:9-60:19
-64            android:name="com.mktech.contactsapp.CallService"
-64-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:51:13-40
-65            android:exported="true"
-65-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:53:13-36
-66            android:permission="android.permission.BIND_INCALL_SERVICE" >
-66-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:52:13-72
-67            <intent-filter>
-67-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:54:13-56:29
-68                <action android:name="android.telecom.InCallService" />
-68-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:55:17-72
-68-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:55:25-69
-69            </intent-filter>
-70
-71            <meta-data
-71-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:57:13-59:40
-72                android:name="android.telecom.IN_CALL_SERVICE_UI"
-72-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:58:17-66
-73                android:value="true" />
-73-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:59:17-37
-74        </service>
-75        <service
-75-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:62:9-69:19
-76            android:name="com.mktech.contactsapp.CallConnectionService"
-76-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:63:13-50
-77            android:exported="true"
-77-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:65:13-36
-78            android:permission="android.permission.BIND_TELECOM_CONNECTION_SERVICE" >
-78-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:64:13-84
-79            <intent-filter>
-79-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:66:13-68:29
-80                <action android:name="android.telecom.ConnectionService" />
-80-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:67:17-76
-80-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:67:25-73
-81            </intent-filter>
-82        </service>
-83
-84        <activity
-84-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:70:9-126:20
-85            android:name="com.mktech.contactsapp.MainActivity"
-85-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:71:13-41
-86            android:exported="true"
-86-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:72:13-36
-87            android:theme="@style/Theme.ContactsApp"
-87-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:73:13-53
-88            android:windowSoftInputMode="adjustResize" >
-88-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:74:13-55
-89
-90            <!-- Launcher -->
-91            <intent-filter>
-91-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:77:13-80:29
-92                <action android:name="android.intent.action.MAIN" />
-92-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:78:17-69
-92-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:78:25-66
-93
-94                <category android:name="android.intent.category.LAUNCHER" />
-94-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:79:17-77
-94-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:79:27-74
-95            </intent-filter>
-96
-97            <!-- Dial number — PRIMARY filter, needs APP_DIALER category -->
-98            <intent-filter>
-98-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:83:13-89:29
-99                <action android:name="android.intent.action.DIAL" />
-99-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:84:17-69
-99-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:84:25-66
-100
-101                <category android:name="android.intent.category.DEFAULT" />
-101-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:17-76
-101-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:27-73
-102                <category android:name="android.intent.category.BROWSABLE" />
-102-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:86:17-78
-102-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:86:27-75
-103                <category android:name="android.intent.category.APP_DIALER" />
-103-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:87:17-79
-103-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:87:27-76
-104
-105                <data android:scheme="tel" />
-105-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:88:17-46
-105-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:88:23-43
-106            </intent-filter>
-107
-108            <!-- Dial with no data (open dialer directly) -->
-109            <intent-filter>
-109-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:92:13-95:29
-110                <action android:name="android.intent.action.DIAL" />
-110-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:84:17-69
-110-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:84:25-66
-111
-112                <category android:name="android.intent.category.DEFAULT" />
-112-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:17-76
-112-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:27-73
-113            </intent-filter>
-114
-115            <!-- Voicemail — required for ROLE_DIALER eligibility -->
-116            <intent-filter>
-116-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:98:13-102:29
-117                <action android:name="android.intent.action.DIAL" />
-117-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:84:17-69
-117-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:84:25-66
-118
-119                <category android:name="android.intent.category.DEFAULT" />
-119-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:17-76
-119-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:27-73
-120
-121                <data android:scheme="voicemail" />
-121-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:88:17-46
-121-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:88:23-43
-122            </intent-filter>
-123
-124            <!-- Place call -->
-125            <intent-filter>
-125-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:105:13-109:29
-126                <action android:name="android.intent.action.CALL" />
-126-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:106:17-69
-126-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:106:25-66
-127
-128                <category android:name="android.intent.category.DEFAULT" />
-128-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:17-76
-128-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:27-73
-129
-130                <data android:scheme="tel" />
-130-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:88:17-46
-130-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:88:23-43
-131            </intent-filter>
-132
-133            <!-- View contacts -->
-134            <intent-filter>
-134-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:112:13-116:29
-135                <action android:name="android.intent.action.VIEW" />
-135-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:113:17-69
-135-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:113:25-66
-136
-137                <category android:name="android.intent.category.DEFAULT" />
-137-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:17-76
-137-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:27-73
-138
-139                <data android:mimeType="vnd.android.cursor.dir/contact" />
-139-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:88:17-46
-139-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:115:23-72
-140            </intent-filter>
-141
-142            <!-- Pick contact -->
-143            <intent-filter>
-143-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:119:13-124:29
-144                <action android:name="android.intent.action.PICK" />
-144-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:120:17-69
-144-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:120:25-66
-145
-146                <category android:name="android.intent.category.DEFAULT" />
-146-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:17-76
-146-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:27-73
-147
-148                <data android:mimeType="vnd.android.cursor.dir/contact" />
+48        android:theme="@style/Theme.ContactsApp" >
+48-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:33:9-49
+49        <activity
+49-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:37:9-44:56
+50            android:name="com.mktech.contactsapp.IncomingCallActivity"
+50-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:38:13-49
+51            android:excludeFromRecents="true"
+51-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:42:13-46
+52            android:exported="true"
+52-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:39:13-36
+53            android:launchMode="singleInstance"
+53-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:43:13-48
+54            android:showOnLockScreen="true"
+54-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:40:13-44
+55            android:theme="@style/Theme.ContactsApp"
+55-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:44:13-53
+56            android:turnScreenOn="true" />
+56-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:41:13-40
+57
+58        <receiver
+58-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:46:9-48:40
+59            android:name="com.mktech.contactsapp.CallActionReceiver"
+59-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:47:13-47
+60            android:exported="false" />
+60-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:48:13-37
+61
+62        <service
+62-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:50:9-60:19
+63            android:name="com.mktech.contactsapp.CallService"
+63-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:51:13-40
+64            android:exported="true"
+64-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:53:13-36
+65            android:permission="android.permission.BIND_INCALL_SERVICE" >
+65-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:52:13-72
+66            <intent-filter>
+66-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:54:13-56:29
+67                <action android:name="android.telecom.InCallService" />
+67-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:55:17-72
+67-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:55:25-69
+68            </intent-filter>
+69
+70            <meta-data
+70-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:57:13-59:40
+71                android:name="android.telecom.IN_CALL_SERVICE_UI"
+71-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:58:17-66
+72                android:value="true" />
+72-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:59:17-37
+73        </service>
+74        <service
+74-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:62:9-69:19
+75            android:name="com.mktech.contactsapp.CallConnectionService"
+75-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:63:13-50
+76            android:exported="true"
+76-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:65:13-36
+77            android:permission="android.permission.BIND_TELECOM_CONNECTION_SERVICE" >
+77-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:64:13-84
+78            <intent-filter>
+78-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:66:13-68:29
+79                <action android:name="android.telecom.ConnectionService" />
+79-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:67:17-76
+79-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:67:25-73
+80            </intent-filter>
+81        </service>
+82
+83        <activity
+83-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:70:9-126:20
+84            android:name="com.mktech.contactsapp.MainActivity"
+84-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:71:13-41
+85            android:exported="true"
+85-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:72:13-36
+86            android:theme="@style/Theme.ContactsApp"
+86-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:73:13-53
+87            android:windowSoftInputMode="adjustResize" >
+87-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:74:13-55
+88
+89            <!-- Launcher -->
+90            <intent-filter>
+90-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:77:13-80:29
+91                <action android:name="android.intent.action.MAIN" />
+91-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:78:17-69
+91-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:78:25-66
+92
+93                <category android:name="android.intent.category.LAUNCHER" />
+93-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:79:17-77
+93-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:79:27-74
+94            </intent-filter>
+95
+96            <!-- Dial number — PRIMARY filter, needs APP_DIALER category -->
+97            <intent-filter>
+97-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:83:13-89:29
+98                <action android:name="android.intent.action.DIAL" />
+98-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:84:17-69
+98-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:84:25-66
+99
+100                <category android:name="android.intent.category.DEFAULT" />
+100-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:17-76
+100-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:27-73
+101                <category android:name="android.intent.category.BROWSABLE" />
+101-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:86:17-78
+101-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:86:27-75
+102                <category android:name="android.intent.category.APP_DIALER" />
+102-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:87:17-79
+102-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:87:27-76
+103
+104                <data android:scheme="tel" />
+104-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:88:17-46
+104-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:88:23-43
+105            </intent-filter>
+106
+107            <!-- Dial with no data (open dialer directly) -->
+108            <intent-filter>
+108-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:92:13-95:29
+109                <action android:name="android.intent.action.DIAL" />
+109-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:84:17-69
+109-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:84:25-66
+110
+111                <category android:name="android.intent.category.DEFAULT" />
+111-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:17-76
+111-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:27-73
+112            </intent-filter>
+113
+114            <!-- Voicemail — required for ROLE_DIALER eligibility -->
+115            <intent-filter>
+115-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:98:13-102:29
+116                <action android:name="android.intent.action.DIAL" />
+116-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:84:17-69
+116-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:84:25-66
+117
+118                <category android:name="android.intent.category.DEFAULT" />
+118-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:17-76
+118-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:27-73
+119
+120                <data android:scheme="voicemail" />
+120-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:88:17-46
+120-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:88:23-43
+121            </intent-filter>
+122
+123            <!-- Place call -->
+124            <intent-filter>
+124-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:105:13-109:29
+125                <action android:name="android.intent.action.CALL" />
+125-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:106:17-69
+125-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:106:25-66
+126
+127                <category android:name="android.intent.category.DEFAULT" />
+127-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:17-76
+127-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:27-73
+128
+129                <data android:scheme="tel" />
+129-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:88:17-46
+129-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:88:23-43
+130            </intent-filter>
+131
+132            <!-- View contacts -->
+133            <intent-filter>
+133-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:112:13-116:29
+134                <action android:name="android.intent.action.VIEW" />
+134-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:113:17-69
+134-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:113:25-66
+135
+136                <category android:name="android.intent.category.DEFAULT" />
+136-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:17-76
+136-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:27-73
+137
+138                <data android:mimeType="vnd.android.cursor.dir/contact" />
+138-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:88:17-46
+138-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:115:23-72
+139            </intent-filter>
+140
+141            <!-- Pick contact -->
+142            <intent-filter>
+142-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:119:13-124:29
+143                <action android:name="android.intent.action.PICK" />
+143-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:120:17-69
+143-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:120:25-66
+144
+145                <category android:name="android.intent.category.DEFAULT" />
+145-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:17-76
+145-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:85:27-73
+146
+147                <data android:mimeType="vnd.android.cursor.dir/contact" />
+147-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:88:17-46
+147-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:115:23-72
+148                <data android:mimeType="vnd.android.cursor.dir/phone_v2" />
 148-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:88:17-46
 148-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:115:23-72
-149                <data android:mimeType="vnd.android.cursor.dir/phone_v2" />
-149-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:88:17-46
-149-->C:\Users\Well\Downloads\ContactsApp (1)\ContactsApp\app\src\main\AndroidManifest.xml:115:23-72
-150            </intent-filter>
-151        </activity>
-152        <activity
-152-->[androidx.compose.ui:ui-test-manifest:1.6.3] C:\Users\Well\.gradle\caches\transforms-3\11639b451feedb2c29b58e1db47ced93\transformed\jetified-ui-test-manifest-1.6.3\AndroidManifest.xml:23:9-25:39
-153            android:name="androidx.activity.ComponentActivity"
-153-->[androidx.compose.ui:ui-test-manifest:1.6.3] C:\Users\Well\.gradle\caches\transforms-3\11639b451feedb2c29b58e1db47ced93\transformed\jetified-ui-test-manifest-1.6.3\AndroidManifest.xml:24:13-63
-154            android:exported="true" />
-154-->[androidx.compose.ui:ui-test-manifest:1.6.3] C:\Users\Well\.gradle\caches\transforms-3\11639b451feedb2c29b58e1db47ced93\transformed\jetified-ui-test-manifest-1.6.3\AndroidManifest.xml:25:13-36
-155        <activity
-155-->[androidx.compose.ui:ui-tooling-android:1.6.3] C:\Users\Well\.gradle\caches\transforms-3\40ba3b6561880bf925ed455b1d47d425\transformed\jetified-ui-tooling-release\AndroidManifest.xml:23:9-25:39
-156            android:name="androidx.compose.ui.tooling.PreviewActivity"
-156-->[androidx.compose.ui:ui-tooling-android:1.6.3] C:\Users\Well\.gradle\caches\transforms-3\40ba3b6561880bf925ed455b1d47d425\transformed\jetified-ui-tooling-release\AndroidManifest.xml:24:13-71
-157            android:exported="true" />
-157-->[androidx.compose.ui:ui-tooling-android:1.6.3] C:\Users\Well\.gradle\caches\transforms-3\40ba3b6561880bf925ed455b1d47d425\transformed\jetified-ui-tooling-release\AndroidManifest.xml:25:13-36
-158
-159        <provider
-159-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Well\.gradle\caches\transforms-3\a60ff7e5e574108984ca7d191e0dbcd6\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
-160            android:name="androidx.startup.InitializationProvider"
-160-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Well\.gradle\caches\transforms-3\a60ff7e5e574108984ca7d191e0dbcd6\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:25:13-67
-161            android:authorities="com.mktech.contactsapp.androidx-startup"
-161-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Well\.gradle\caches\transforms-3\a60ff7e5e574108984ca7d191e0dbcd6\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:26:13-68
-162            android:exported="false" >
-162-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Well\.gradle\caches\transforms-3\a60ff7e5e574108984ca7d191e0dbcd6\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:27:13-37
-163            <meta-data
-163-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Well\.gradle\caches\transforms-3\a60ff7e5e574108984ca7d191e0dbcd6\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
-164                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-164-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Well\.gradle\caches\transforms-3\a60ff7e5e574108984ca7d191e0dbcd6\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:30:17-75
-165                android:value="androidx.startup" />
-165-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Well\.gradle\caches\transforms-3\a60ff7e5e574108984ca7d191e0dbcd6\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:31:17-49
-166            <meta-data
-166-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\Well\.gradle\caches\transforms-3\7ea73ab8d36ababdcd74f8d25fc892f6\transformed\jetified-lifecycle-process-2.7.0\AndroidManifest.xml:29:13-31:52
-167                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-167-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\Well\.gradle\caches\transforms-3\7ea73ab8d36ababdcd74f8d25fc892f6\transformed\jetified-lifecycle-process-2.7.0\AndroidManifest.xml:30:17-78
-168                android:value="androidx.startup" />
-168-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\Well\.gradle\caches\transforms-3\7ea73ab8d36ababdcd74f8d25fc892f6\transformed\jetified-lifecycle-process-2.7.0\AndroidManifest.xml:31:17-49
-169            <meta-data
-169-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
-170                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-170-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
-171                android:value="androidx.startup" />
-171-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
-172        </provider>
-173
-174        <service
-174-->[androidx.room:room-runtime:2.6.1] C:\Users\Well\.gradle\caches\transforms-3\a91f13c0fcffdd2bc1dad0b93842be78\transformed\room-runtime-2.6.1\AndroidManifest.xml:24:9-28:63
-175            android:name="androidx.room.MultiInstanceInvalidationService"
-175-->[androidx.room:room-runtime:2.6.1] C:\Users\Well\.gradle\caches\transforms-3\a91f13c0fcffdd2bc1dad0b93842be78\transformed\room-runtime-2.6.1\AndroidManifest.xml:25:13-74
-176            android:directBootAware="true"
-176-->[androidx.room:room-runtime:2.6.1] C:\Users\Well\.gradle\caches\transforms-3\a91f13c0fcffdd2bc1dad0b93842be78\transformed\room-runtime-2.6.1\AndroidManifest.xml:26:13-43
-177            android:exported="false" />
-177-->[androidx.room:room-runtime:2.6.1] C:\Users\Well\.gradle\caches\transforms-3\a91f13c0fcffdd2bc1dad0b93842be78\transformed\room-runtime-2.6.1\AndroidManifest.xml:27:13-37
-178
-179        <receiver
-179-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
-180            android:name="androidx.profileinstaller.ProfileInstallReceiver"
-180-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
-181            android:directBootAware="false"
-181-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
-182            android:enabled="true"
-182-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
-183            android:exported="true"
-183-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
-184            android:permission="android.permission.DUMP" >
-184-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
-185            <intent-filter>
-185-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
-186                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
-186-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
-186-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
-187            </intent-filter>
-188            <intent-filter>
-188-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
-189                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
-189-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
-189-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
-190            </intent-filter>
-191            <intent-filter>
-191-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
-192                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
-192-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
-192-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
-193            </intent-filter>
-194            <intent-filter>
-194-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
-195                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
-195-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
-195-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:50:25-92
-196            </intent-filter>
-197        </receiver>
-198    </application>
-199
-200</manifest>
+149            </intent-filter>
+150        </activity>
+151        <activity
+151-->[androidx.compose.ui:ui-test-manifest:1.6.3] C:\Users\Well\.gradle\caches\transforms-3\11639b451feedb2c29b58e1db47ced93\transformed\jetified-ui-test-manifest-1.6.3\AndroidManifest.xml:23:9-25:39
+152            android:name="androidx.activity.ComponentActivity"
+152-->[androidx.compose.ui:ui-test-manifest:1.6.3] C:\Users\Well\.gradle\caches\transforms-3\11639b451feedb2c29b58e1db47ced93\transformed\jetified-ui-test-manifest-1.6.3\AndroidManifest.xml:24:13-63
+153            android:exported="true" />
+153-->[androidx.compose.ui:ui-test-manifest:1.6.3] C:\Users\Well\.gradle\caches\transforms-3\11639b451feedb2c29b58e1db47ced93\transformed\jetified-ui-test-manifest-1.6.3\AndroidManifest.xml:25:13-36
+154        <activity
+154-->[androidx.compose.ui:ui-tooling-android:1.6.3] C:\Users\Well\.gradle\caches\transforms-3\40ba3b6561880bf925ed455b1d47d425\transformed\jetified-ui-tooling-release\AndroidManifest.xml:23:9-25:39
+155            android:name="androidx.compose.ui.tooling.PreviewActivity"
+155-->[androidx.compose.ui:ui-tooling-android:1.6.3] C:\Users\Well\.gradle\caches\transforms-3\40ba3b6561880bf925ed455b1d47d425\transformed\jetified-ui-tooling-release\AndroidManifest.xml:24:13-71
+156            android:exported="true" />
+156-->[androidx.compose.ui:ui-tooling-android:1.6.3] C:\Users\Well\.gradle\caches\transforms-3\40ba3b6561880bf925ed455b1d47d425\transformed\jetified-ui-tooling-release\AndroidManifest.xml:25:13-36
+157
+158        <provider
+158-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Well\.gradle\caches\transforms-3\a60ff7e5e574108984ca7d191e0dbcd6\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+159            android:name="androidx.startup.InitializationProvider"
+159-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Well\.gradle\caches\transforms-3\a60ff7e5e574108984ca7d191e0dbcd6\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:25:13-67
+160            android:authorities="com.mktech.contactsapp.androidx-startup"
+160-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Well\.gradle\caches\transforms-3\a60ff7e5e574108984ca7d191e0dbcd6\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:26:13-68
+161            android:exported="false" >
+161-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Well\.gradle\caches\transforms-3\a60ff7e5e574108984ca7d191e0dbcd6\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:27:13-37
+162            <meta-data
+162-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Well\.gradle\caches\transforms-3\a60ff7e5e574108984ca7d191e0dbcd6\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+163                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+163-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Well\.gradle\caches\transforms-3\a60ff7e5e574108984ca7d191e0dbcd6\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:30:17-75
+164                android:value="androidx.startup" />
+164-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Well\.gradle\caches\transforms-3\a60ff7e5e574108984ca7d191e0dbcd6\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:31:17-49
+165            <meta-data
+165-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\Well\.gradle\caches\transforms-3\7ea73ab8d36ababdcd74f8d25fc892f6\transformed\jetified-lifecycle-process-2.7.0\AndroidManifest.xml:29:13-31:52
+166                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+166-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\Well\.gradle\caches\transforms-3\7ea73ab8d36ababdcd74f8d25fc892f6\transformed\jetified-lifecycle-process-2.7.0\AndroidManifest.xml:30:17-78
+167                android:value="androidx.startup" />
+167-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\Well\.gradle\caches\transforms-3\7ea73ab8d36ababdcd74f8d25fc892f6\transformed\jetified-lifecycle-process-2.7.0\AndroidManifest.xml:31:17-49
+168            <meta-data
+168-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
+169                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+169-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
+170                android:value="androidx.startup" />
+170-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
+171        </provider>
+172
+173        <service
+173-->[androidx.room:room-runtime:2.6.1] C:\Users\Well\.gradle\caches\transforms-3\a91f13c0fcffdd2bc1dad0b93842be78\transformed\room-runtime-2.6.1\AndroidManifest.xml:24:9-28:63
+174            android:name="androidx.room.MultiInstanceInvalidationService"
+174-->[androidx.room:room-runtime:2.6.1] C:\Users\Well\.gradle\caches\transforms-3\a91f13c0fcffdd2bc1dad0b93842be78\transformed\room-runtime-2.6.1\AndroidManifest.xml:25:13-74
+175            android:directBootAware="true"
+175-->[androidx.room:room-runtime:2.6.1] C:\Users\Well\.gradle\caches\transforms-3\a91f13c0fcffdd2bc1dad0b93842be78\transformed\room-runtime-2.6.1\AndroidManifest.xml:26:13-43
+176            android:exported="false" />
+176-->[androidx.room:room-runtime:2.6.1] C:\Users\Well\.gradle\caches\transforms-3\a91f13c0fcffdd2bc1dad0b93842be78\transformed\room-runtime-2.6.1\AndroidManifest.xml:27:13-37
+177
+178        <receiver
+178-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
+179            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+179-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
+180            android:directBootAware="false"
+180-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
+181            android:enabled="true"
+181-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
+182            android:exported="true"
+182-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
+183            android:permission="android.permission.DUMP" >
+183-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
+184            <intent-filter>
+184-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
+185                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+185-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
+185-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
+186            </intent-filter>
+187            <intent-filter>
+187-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
+188                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+188-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
+188-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
+189            </intent-filter>
+190            <intent-filter>
+190-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
+191                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+191-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
+191-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
+192            </intent-filter>
+193            <intent-filter>
+193-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
+194                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+194-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
+194-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Well\.gradle\caches\transforms-3\04ad4fe13e954479a1b169e8fe82cdce\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:50:25-92
+195            </intent-filter>
+196        </receiver>
+197    </application>
+198
+199</manifest>

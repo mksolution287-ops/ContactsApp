@@ -11,14 +11,15 @@ plugins {
 
 android {
     namespace = "com.mktech.contactsapp"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.mktech.contactsapp"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        //noinspection EditedTargetSdkVersion
+        targetSdk = 36
+        versionCode = 3
+        versionName = "1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
