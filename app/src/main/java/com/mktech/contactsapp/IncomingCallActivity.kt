@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -193,7 +194,7 @@ fun IncomingCallScreen(
                 modifier = Modifier.padding(top = 80.dp)
             ) {
                 Text(
-                    "Incoming Call",
+                    stringResource(R.string.incoming_call),
                     color = Color.White.copy(alpha = 0.55f),
                     fontSize = 13.sp,
                     letterSpacing = 2.sp
@@ -264,7 +265,7 @@ fun IncomingCallScreen(
                         Icon(Icons.Default.CallEnd, "Decline", Modifier.size(34.dp))
                     }
                     Spacer(Modifier.height(10.dp))
-                    Text("Decline", color = Color.White.copy(alpha = 0.8f), fontSize = 13.sp)
+                    Text(stringResource(R.string.decline), color = Color.White.copy(alpha = 0.8f), fontSize = 13.sp)
                 }
 
                 // Answer
@@ -384,7 +385,7 @@ fun ActiveCallScreen(
                 ) {
                     // App name
                     Text(
-                        text       = "ContactsApp",
+                        text       = stringResource(R.string.app_name),
                         color      = Color.White,
                         fontSize   = 15.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -509,7 +510,7 @@ fun ActiveCallScreen(
 //                    )
                     CallControlButton(
                         icon   = if (isMuted) Icons.Default.MicOff else Icons.Default.Mic,
-                        label  = if (isMuted) "Unmute" else "Mute",
+                        label  = if (isMuted) stringResource(R.string.unmute) else stringResource(R.string.mute),
                         active = isMuted,
                         onClick = { CallManager.toggleMute() }  // ← listener updates isMuted automatically
                     )
@@ -532,7 +533,7 @@ fun ActiveCallScreen(
                             Icon(Icons.Default.CallEnd, "End", Modifier.size(30.dp))
                         }
                         Spacer(Modifier.height(6.dp))
-                        Text("End", color = Color.White.copy(alpha = 0.7f), fontSize = 12.sp)
+                        Text(stringResource(R.string.end_call), color = Color.White.copy(alpha = 0.7f), fontSize = 12.sp)
                     }
 
 //                    CallControlButton(
@@ -546,7 +547,7 @@ fun ActiveCallScreen(
 //                    )
                     CallControlButton(
                         icon   = Icons.Default.VolumeUp,
-                        label  = if (isSpeaker) "Earpiece" else "Speaker",
+                        label  = if (isSpeaker) stringResource(R.string.earpiece) else stringResource(R.string.speaker),
                         active = isSpeaker,
                         onClick = { CallManager.toggleSpeaker() }  // ← listener updates isSpeaker automatically
                     )

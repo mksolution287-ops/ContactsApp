@@ -1,6 +1,7 @@
 package com.mktech.contactsapp.ui.navigation
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
@@ -20,15 +21,19 @@ import com.mktech.contactsapp.data.model.CallLog
 import com.mktech.contactsapp.ui.screens.*
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import com.mktech.contactsapp.ui.viewmodel.ContactViewModel
+import com.mktech.contactsapp.data.AnalyticsTracker
+import com.mktech.contactsapp.data.repository.SettingsRepository
 import kotlinx.coroutines.launch
+import com.mktech.contactsapp.R
 
 // ── Route constants ──────────────────────────────────────────────────────────
 object Routes {
-    const val CONTACTS   = "contacts"
-    const val RECENTS    = "recents"
-    const val DIALER     = "dialer"
-    const val SETTINGS   = "settings"
+    const val CONTACTS       = "contacts"
+    const val RECENTS        = "recents"
+    const val DIALER         = "dialer"
+    const val SETTINGS       = "settings"
     const val CONTACT_DETAIL = "contact_detail/{contactId}"
     fun contactDetail(id: Long?) = "contact_detail/${id ?: -1L}"
 }
@@ -46,31 +51,40 @@ data class BottomNavItem(
 fun ContactNavigation(
     navController: NavHostController,
     viewModel: ContactViewModel,
-//    calllogviewmodel: CallLogViewModel
 ) {
-    val contacts        by viewModel.contacts.collectAsState()
-    val searchQuery     by viewModel.searchQuery.collectAsState()
-    val showFavOnly     by viewModel.showFavoritesOnly.collectAsState()
-    val isLoading       by viewModel.isLoading.collectAsState()
-//    val allLogs         by viewModel.allCallLogs.collectAsState()
-//    val missedLogs      by viewModel.missedCalls.collectAsState()
-    val missedCount     by viewModel.missedCallCount.collectAsState()
-    val dialNumber      by viewModel.dialPadNumber.collectAsState()
-    val settings        by viewModel.settings.collectAsState()
-
-    val currentBack by navController.currentBackStackEntryAsState()
-    val currentRoute = currentBack?.destination?.route
-    val context = LocalContext.current
+    val contacts    by viewModel.contacts.collectAsState()
+    val searchQuery by viewModel.searchQuery.collectAsState()
+    val showFavOnly by viewModel.showFavoritesOnly.collectAsState()
+    val isLoading   by viewModel.isLoading.collectAsState()
+    val missedCount by viewModel.missedCallCount.collectAsState()
+    val dialNumber  by viewModel.dialPadNumber.collectAsState()
+    val settings    by viewModel.settings.collectAsState()
+    val context     = LocalContext.current
 
     val allLogs    by viewModel.allResolvedCallLogs.collectAsState()
     val missedLogs by viewModel.missedResolvedCalls.collectAsState()
+    val activity = LocalContext.current as? Activity
 
+    // ── Track screen views on every route change ─────────────────────────────
+    val currentBack by navController.currentBackStackEntryAsState()
+    val currentRoute = currentBack?.destination?.route
+    val settingsRepository = SettingsRepository(context)
+
+    LaunchedEffect(currentRoute) {
+        when (currentRoute) {
+            Routes.CONTACTS -> AnalyticsTracker.logScreenView("ContactList",   "ContactListScreen")
+            Routes.RECENTS  -> AnalyticsTracker.logScreenView("Recents",       "CallLogsScreen")
+            Routes.DIALER   -> AnalyticsTracker.logScreenView("Dialer",        "DialPadScreen")
+            Routes.SETTINGS -> AnalyticsTracker.logScreenView("Settings",      "SettingsScreen")
+            Routes.CONTACT_DETAIL -> AnalyticsTracker.logScreenView("ContactDetail", "ContactDetailScreen")
+        }
+    }
 
     val bottomItems = listOf(
-        BottomNavItem(Routes.CONTACTS, "Contacts", Icons.Default.People),
-        BottomNavItem(Routes.RECENTS,  "Recents",  Icons.Default.History, missedCount),
-        BottomNavItem(Routes.DIALER,   "Dialer",   Icons.Default.Dialpad),
-        BottomNavItem(Routes.SETTINGS, "Settings", Icons.Default.Settings)
+        BottomNavItem(Routes.CONTACTS, stringResource(R.string.contacts), Icons.Default.People),
+        BottomNavItem(Routes.RECENTS,  stringResource(R.string.recents),  Icons.Default.History, missedCount),
+        BottomNavItem(Routes.DIALER,   stringResource(R.string.dialer),   Icons.Default.Dialpad),
+        BottomNavItem(Routes.SETTINGS, stringResource(R.string.settings), Icons.Default.Settings)
     )
 
     val showBottomBar = currentRoute in listOf(
@@ -81,18 +95,28 @@ fun ContactNavigation(
         topBar = {
             when (currentRoute) {
                 Routes.CONTACTS -> ContactsTopBar(
-                    searchQuery        = searchQuery,
-                    showFavoritesOnly  = showFavOnly,
-                    onSearchChange     = viewModel::updateSearchQuery,
-                    onToggleFavorites  = viewModel::toggleFavoritesFilter,
-                    onSyncContacts     = {
+                    searchQuery       = searchQuery,
+                    showFavoritesOnly = showFavOnly,
+                    onSearchChange    = { query ->
+                        viewModel.updateSearchQuery(query)
+                        // Log search only when user has typed at least 2 chars
+                        if (query.length >= 2) {
+                            AnalyticsTracker.logSearchUsed(contacts.size)
+                        }
+                    },
+                    onToggleFavorites = {
+                        viewModel.toggleFavoritesFilter()
+                        AnalyticsTracker.logFilterToggled(!showFavOnly) // toggled state
+                    },
+                    onSyncContacts = {
                         viewModel.loadDeviceContacts()
                         viewModel.loadDeviceCallLogs()
+                        AnalyticsTracker.logEvent("contacts_synced")   // sync tapped
                     }
                 )
-                Routes.RECENTS  -> SimpleTopBar("Recents")
-                Routes.DIALER   -> SimpleTopBar("Dial Pad")
-                Routes.SETTINGS -> SimpleTopBar("Settings")
+                Routes.RECENTS  -> SimpleTopBar(stringResource(R.string.recents))
+                Routes.DIALER   -> SimpleTopBar(stringResource(R.string.dialer))
+                Routes.SETTINGS -> SimpleTopBar(stringResource(R.string.settings))
                 else            -> {}
             }
         },
@@ -103,10 +127,13 @@ fun ContactNavigation(
                         NavigationBarItem(
                             selected = currentRoute == item.route,
                             onClick = {
+                                // ── Track bottom nav tab taps ────────────────
+                                AnalyticsTracker.logBottomNavTapped(item.route)
+
                                 navController.navigate(item.route) {
                                     popUpTo(Routes.CONTACTS) { saveState = true }
                                     launchSingleTop = true
-                                    restoreState = true
+                                    restoreState    = true
                                 }
                             },
                             icon = {
@@ -128,10 +155,11 @@ fun ContactNavigation(
         }
     ) { padding ->
         NavHost(
-            navController  = navController,
+            navController    = navController,
             startDestination = Routes.RECENTS,
-            modifier       = Modifier.padding(padding)
+            modifier         = Modifier.padding(padding)
         ) {
+
             // ── Contacts list ────────────────────────────────────────────
             composable(Routes.CONTACTS) {
                 ContactListScreen(
@@ -139,38 +167,68 @@ fun ContactNavigation(
                     showFavoritesOnly = showFavOnly,
                     isLoading         = isLoading,
                     settings          = settings,
-                    onContactClick    = { navController.navigate(Routes.contactDetail(it.id)) },
-                    onToggleFavorite  = viewModel::toggleFavorite,
-                    onAddContact      = { navController.navigate(Routes.contactDetail(null)) },
-                    onCallContact     = { viewModel.makeCall(context = context ,it) }
+                    onContactClick    = { contact ->
+                        AnalyticsTracker.logContactOpened(contact.id, contact.isFavorite)
+                        navController.navigate(Routes.contactDetail(contact.id))
+                    },
+                    onToggleFavorite  = { id, currentState ->
+                        AnalyticsTracker.logFavoriteToggled(id, !currentState)
+                        viewModel.toggleFavorite(id, currentState)
+                    },
+                    onAddContact      = {
+                        AnalyticsTracker.logEvent("add_contact_tapped", mapOf("source" to "contacts_fab"))
+                        navController.navigate(Routes.contactDetail(null))
+                    },
+                    onCallContact     = { number ->
+                        AnalyticsTracker.logContactCalled(hasImage = false)
+                        viewModel.makeCall(context = context, number)
+                    }
                 )
             }
 
             // ── Recents / Call logs ──────────────────────────────────────
             composable(Routes.RECENTS) {
+
+                // Track how many missed calls are visible on entry
+                LaunchedEffect(missedCount) {
+                    if (missedCount > 0) {
+                        AnalyticsTracker.logEvent("missed_calls_viewed",
+                            mapOf("missed_count" to missedCount.toString()))
+                    }
+                }
+
                 CallLogsScreen(
                     allLogs    = allLogs,
                     missedLogs = missedLogs,
                     onCallBack = { number ->
-//                        viewModel.dialPadSetNumber(number)
-//                        navController.navigate(Routes.DIALER) {
-//                            launchSingleTop = true
-//                        }
-                        viewModel.makeCall(context = context ,number)
+                        AnalyticsTracker.logEvent("callback_tapped",
+                            mapOf("source" to "recents"))
+                        viewModel.makeCall(context = context, number)
                     },
-                    onDeleteLog = viewModel::deleteCallLog,
-                    onClearAll  = viewModel::clearAllCallLogs,
-                    onSyncLogs  = viewModel::loadDeviceCallLogs,
-                    onContactClick = { phoneNumber ->  // ← ADD THIS
-                        // Find contact by phone number
+                    onDeleteLog = { log ->
+                        AnalyticsTracker.logEvent("call_log_deleted")
+                        viewModel.deleteCallLog(log)
+                    },
+                    onClearAll  = {
+                        AnalyticsTracker.logEvent("call_logs_cleared_all")
+                        viewModel.clearAllCallLogs()
+                    },
+                    onSyncLogs  = {
+                        AnalyticsTracker.logEvent("call_logs_synced")
+                        viewModel.loadDeviceCallLogs()
+                    },
+                    onContactClick = { phoneNumber ->
+                        AnalyticsTracker.logEvent("recents_contact_tapped",
+                            mapOf("source" to "recents_list"))
                         val scope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main)
                         scope.launch {
                             val contact = viewModel.contactRepository.getContactByPhone(phoneNumber)
                             if (contact != null) {
+                                AnalyticsTracker.logContactOpened(contact.id, contact.isFavorite)
                                 viewModel.dialPadClear()
                                 navController.navigate(Routes.contactDetail(contact.id))
                             } else {
-                                // Navigate to create new contact with pre-filled phone
+                                AnalyticsTracker.logEvent("new_contact_from_recents")
                                 viewModel.dialPadSetNumber(phoneNumber)
                                 navController.navigate(Routes.contactDetail(-1L))
                             }
@@ -183,33 +241,59 @@ fun ContactNavigation(
             composable(Routes.DIALER) {
                 val dialNumber by viewModel.dialPadNumber.collectAsState()
 
+                // Track when user has typed a full-length number (10+ digits)
+                LaunchedEffect(dialNumber) {
+                    if (dialNumber.length == 10) {
+                        AnalyticsTracker.logEvent("dialpad_full_number_entered")
+                    }
+                }
+
                 val matchingContacts by remember {
                     derivedStateOf {
-                        if (dialNumber.isNotEmpty()) {
-                            viewModel.getMatchingContacts(dialNumber)
-                        } else {
-                            emptyList()
-                        }
+                        if (dialNumber.isNotEmpty()) viewModel.getMatchingContacts(dialNumber)
+                        else emptyList()
+                    }
+                }
+
+                // Track when dialpad suggestions appear
+                LaunchedEffect(matchingContacts.size) {
+                    if (matchingContacts.isNotEmpty()) {
+                        AnalyticsTracker.logEvent("dialpad_suggestions_shown",
+                            mapOf("suggestion_count" to matchingContacts.size.toString()))
                     }
                 }
 
                 DialPadScreen(
                     number    = dialNumber,
-                    onKeyPress = viewModel::dialPadAppend,
-                    onDelete  = viewModel::dialPadDelete,
+                    onKeyPress = { key ->
+                        viewModel.dialPadAppend(key)
+                        AnalyticsTracker.logEvent("dialpad_key_pressed") // fires per key
+                    },
+                    onDelete  = {
+                        viewModel.dialPadDelete()
+                        AnalyticsTracker.logEvent("dialpad_backspace")
+                    },
                     onCall    = {
-                        if (dialNumber.isNotEmpty()) viewModel.makeCall(context, dialNumber)
+                        if (dialNumber.isNotEmpty()) {
+                            AnalyticsTracker.logEvent("dialpad_call_initiated",
+                                mapOf("number_length" to dialNumber.length.toString()))
+                            viewModel.makeCall(context, dialNumber)
+                        }
                     },
                     onSaveContact = {
+                        AnalyticsTracker.logEvent("save_contact_from_dialpad")
                         navController.navigate(Routes.contactDetail(-1L))
                     },
                     matchingContacts = matchingContacts,
-                    settings = settings,
-                    onContactClick = { contact ->  // ← Click to view details
+                    settings         = settings,
+                    onContactClick   = { contact ->
+                        AnalyticsTracker.logContactOpened(contact.id, contact.isFavorite)
                         navController.navigate(Routes.contactDetail(contact.id))
                     },
-                    onCallContact = { phoneNumber ->  // ← ADD THIS: Quick call
-                        viewModel.makeCall(context,phoneNumber)
+                    onCallContact    = { phoneNumber ->
+                        AnalyticsTracker.logEvent("quick_call_from_suggestion",
+                            mapOf("source" to "dialpad_suggestion"))
+                        viewModel.makeCall(context, phoneNumber)
                     }
                 )
             }
@@ -217,16 +301,41 @@ fun ContactNavigation(
             // ── Settings ─────────────────────────────────────────────────
             composable(Routes.SETTINGS) {
                 SettingsScreen(
-                    settings              = settings,
-                    onThemeChange         = viewModel::setTheme,
-                    onAccentColorChange   = viewModel::setAccentColor,
-                    onSortOrderChange     = viewModel::setSortOrder,
-                    onShowPhoneChange     = viewModel::setShowPhone,
-                    onConfirmDeleteChange = viewModel::setConfirmDelete
+                    settings            = settings,
+                    onThemeChange       = { theme ->
+                        AnalyticsTracker.logEvent("setting_changed",
+                            mapOf("setting" to "theme", "value" to theme.toString()))
+                        viewModel.setTheme(theme)
+                    },
+                    onAccentColorChange = { color ->
+                        AnalyticsTracker.logEvent("setting_changed",
+                            mapOf("setting" to "accent_color", "value" to color.toString()))
+                        viewModel.setAccentColor(color)
+                    },
+                    onSortOrderChange   = { sort ->
+                        AnalyticsTracker.logEvent("setting_changed",
+                            mapOf("setting" to "sort_order", "value" to sort.toString()))
+                        viewModel.setSortOrder(sort)
+                    },
+                    onShowPhoneChange   = { show ->
+                        AnalyticsTracker.logEvent("setting_changed",
+                            mapOf("setting" to "show_phone", "value" to show.toString()))
+                        viewModel.setShowPhone(show)
+                    },
+                    onConfirmDeleteChange = { confirm ->
+                        AnalyticsTracker.logEvent("setting_changed",
+                            mapOf("setting" to "confirm_delete", "value" to confirm.toString()))
+                        viewModel.setConfirmDelete(confirm)
+                    },
+                    onLanguageChange = { lang ->
+                        AnalyticsTracker.logEvent("setting_changed",
+                            mapOf("setting" to "language", "value" to lang.code))
+                        viewModel.setLanguage(lang)
+                        activity?.recreate()   // ← applies new locale immediately
+                    }
                 )
             }
 
-            // ── Contact detail / edit ────────────────────────────────────
             // ── Contact detail / edit ────────────────────────────────────
             composable(
                 route     = Routes.CONTACT_DETAIL,
@@ -234,21 +343,25 @@ fun ContactNavigation(
                     type = NavType.LongType; defaultValue = -1L
                 })
             ) { back ->
-                val contactId  = back.arguments?.getLong("contactId") ?: -1L
-                val isNew      = contactId == -1L
-                val scope      = rememberCoroutineScope()
-                var contact    by remember { mutableStateOf<com.mktech.contactsapp.data.model.Contact?>(null) }
-                var loading    by remember { mutableStateOf(!isNew) }
-
+                val contactId     = back.arguments?.getLong("contactId") ?: -1L
+                val isNew         = contactId == -1L
+                val scope         = rememberCoroutineScope()
+                var contact       by remember { mutableStateOf<com.mktech.contactsapp.data.model.Contact?>(null) }
+                var loading       by remember { mutableStateOf(!isNew) }
                 val prefilledPhone by viewModel.dialPadNumber.collectAsState()
+                var callHistory   by remember { mutableStateOf<List<CallLog>>(emptyList()) }
 
-                // ← ADD THIS: Get call history for this contact
-                var callHistory by remember { mutableStateOf<List<CallLog>>(emptyList()) }
-
+                // Track whether opened as new or existing
                 LaunchedEffect(contactId) {
-                    if (!isNew) {
+                    if (isNew) {
+                        AnalyticsTracker.logScreenView("NewContact", "ContactDetailScreen")
+                        AnalyticsTracker.logEvent("new_contact_screen_opened",
+                            mapOf("has_prefilled_phone" to prefilledPhone.isNotEmpty().toString()))
+                    } else {
+                        AnalyticsTracker.logScreenView("EditContact", "ContactDetailScreen")
                         loading = true
                         contact = viewModel.getContactById(contactId)
+                        AnalyticsTracker.logContactOpened(contactId, contact?.isFavorite ?: false)
                         loading = false
                     }
                 }
@@ -262,14 +375,17 @@ fun ContactNavigation(
                         contact        = contact,
                         isNewContact   = isNew,
                         prefilledPhone = if (isNew) prefilledPhone else null,
-                        callHistory    = callHistory,  // ← ADD THIS
+                        callHistory    = callHistory,
                         onSave = { updated ->
                             scope.launch {
                                 Log.d("ContactSave", "onSave called isNew=$isNew contact=$updated")
                                 if (isNew) {
+                                    AnalyticsTracker.logContactAdded()
                                     viewModel.addContact(updated)
                                     viewModel.dialPadClear()
                                 } else {
+                                    AnalyticsTracker.logEvent("contact_updated",
+                                        mapOf("contact_id" to updated.id.toString()))
                                     Log.d("ContactSave", "Calling updateContact id=${updated.id}")
                                     viewModel.updateContact(updated)
                                 }
@@ -278,12 +394,23 @@ fun ContactNavigation(
                         },
                         onDelete = {
                             scope.launch {
-                                contact?.let { viewModel.deleteContact(it) }
+                                contact?.let {
+                                    AnalyticsTracker.logEvent("contact_deleted",
+                                        mapOf("contact_id" to it.id.toString()))
+                                    viewModel.deleteContact(it)
+                                }
                                 navController.popBackStack()
                             }
                         },
-                        onBack = { navController.popBackStack() },
-                        onCallNow = @androidx.annotation.RequiresPermission(android.Manifest.permission.CALL_PHONE) { viewModel.makeCall(context,it) }
+                        onBack = {
+                            AnalyticsTracker.logEvent("contact_detail_back_pressed",
+                                mapOf("was_new" to isNew.toString()))
+                            navController.popBackStack()
+                        },
+                        onCallNow = @androidx.annotation.RequiresPermission(android.Manifest.permission.CALL_PHONE) { number ->
+                            AnalyticsTracker.logContactCalled(hasImage = contact?.profileImageUri != null)
+                            viewModel.makeCall(context, number)
+                        }
                     )
                 }
             }
@@ -309,12 +436,12 @@ private fun ContactsTopBar(
             AnimatedContent(targetState = searching, label = "search") { s ->
                 if (s) {
                     TextField(
-                        value = searchQuery,
+                        value         = searchQuery,
                         onValueChange = onSearchChange,
-                        modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text("Search contacts…") },
-                        singleLine = true,
-                        colors = TextFieldDefaults.colors(
+                        modifier      = Modifier.fillMaxWidth(),
+                        placeholder   = { Text(stringResource(R.string.search_contacts)) },
+                        singleLine    = true,
+                        colors        = TextFieldDefaults.colors(
                             focusedContainerColor   = androidx.compose.ui.graphics.Color.Transparent,
                             unfocusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
                             focusedIndicatorColor   = androidx.compose.ui.graphics.Color.Transparent,
@@ -322,22 +449,31 @@ private fun ContactsTopBar(
                         )
                     )
                 } else {
-                    Text("Contacts", fontWeight = FontWeight.Bold,
+                    Text(stringResource(R.string.contacts), fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.headlineSmall)
                 }
             }
         },
         actions = {
-            IconButton(onClick = { searching = !searching; if (!searching) onSearchChange("") }) {
-                Icon(if (searching) Icons.Default.Close else Icons.Default.Search,
-                    contentDescription = "Search")
+            IconButton(onClick = {
+                val opening = !searching
+                searching = opening
+                if (!searching) onSearchChange("")
+                AnalyticsTracker.logEvent(
+                    if (opening) "search_opened" else "search_closed"
+                )
+            }) {
+                Icon(
+                    if (searching) Icons.Default.Close else Icons.Default.Search,
+                    contentDescription = "Search"
+                )
             }
             IconButton(onClick = onToggleFavorites) {
                 Icon(
                     if (showFavoritesOnly) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                     contentDescription = "Favorites",
                     tint = if (showFavoritesOnly) MaterialTheme.colorScheme.error
-                           else MaterialTheme.colorScheme.onSurfaceVariant
+                    else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
             IconButton(onClick = onSyncContacts) {
@@ -354,8 +490,10 @@ private fun ContactsTopBar(
 @Composable
 private fun SimpleTopBar(title: String) {
     TopAppBar(
-        title = { Text(title, fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.headlineSmall) },
+        title = {
+            Text(title, fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.headlineSmall)
+        },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.background
         )

@@ -14,6 +14,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,9 +30,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.mktech.contactsapp.R
 import com.mktech.contactsapp.data.model.AccentColor
+import com.mktech.contactsapp.data.model.AppLanguage
 import com.mktech.contactsapp.data.model.AppSettings
 import com.mktech.contactsapp.data.model.AppTheme
 
@@ -42,19 +46,18 @@ fun SettingsScreen(
     onAccentColorChange: (AccentColor) -> Unit,
     onSortOrderChange: (Boolean) -> Unit,
     onShowPhoneChange: (Boolean) -> Unit,
-    onConfirmDeleteChange: (Boolean) -> Unit
+    onConfirmDeleteChange: (Boolean) -> Unit,
+    onLanguageChange: (AppLanguage) -> Unit
 ) {
     val context = LocalContext.current
-    var visible by remember { mutableStateOf(false) }
     var isDefaultApp by remember { mutableStateOf(isDefaultDialerApp(context)) }
+    var showLanguagePicker by remember { mutableStateOf(false) }
 
-    val defaultDialerLauncher =
-        rememberLauncherForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) {
-            // Called when user returns from system dialog
-            isDefaultApp = isDefaultDialerApp(context)
-        }
+    val defaultDialerLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        isDefaultApp = isDefaultDialerApp(context)
+    }
 
     Column(
         modifier = Modifier
@@ -64,16 +67,12 @@ fun SettingsScreen(
     ) {
 
         // ── Default App ──────────────────────────────────────────────────
-        // ── Default App ──────────────────────────────────────────────────
         if (!isDefaultApp) {
-            SettingsSection(title = "Default App") {
+            SettingsSection(title = stringResource(R.string.default_app)) {
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable {
-                            Log.e("DEFAULT_DIALER", "Set as default button clicked")
-                            requestDefaultDialer(context, defaultDialerLauncher)
-                        }
+                        .clickable { requestDefaultDialer(context, defaultDialerLauncher) }
                         .padding(horizontal = 16.dp, vertical = 14.dp),
                     color = Color.Transparent
                 ) {
@@ -87,36 +86,34 @@ fun SettingsScreen(
                         Spacer(modifier = Modifier.width(12.dp))
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "Set as default contacts app",
+                                text = stringResource(R.string.set_as_default_contacts_app),
                                 style = MaterialTheme.typography.bodyLarge,
                                 fontWeight = FontWeight.Medium
                             )
                             Text(
-                                text = "Make this your default contacts and dialer app",
+                                text = stringResource(R.string.set_as_default_subtitle),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                         Icon(
                             imageVector = Icons.Default.ChevronRight,
-                            contentDescription = "Open settings",
+                            contentDescription = null,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(20.dp)
                         )
                     }
                 }
             }
-
             Spacer(modifier = Modifier.height(8.dp))
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
         // ── Appearance ───────────────────────────────────────────────────
-        SettingsSection(title = "Appearance") {
+        SettingsSection(title = stringResource(R.string.appearance)) {
 
-            // Theme
-            SettingsLabel(icon = Icons.Default.Palette, label = "Theme")
+            SettingsLabel(icon = Icons.Default.Palette, label = stringResource(R.string.theme))
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier
@@ -137,8 +134,7 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Accent Color
-            SettingsLabel(icon = Icons.Default.ColorLens, label = "Accent Color")
+            SettingsLabel(icon = Icons.Default.ColorLens, label = stringResource(R.string.accent_color))
             Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier
@@ -163,15 +159,108 @@ fun SettingsScreen(
             }
         }
 
+        Spacer(Modifier.height(8.dp))
+
+        // ── Language ─────────────────────────────────────────────────────
+        SettingsSection(title = stringResource(R.string.language)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { showLanguagePicker = true }
+                    .padding(horizontal = 16.dp, vertical = 14.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Language,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(22.dp)
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = stringResource(R.string.language),
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Text(
+                        text = settings.language.nativeName,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Icon(
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+        }
+
+        if (showLanguagePicker) {
+            AlertDialog(
+                onDismissRequest = { showLanguagePicker = false },
+                title = {
+                    Text(stringResource(R.string.select_language), fontWeight = FontWeight.Bold)
+                },
+                text = {
+                    LazyColumn {
+                        item {
+                            AppLanguage.values().forEach { lang ->
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            onLanguageChange(lang)
+                                            showLanguagePicker = false
+                                        }
+                                        .padding(vertical = 12.dp, horizontal = 8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    RadioButton(
+                                        selected = settings.language == lang,
+                                        onClick = {
+                                            onLanguageChange(lang)
+                                            showLanguagePicker = false
+                                        }
+                                    )
+                                    Spacer(Modifier.width(8.dp))
+                                    Column {
+                                        Text(lang.nativeName, fontWeight = FontWeight.Medium)
+                                        if (lang.nativeName != lang.displayName) {
+                                            Text(
+                                                lang.displayName,
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { showLanguagePicker = false }) {
+                        Text(stringResource(R.string.cancel))
+                    }
+                }
+            )
+        }
+
         Spacer(modifier = Modifier.height(8.dp))
 
         // ── Contacts ─────────────────────────────────────────────────────
-        SettingsSection(title = "Contacts") {
+        SettingsSection(title = stringResource(R.string.contacts_section)) {
 
             SettingsToggleRow(
                 icon = Icons.Default.SortByAlpha,
-                title = "Sort by first name",
-                subtitle = if (settings.sortByFirstName) "Currently: First name first" else "Currently: Last name first",
+                title = stringResource(R.string.sort_by_first_name),
+                subtitle = stringResource(
+                    if (settings.sortByFirstName) R.string.sort_first_name_first
+                    else R.string.sort_last_name_first
+                ),
                 checked = settings.sortByFirstName,
                 onCheckedChange = onSortOrderChange
             )
@@ -180,8 +269,8 @@ fun SettingsScreen(
 
             SettingsToggleRow(
                 icon = Icons.Default.Phone,
-                title = "Show phone number in list",
-                subtitle = "Display phone number below contact name",
+                title = stringResource(R.string.show_phone_in_list),
+                subtitle = stringResource(R.string.show_phone_subtitle),
                 checked = settings.showPhoneNumberInList,
                 onCheckedChange = onShowPhoneChange
             )
@@ -190,8 +279,8 @@ fun SettingsScreen(
 
             SettingsToggleRow(
                 icon = Icons.Default.DeleteForever,
-                title = "Confirm before delete",
-                subtitle = "Show dialog before deleting contacts",
+                title = stringResource(R.string.confirm_before_delete),
+                subtitle = stringResource(R.string.confirm_delete_subtitle),
                 checked = settings.confirmBeforeDelete,
                 onCheckedChange = onConfirmDeleteChange
             )
@@ -199,164 +288,55 @@ fun SettingsScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // ── About ────────────────────────────────────────────────────────
-//        SettingsSection(title = "About") {
-//            SettingsInfoRow(
-//                icon = Icons.Default.Info,
-//                title = "Version",
-//                value = "1.0.0"
-//            )
-//            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
-//            SettingsInfoRow(
-//                icon = Icons.Default.Storage,
-//                title = "Storage",
-//                value = "Room DB (local)"
-//            )
-//        }
-        Spacer(modifier = Modifier.height(8.dp))
-
-// ── Legal ────────────────────────────────────────────────────────────
-        SettingsSection(title = "Legal") {
+        // ── Legal ─────────────────────────────────────────────────────────
+        SettingsSection(title = stringResource(R.string.legal)) {
             SettingsLinkRow(
                 icon = Icons.Default.Description,
-                title = "Terms & Conditions",
+                title = stringResource(R.string.terms_and_conditions),
                 url = "https://sites.google.com/view/mksolutionappstermsandcondtion/home",
                 context = context
             )
             HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
             SettingsLinkRow(
                 icon = Icons.Default.PrivacyTip,
-                title = "Privacy Policy",
+                title = stringResource(R.string.privacy_policy),
                 url = "https://sites.google.com/view/mksolutioncontactdilaerprivacy/home",
                 context = context
             )
         }
-
     }
 }
 
-// ← REPLACE the isDefaultDialerApp function
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
 private fun isDefaultDialerApp(context: Context): Boolean {
     return try {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val telecomManager = context.getSystemService(Context.TELECOM_SERVICE) as android.telecom.TelecomManager
+            val telecomManager = context.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
             context.packageName == telecomManager.defaultDialerPackage
-        } else {
-            false
-        }
-    } catch (e: Exception) {
-        false
-    }
+        } else false
+    } catch (e: Exception) { false }
 }
 
-// ← REPLACE the openDefaultAppSettings function
 private fun requestDefaultDialer(
     context: Context,
     launcher: androidx.activity.result.ActivityResultLauncher<Intent>
 ) {
-    Log.e("DEFAULT_DIALER", "requestDefaultDialer() called")
-
     try {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            Log.e("DEFAULT_DIALER", "Android 10+ detected")
-
-            val roleManager = context.getSystemService(RoleManager::class.java)
-
-            if (roleManager == null) {
-                Log.e("DEFAULT_DIALER", "❌ RoleManager is NULL")
-                return
-            }
-
-            Log.e(
-                "DEFAULT_DIALER",
-                "Role available: ${roleManager.isRoleAvailable(RoleManager.ROLE_DIALER)}"
-            )
-            Log.e(
-                "DEFAULT_DIALER",
-                "Role held: ${roleManager.isRoleHeld(RoleManager.ROLE_DIALER)}"
-            )
-
-            if (!roleManager.isRoleAvailable(RoleManager.ROLE_DIALER)) {
-                Log.e("DEFAULT_DIALER", "❌ ROLE_DIALER is NOT available on this device")
-                return
-            }
-
-            if (roleManager.isRoleHeld(RoleManager.ROLE_DIALER)) {
-                Log.e("DEFAULT_DIALER", "ℹ️ App is already default dialer")
-                return
-            }
-
-            Log.e("DEFAULT_DIALER", "✅ Launching ROLE_DIALER system dialog")
-            launcher.launch(
-                roleManager.createRequestRoleIntent(RoleManager.ROLE_DIALER)
-            )
-
+            val roleManager = context.getSystemService(RoleManager::class.java) ?: return
+            if (!roleManager.isRoleAvailable(RoleManager.ROLE_DIALER)) return
+            if (roleManager.isRoleHeld(RoleManager.ROLE_DIALER)) return
+            launcher.launch(roleManager.createRequestRoleIntent(RoleManager.ROLE_DIALER))
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Log.e("DEFAULT_DIALER", "Android 6–9 detected")
-
-            val intent = Intent(TelecomManager.ACTION_CHANGE_DEFAULT_DIALER).apply {
-                putExtra(
-                    TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME,
-                    context.packageName
-                )
-            }
-
-            Log.e("DEFAULT_DIALER", "✅ Launching legacy default dialer dialog")
-            launcher.launch(intent)
-
-        } else {
-            Log.e("DEFAULT_DIALER", "❌ Android version < 6, not supported")
-        }
-
-    } catch (e: Exception) {
-        Log.e("DEFAULT_DIALER", "🔥 Exception while requesting default dialer", e)
-    }
-}
-
-// ← ADD THIS: Legacy method for Android 6-9
-private fun openLegacyDefaultAppSettings(
-    context: Context,
-    launcher: androidx.activity.result.ActivityResultLauncher<Intent>
-) {
-    try {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val intent = Intent(android.telecom.TelecomManager.ACTION_CHANGE_DEFAULT_DIALER)
-            intent.putExtra(
-                android.telecom.TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME,
-                context.packageName
+            launcher.launch(
+                Intent(TelecomManager.ACTION_CHANGE_DEFAULT_DIALER).apply {
+                    putExtra(TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME, context.packageName)
+                }
             )
-            launcher.launch(intent)
         }
     } catch (e: Exception) {
         e.printStackTrace()
-        openManualDefaultAppSettings(context, launcher)
-    }
-}
-
-// ← ADD THIS: Manual fallback
-private fun openManualDefaultAppSettings(
-    context: Context,
-    launcher: androidx.activity.result.ActivityResultLauncher<Intent>
-) {
-    try {
-        // Try opening app settings
-        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-            data = android.net.Uri.parse("package:${context.packageName}")
-        }
-        launcher.launch(intent)
-
-        android.widget.Toast.makeText(
-            context,
-            "Please set as default in 'Set as default' or 'Open by default' section",
-            android.widget.Toast.LENGTH_LONG
-        ).show()
-    } catch (e: Exception) {
-        e.printStackTrace()
-        android.widget.Toast.makeText(
-            context,
-            "Could not open settings. Please set manually in system settings.",
-            android.widget.Toast.LENGTH_LONG
-        ).show()
     }
 }
 
@@ -444,12 +424,10 @@ private fun SettingsToggleRow(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-        Switch(
-            checked = checked,
-            onCheckedChange = onCheckedChange
-        )
+        Switch(checked = checked, onCheckedChange = onCheckedChange)
     }
 }
+
 @Composable
 private fun SettingsLinkRow(
     icon: ImageVector,
@@ -460,11 +438,7 @@ private fun SettingsLinkRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                context.startActivity(
-                    Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                )
-            }
+            .clickable { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))) }
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

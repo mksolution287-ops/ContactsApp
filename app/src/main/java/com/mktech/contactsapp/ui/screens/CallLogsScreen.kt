@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -30,6 +31,7 @@ import com.mktech.contactsapp.data.model.CallType
 import com.mktech.contactsapp.data.model.ResolvedCallLog  // ← only ResolvedCallLog, no CallLog import
 import java.text.SimpleDateFormat
 import java.util.*
+import com.mktech.contactsapp.R
 
 enum class CallLogFilter { ALL, MISSED, INCOMING, OUTGOING }
 
@@ -203,16 +205,16 @@ fun CallLogsScreen(
     if (showClearDialog) {
         AlertDialog(
             onDismissRequest = { showClearDialog = false },
-            title = { Text("Clear call history?") },
-            text  = { Text("All call logs will be permanently deleted.") },
+            title = { Text(stringResource(R.string.clear_call_history_title)) },
+            text  = { Text(stringResource(R.string.clear_call_history_message)) },
             confirmButton = {
                 TextButton(
                     onClick = { showClearDialog = false; onClearAll() },
                     colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
-                ) { Text("Clear All") }
+                ) { Text(stringResource(R.string.clear_all)) }
             },
             dismissButton = {
-                TextButton(onClick = { showClearDialog = false }) { Text("Cancel") }
+                TextButton(onClick = { showClearDialog = false }) { Text(stringResource(R.string.cancel)) }
             }
         )
     }

@@ -1,6 +1,7 @@
 package com.mktech.contactsapp
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.role.RoleManager
 import android.content.ComponentName
 import android.content.Context
@@ -18,6 +19,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,12 +33,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -50,6 +53,8 @@ import com.mktech.contactsapp.ui.viewmodel.ContactViewModelFactory
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.mktech.contactsapp.data.model.AppLanguage
+import com.mktech.contactsapp.util.LocaleHelper
 import kotlinx.coroutines.delay
 
 // ── Permission metadata ───────────────────────────────────────────────────────
@@ -62,28 +67,21 @@ private data class PermissionInfo(
 )
 
 private val permissionMeta = mapOf(
-    "READ_CONTACTS"         to PermissionInfo(Icons.Default.Contacts,     "Contacts",       "View and manage your contacts",         Color(0xFF4FC3F7)),
-    "CALL_PHONE"            to PermissionInfo(Icons.Default.Call,          "Phone Calls",    "Make and manage phone calls",           Color(0xFF81C784)),
-    "READ_CALL_LOG"         to PermissionInfo(Icons.Default.History,       "Call History",   "Access your call history",              Color(0xFFFFB74D)),
-    "READ_PHONE_STATE"      to PermissionInfo(Icons.Default.PhoneAndroid,  "Phone State",    "Monitor call status and state",         Color(0xFFCE93D8)),
-    "READ_MEDIA_IMAGES"     to PermissionInfo(Icons.Default.Image,         "Photos",         "Set profile pictures for contacts",     Color(0xFFF48FB1)),
-    "READ_EXTERNAL_STORAGE" to PermissionInfo(Icons.Default.Image,         "Storage",        "Access photos for contact avatars",     Color(0xFFF48FB1)),
-    "POST_NOTIFICATIONS"    to PermissionInfo(Icons.Default.Notifications, "Notifications",  "Get notified about calls and messages", Color(0xFFFFCC80)),
+    "READ_CONTACTS"         to PermissionInfo(Icons.Default.Contacts,    "Contacts",       "View and manage your contacts",         Color(0xFF4FC3F7)),
+    "CALL_PHONE"            to PermissionInfo(Icons.Default.Call,         "Phone Calls",    "Make and manage phone calls",           Color(0xFF81C784)),
+    "READ_CALL_LOG"         to PermissionInfo(Icons.Default.History,      "Call History",   "Access your call history",              Color(0xFFFFB74D)),
+    "READ_PHONE_STATE"      to PermissionInfo(Icons.Default.PhoneAndroid, "Phone State",    "Monitor call status and state",         Color(0xFFCE93D8)),
+    "READ_MEDIA_IMAGES"     to PermissionInfo(Icons.Default.Image,        "Photos",         "Set profile pictures for contacts",     Color(0xFFF48FB1)),
+    "READ_EXTERNAL_STORAGE" to PermissionInfo(Icons.Default.Image,        "Storage",        "Access photos for contact avatars",     Color(0xFFF48FB1)),
+    "POST_NOTIFICATIONS"    to PermissionInfo(Icons.Default.Notifications,"Notifications",  "Get notified about calls and messages", Color(0xFFFFCC80)),
 )
 
-// ── Permissions config ────────────────────────────────────────────────────────
-
-// Silently requested but never shown on cards
 private val hiddenFromCards = setOf("WRITE_CONTACTS", "WRITE_CALL_LOG")
-
-// Shown on cards with "Optional" badge — app proceeds without these
 private val optionalPermissionNames = setOf(
     "READ_MEDIA_IMAGES",
     "READ_EXTERNAL_STORAGE",
     "POST_NOTIFICATIONS"
 )
-
-// Not required to enter the app
 private val notRequiredForApp = setOf(
     Manifest.permission.READ_EXTERNAL_STORAGE,
     Manifest.permission.READ_MEDIA_IMAGES,
@@ -95,11 +93,27 @@ private val notRequiredForApp = setOf(
 // ─────────────────────────────────────────────────────────────────────────────
 
 class MainActivity : ComponentActivity() {
+
+    // Shared state between onCreate and onNewIntent
+    private var dialIntentNumber by mutableStateOf<String?>(null)
+    private var shouldAutoCall by mutableStateOf(false)
+
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         registerPhoneAccount(this)
         super.onCreate(savedInstanceState)
         val activity = this
+
+        // ── Extract number from external dial intent ──────────────────────
+        val intentNumber = when (intent?.action) {
+            Intent.ACTION_DIAL, Intent.ACTION_CALL -> {
+                intent.data?.schemeSpecificPart
+                    ?.let { android.net.Uri.decode(it) }
+                    ?.replace(" ", "")
+            }
+            else -> null
+        }
+
         setContent {
             val app = application as ContactsApplication
             val viewModel: ContactViewModel = viewModel(
@@ -110,7 +124,30 @@ class MainActivity : ComponentActivity() {
             )
             val settings by viewModel.settings.collectAsState()
 
+
             ContactsAppTheme(appTheme = settings.theme, accentColor = settings.accentColor) {
+
+                // ── Handle external dial intent ───────────────────────
+                LaunchedEffect(dialIntentNumber) {
+                    val number = dialIntentNumber
+                    if (!number.isNullOrEmpty()) {
+                        viewModel.dialPadSetNumber(number)
+                        if (shouldAutoCall) {
+                            delay(200)
+                            // Only auto-call if permission is granted
+                            if (androidx.core.content.ContextCompat.checkSelfPermission(
+                                    activity,
+                                    android.Manifest.permission.CALL_PHONE
+                                ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+                            ) {
+                                viewModel.makeCall(activity, number)
+                            }
+                            // If no permission, number is still pre-filled in dialer
+                            shouldAutoCall = false
+                        }
+                        dialIntentNumber = null
+                    }
+                }
 
                 val permissions = buildList {
                     add(Manifest.permission.READ_CONTACTS)
@@ -128,8 +165,15 @@ class MainActivity : ComponentActivity() {
 
                 val permsState = rememberMultiplePermissionsState(permissions)
 
-                var showSplash     by remember { mutableStateOf(true) }
-                var defaultSkipped by remember { mutableStateOf(false) }
+                var showSplash       by remember { mutableStateOf(true) }
+                var defaultSkipped   by remember { mutableStateOf(false) }
+
+                // Check if language has been chosen before (first launch detection)
+                val prefs = activity.getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+                val languageAlreadyChosen = remember {
+                    prefs.contains("language")
+                }
+                var languagePicked by remember { mutableStateOf(languageAlreadyChosen) }
 
                 val isDefaultDialer = remember { mutableStateOf(isDefaultDialer(this)) }
 
@@ -140,34 +184,11 @@ class MainActivity : ComponentActivity() {
                     if (isDefaultDialer.value) defaultSkipped = true
                 }
 
-                // Only hide splash after delay — do NOT auto-launch permission dialog
-//                LaunchedEffect(Unit) {
-//                    delay(2800)
-//                    showSplash = false
-//                }
-//
-//                LaunchedEffect(permsState.allPermissionsGranted) {
-//                    if (permsState.allPermissionsGranted) {
-//                        viewModel.loadDeviceContacts()
-//                        viewModel.loadDeviceCallLogs()
-//                    }
-//                }
-                // REPLACE the two LaunchedEffect(Unit) blocks with this single one:
                 LaunchedEffect(Unit) {
                     delay(2800)
                     showSplash = false
                 }
 
-// Request permissions only after default dialer is resolved
-                LaunchedEffect(isDefaultDialer.value, defaultSkipped) {
-                    if (isDefaultDialer.value || defaultSkipped) {
-                        if (!permsState.allPermissionsGranted) {
-                            permsState.launchMultiplePermissionRequest()
-                        }
-                    }
-                }
-
-                // Load data only after permissions granted
                 LaunchedEffect(permsState.allPermissionsGranted) {
                     if (permsState.allPermissionsGranted) {
                         viewModel.loadDeviceContacts()
@@ -181,6 +202,7 @@ class MainActivity : ComponentActivity() {
 
                 val currentScreen = when {
                     showSplash                                 -> "splash"
+                    !languagePicked                            -> "language"
                     !isDefaultDialer.value && !defaultSkipped -> "set_default"
                     !requiredPermissionsGranted                -> "permission"
                     else                                       -> "main"
@@ -200,9 +222,16 @@ class MainActivity : ComponentActivity() {
                         when (screen) {
                             "splash" -> SplashScreen()
 
+                            "language" -> LanguagePickerScreen(        // ← NEW
+                                onLanguageSelected = { language ->
+                                    viewModel.setLanguage(language)
+                                    languagePicked = true
+                                    activity.recreate()
+                                }
+                            )
+
                             "permission" -> {
                                 var deniedCount by remember { mutableStateOf(0) }
-
                                 PermissionScreen(
                                     denied = permsState.permissions
                                         .filter { !it.status.isGranted }
@@ -213,7 +242,6 @@ class MainActivity : ComponentActivity() {
                                         val allRequiredDenied = permsState.permissions
                                             .filter { it.permission !in notRequiredForApp }
                                             .none { it.status.isGranted }
-
                                         if (deniedCount >= 2 && allRequiredDenied) {
                                             activity.startActivity(
                                                 Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
@@ -269,6 +297,38 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    //for making calls from outside apps
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleDialIntent(intent)
+    }
+
+    private fun handleDialIntent(intent: Intent?) {
+        val number = extractNumber(intent) ?: return
+        dialIntentNumber = number
+        shouldAutoCall = intent?.action == Intent.ACTION_CALL
+    }
+
+    private fun extractNumber(intent: Intent?): String? {
+        if (intent?.action !in listOf(Intent.ACTION_DIAL, Intent.ACTION_CALL)) return null
+        return intent?.data?.schemeSpecificPart
+            ?.let { android.net.Uri.decode(it) }
+            ?.replace(" ", "")
+            ?.replace("-", "")
+            ?.replace("(", "")
+            ?.replace(")", "")
+            ?.trim()
+            .takeIf { !it.isNullOrEmpty() }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        val prefs = newBase.getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+        val langCode = prefs.getString("language", AppLanguage.SYSTEM.code) ?: AppLanguage.SYSTEM.code
+        val language = AppLanguage.values().find { it.code == langCode } ?: AppLanguage.SYSTEM
+        super.attachBaseContext(LocaleHelper.applyLanguage(newBase, language))
+    }
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -295,12 +355,215 @@ private fun registerPhoneAccount(context: Context) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// LANGUAGE PICKER SCREEN
+// ─────────────────────────────────────────────────────────────────────────────
+
+@Composable
+private fun LanguagePickerScreen(
+    onLanguageSelected: (AppLanguage) -> Unit
+) {
+    var visible by remember { mutableStateOf(false) }
+    var selectedLanguage by remember { mutableStateOf(AppLanguage.ENGLISH) }
+
+    LaunchedEffect(Unit) { delay(100); visible = true }
+
+    val headerAlpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+        animationSpec = tween(700), label = "header"
+    )
+    val headerOffset by animateFloatAsState(
+        targetValue = if (visible) 0f else -40f,
+        animationSpec = tween(700, easing = EaseOut), label = "header_offset"
+    )
+    val buttonAlpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+        animationSpec = tween(700, delayMillis = 600), label = "button"
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(Color(0xFF0A1628), Color(0xFF050A14))
+                )
+            )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 28.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(Modifier.height(72.dp))
+
+            // Header
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .alpha(headerAlpha)
+                    .offset(y = headerOffset.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(86.dp)
+                        .background(
+                            Brush.linearGradient(
+                                colors = listOf(Color(0xFF1565C0), Color(0xFF42A5F5))
+                            ),
+                            CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        Icons.Default.Language,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(44.dp)
+                    )
+                }
+
+                Spacer(Modifier.height(28.dp))
+
+                Text(
+                    text = "Choose Language",
+                    color = Color.White,
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = (-0.3).sp
+                )
+
+                Spacer(Modifier.height(10.dp))
+
+                Text(
+                    text = "Select your preferred language\nto continue",
+                    color = Color(0xFF90CAF9),
+                    fontSize = 15.sp,
+                    textAlign = TextAlign.Center,
+                    lineHeight = 22.sp
+                )
+            }
+
+            Spacer(Modifier.height(32.dp))
+
+            // Language list
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .alpha(headerAlpha),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                contentPadding = PaddingValues(vertical = 8.dp)
+            ) {
+                val languages = AppLanguage.values().filter { it != AppLanguage.SYSTEM }
+                itemsIndexed(languages) { index, lang ->
+                    val cardAlpha by animateFloatAsState(
+                        targetValue = if (visible) 1f else 0f,
+                        animationSpec = tween(500, delayMillis = 200 + index * 80),
+                        label = "lang_card_$index"
+                    )
+                    val cardOffset by animateFloatAsState(
+                        targetValue = if (visible) 0f else 30f,
+                        animationSpec = tween(500, delayMillis = 200 + index * 80, easing = EaseOut),
+                        label = "lang_offset_$index"
+                    )
+
+                    val isSelected = selectedLanguage == lang
+
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .alpha(cardAlpha)
+                            .offset(y = cardOffset.dp)
+                            .clickable { selectedLanguage = lang },
+                        shape = RoundedCornerShape(16.dp),
+                        color = if (isSelected) Color(0xFF1565C0).copy(alpha = 0.3f)
+                        else Color(0xFF0D1B2A),
+                        border = if (isSelected)
+                            androidx.compose.foundation.BorderStroke(1.5.dp, Color(0xFF42A5F5))
+                        else null
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = lang.nativeName,
+                                    color = Color.White,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                                if (lang.nativeName != lang.displayName) {
+                                    Text(
+                                        text = lang.displayName,
+                                        color = Color(0xFF607D8B),
+                                        fontSize = 13.sp
+                                    )
+                                }
+                            }
+
+                            if (isSelected) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                        .background(Color(0xFF1976D2), CircleShape),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        Icons.Default.Check,
+                                        contentDescription = null,
+                                        tint = Color.White,
+                                        modifier = Modifier.size(14.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            // Continue button
+            Column(
+                modifier = Modifier
+                    .alpha(buttonAlpha)
+                    .padding(bottom = 32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Button(
+                    onClick = { onLanguageSelected(selectedLanguage) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF1976D2)
+                    )
+                ) {
+                    Icon(
+                        Icons.Default.ArrowForward,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(Modifier.width(10.dp))
+                    Text(
+                        text = "Continue",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            }
+        }
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // SPLASH SCREEN
 // ─────────────────────────────────────────────────────────────────────────────
 
 @Composable
 private fun SplashScreen() {
-    val context = LocalContext.current
     val infiniteTransition = rememberInfiniteTransition(label = "splash_pulse")
 
     val ringScale by infiniteTransition.animateFloat(
@@ -349,7 +612,6 @@ private fun SplashScreen() {
             ),
         contentAlignment = Alignment.Center
     ) {
-        // Pulsing background rings
         Box(
             modifier = Modifier
                 .size(340.dp)
@@ -381,7 +643,6 @@ private fun SplashScreen() {
         ) {
             Box(
                 modifier = Modifier
-
                     .scale(logoScale)
                     .alpha(logoAlpha)
                     .size(110.dp)
@@ -391,8 +652,7 @@ private fun SplashScreen() {
                         ),
                         shape = RoundedCornerShape(30.dp)
                     ),
-                contentAlignment = Alignment.Center,
-
+                contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.Call,
@@ -405,7 +665,7 @@ private fun SplashScreen() {
             Spacer(Modifier.height(32.dp))
 
             Text(
-                text = "Contacts",
+                text = stringResource(R.string.app_name),
                 color = Color.White,
                 fontSize = 34.sp,
                 fontWeight = FontWeight.Bold,
@@ -416,7 +676,7 @@ private fun SplashScreen() {
             Spacer(Modifier.height(8.dp))
 
             Text(
-                text = "Smart calls. Real connections.",
+                text = stringResource(R.string.tagline),
                 color = Color(0xFF90CAF9),
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Normal,
@@ -426,7 +686,6 @@ private fun SplashScreen() {
 
             Spacer(Modifier.height(80.dp))
 
-            // Loading dots
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.alpha(taglineAlpha)
@@ -456,38 +715,46 @@ private fun SplashScreen() {
 // PERMISSION SCREEN
 // ─────────────────────────────────────────────────────────────────────────────
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 private fun PermissionScreen(
     denied: List<String>,
     optionalPermissions: Set<String> = emptySet(),
     onRequest: () -> Unit
 ) {
+
     var visible by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { delay(100); visible = true }
 
     val headerAlpha by animateFloatAsState(
         targetValue = if (visible) 1f else 0f,
-        animationSpec = tween(700),
-        label = "header"
+        animationSpec = tween(700), label = "header"
     )
     val headerOffset by animateFloatAsState(
         targetValue = if (visible) 0f else -40f,
-        animationSpec = tween(700, easing = EaseOut),
-        label = "header_offset"
+        animationSpec = tween(700, easing = EaseOut), label = "header_offset"
     )
     val buttonAlpha by animateFloatAsState(
         targetValue = if (visible) 1f else 0f,
-        animationSpec = tween(700, delayMillis = 800),
-        label = "button"
+        animationSpec = tween(700, delayMillis = 800), label = "button"
     )
     val taglineAlpha by animateFloatAsState(
         targetValue = if (visible) 1f else 0f,
-        animationSpec = tween(800, delayMillis = 700),
-        label = "tagline_alpha"
+        animationSpec = tween(800, delayMillis = 700), label = "tagline_alpha"
     )
     val context = LocalContext.current
 
-    Box(
+    val translatedMeta = mapOf(
+        "READ_CONTACTS"         to PermissionInfo(Icons.Default.Contacts,     stringResource(R.string.perm_contacts_title),      stringResource(R.string.perm_contacts_desc),      Color(0xFF4FC3F7)),
+        "CALL_PHONE"            to PermissionInfo(Icons.Default.Call,          stringResource(R.string.perm_calls_title),         stringResource(R.string.perm_calls_title),         Color(0xFF81C784)),
+        "READ_CALL_LOG"         to PermissionInfo(Icons.Default.History,       stringResource(R.string.perm_call_history_title),      stringResource(R.string.perm_call_history_desc),      Color(0xFFFFB74D)),
+        "READ_PHONE_STATE"      to PermissionInfo(Icons.Default.PhoneAndroid,  stringResource(R.string.perm_phone_state_title),   stringResource(R.string.perm_phone_state_desc),   Color(0xFFCE93D8)),
+        "READ_MEDIA_IMAGES"     to PermissionInfo(Icons.Default.Image,         stringResource(R.string.perm_photos_title),        stringResource(R.string.perm_photos_desc),        Color(0xFFF48FB1)),
+        "READ_EXTERNAL_STORAGE" to PermissionInfo(Icons.Default.Image,         stringResource(R.string.perm_storage_title),       stringResource(R.string.perm_storage_desc),       Color(0xFFF48FB1)),
+        "POST_NOTIFICATIONS"    to PermissionInfo(Icons.Default.Notifications, stringResource(R.string.perm_notifications_title), stringResource(R.string.perm_notifications_desc), Color(0xFFFFCC80)),
+    )
+
+        Box(
         modifier = Modifier
             .fillMaxSize()
             .background(
@@ -504,7 +771,6 @@ private fun PermissionScreen(
         ) {
             Spacer(Modifier.height(72.dp))
 
-            // Header
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
@@ -533,7 +799,7 @@ private fun PermissionScreen(
                 Spacer(Modifier.height(28.dp))
 
                 Text(
-                    text = "Allow Access",
+                    text = stringResource(R.string.allow_access),
                     color = Color.White,
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold,
@@ -543,7 +809,7 @@ private fun PermissionScreen(
                 Spacer(Modifier.height(10.dp))
 
                 Text(
-                    text = "ContactsApp needs a few permissions\nto deliver the best experience",
+                    text = stringResource(R.string.permission_subtitle),
                     color = Color(0xFF90CAF9),
                     fontSize = 15.sp,
                     textAlign = TextAlign.Center,
@@ -553,7 +819,6 @@ private fun PermissionScreen(
 
             Spacer(Modifier.height(40.dp))
 
-            // Permission cards + CTA
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -561,7 +826,7 @@ private fun PermissionScreen(
                 contentPadding = PaddingValues(bottom = 52.dp)
             ) {
                 itemsIndexed(denied) { index, permission ->
-                    val meta = permissionMeta[permission] ?: PermissionInfo(
+                    val meta = translatedMeta[permission] ?: PermissionInfo(
                         Icons.Default.Lock, permission, "Required permission", Color(0xFF90CAF9)
                     )
                     val isOptional = permission in optionalPermissions
@@ -624,7 +889,6 @@ private fun PermissionScreen(
                                 )
                             }
 
-                            // Required / Optional badge
                             Surface(
                                 shape = RoundedCornerShape(6.dp),
                                 color = if (isOptional)
@@ -633,7 +897,8 @@ private fun PermissionScreen(
                                     meta.color.copy(alpha = 0.15f)
                             ) {
                                 Text(
-                                    text = if (isOptional) "Optional" else "Required",
+                                    text = if (isOptional) stringResource(R.string.optional)
+                                    else stringResource(R.string.required),
                                     color = if (isOptional) Color(0xFF90A4AE) else meta.color,
                                     fontSize = 10.sp,
                                     fontWeight = FontWeight.Bold,
@@ -643,6 +908,7 @@ private fun PermissionScreen(
                         }
                     }
                 }
+
                 item {
                     Column(
                         modifier = Modifier
@@ -652,14 +918,14 @@ private fun PermissionScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "By tapping Grant Permissions, you accept our",
+                            text = stringResource(R.string.permission_terms_prefix),
                             color = Color(0xFF607D8B),
                             fontSize = 12.sp,
                             textAlign = TextAlign.Center
                         )
                         Row(horizontalArrangement = Arrangement.Center) {
                             Text(
-                                text = "Terms & Conditions",
+                                text = stringResource(R.string.terms_and_conditions),
                                 color = Color(0xFF0466FA),
                                 fontSize = 12.sp,
                                 modifier = Modifier.clickable {
@@ -668,13 +934,9 @@ private fun PermissionScreen(
                                     )
                                 }
                             )
+                            Text(text = "  ·  ", color = Color(0xFF607D8B), fontSize = 12.sp)
                             Text(
-                                text = "  ·  ",
-                                color = Color(0xFF607D8B),
-                                fontSize = 12.sp
-                            )
-                            Text(
-                                text = "Privacy Policy",
+                                text = stringResource(R.string.privacy_policy),
                                 color = Color(0xFF0466FA),
                                 fontSize = 12.sp,
                                 modifier = Modifier.clickable {
@@ -687,41 +949,29 @@ private fun PermissionScreen(
                     }
                 }
 
-                // CTA Button
                 item {
                     Spacer(Modifier.height(8.dp))
-
                     Column(
                         modifier = Modifier.alpha(buttonAlpha),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Button(
                             onClick = onRequest,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(56.dp),
+                            modifier = Modifier.fillMaxWidth().height(56.dp),
                             shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF1976D2)
-                            )
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2))
                         ) {
-                            Icon(
-                                Icons.Default.Lock,
-                                contentDescription = null,
-                                modifier = Modifier.size(18.dp)
-                            )
+                            Icon(Icons.Default.Lock, contentDescription = null, modifier = Modifier.size(18.dp))
                             Spacer(Modifier.width(10.dp))
                             Text(
-                                text = "Grant Permissions",
+                                text = stringResource(R.string.grant_permissions),
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.SemiBold
                             )
                         }
-
                         Spacer(Modifier.height(14.dp))
-
                         Text(
-                            text = "Your data stays on your device.\nWe never upload your contacts.",
+                            text = stringResource(R.string.data_privacy_note),
                             color = Color(0xFF455A64),
                             fontSize = 12.sp,
                             textAlign = TextAlign.Center,
@@ -754,7 +1004,6 @@ private fun SetDefaultScreen(
         targetValue = if (visible) 0f else -40f,
         animationSpec = tween(700, easing = EaseOut), label = "offset"
     )
-
     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
     val pulseScale by infiniteTransition.animateFloat(
         initialValue = 1f, targetValue = 1.12f,
@@ -785,9 +1034,7 @@ private fun SetDefaultScreen(
             Spacer(Modifier.height(80.dp))
 
             Box(
-                modifier = Modifier
-                    .alpha(headerAlpha)
-                    .offset(y = headerOffset.dp),
+                modifier = Modifier.alpha(headerAlpha).offset(y = headerOffset.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Box(
@@ -795,9 +1042,7 @@ private fun SetDefaultScreen(
                         .size((100 * pulseScale).dp)
                         .alpha(pulseAlpha)
                         .background(
-                            Brush.radialGradient(
-                                colors = listOf(Color(0xFF1976D2), Color.Transparent)
-                            ),
+                            Brush.radialGradient(colors = listOf(Color(0xFF1976D2), Color.Transparent)),
                             CircleShape
                         )
                 )
@@ -805,9 +1050,7 @@ private fun SetDefaultScreen(
                     modifier = Modifier
                         .size(90.dp)
                         .background(
-                            Brush.linearGradient(
-                                colors = listOf(Color(0xFF1565C0), Color(0xFF42A5F5))
-                            ),
+                            Brush.linearGradient(colors = listOf(Color(0xFF1565C0), Color(0xFF42A5F5))),
                             CircleShape
                         ),
                     contentAlignment = Alignment.Center
@@ -828,27 +1071,23 @@ private fun SetDefaultScreen(
                 modifier = Modifier.alpha(headerAlpha)
             ) {
                 Text(
-                    "Set as Default",
-                    color = Color.White,
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = (-0.3).sp
+                    stringResource(R.string.set_as_default),
+                    color = Color.White, fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold, letterSpacing = (-0.3).sp
                 )
                 Spacer(Modifier.height(12.dp))
                 Text(
-                    "Make Contacts your default dialer\nto unlock the full calling experience",
-                    color = Color(0xFF90CAF9),
-                    fontSize = 15.sp,
-                    textAlign = TextAlign.Center,
-                    lineHeight = 22.sp
+                    stringResource(R.string.set_default_subtitle),
+                    color = Color(0xFF90CAF9), fontSize = 15.sp,
+                    textAlign = TextAlign.Center, lineHeight = 22.sp
                 )
             }
 
             Spacer(Modifier.height(44.dp))
 
             val features = listOf(
-                Triple(Icons.Default.CallEnd,  Color(0xFF81C784), "One-tap Call Controls"),
-                Triple(Icons.Default.Contacts, Color(0xFFFFB74D), "Unified Contacts"),
+                Triple(Icons.Default.CallEnd,  Color(0xFF81C784), stringResource(R.string.one_tap_call_controls)),
+                Triple(Icons.Default.Contacts, Color(0xFFFFB74D), stringResource(R.string.unified_contacts)),
             )
 
             val featAlpha by animateFloatAsState(
@@ -872,10 +1111,7 @@ private fun SetDefaultScreen(
                         label = "offset_$index"
                     )
                     Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .alpha(cardAlpha)
-                            .offset(y = cardOffset.dp),
+                        modifier = Modifier.fillMaxWidth().alpha(cardAlpha).offset(y = cardOffset.dp),
                         shape = RoundedCornerShape(16.dp),
                         color = Color(0xFF0D1B2A)
                     ) {
@@ -892,12 +1128,7 @@ private fun SetDefaultScreen(
                                 Icon(icon, null, tint = color, modifier = Modifier.size(24.dp))
                             }
                             Spacer(Modifier.width(14.dp))
-                            Text(
-                                title,
-                                color = Color.White,
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.SemiBold
-                            )
+                            Text(title, color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
                         }
                     }
                 }
@@ -911,27 +1142,22 @@ private fun SetDefaultScreen(
             )
 
             Column(
-                modifier = Modifier
-                    .alpha(ctaAlpha)
-                    .padding(bottom = 12.dp),
+                modifier = Modifier.alpha(ctaAlpha).padding(bottom = 12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Button(
                     onClick = onSetDefault,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2))
                 ) {
                     Icon(Icons.Default.PhoneAndroid, null, modifier = Modifier.size(18.dp))
                     Spacer(Modifier.width(10.dp))
-                    Text("Set as Default Dialer", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                    Text(stringResource(R.string.set_as_default_dialer), fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
                 }
-
                 TextButton(onClick = onSkip) {
-                    Text("Skip for now", color = Color(0xFF546E7A), fontSize = 14.sp)
+                    Text(stringResource(R.string.skip_for_now), color = Color(0xFF546E7A), fontSize = 14.sp)
                 }
             }
         }

@@ -22,6 +22,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -30,6 +31,7 @@ import coil.compose.AsyncImage
 import com.mktech.contactsapp.data.model.AppSettings
 import com.mktech.contactsapp.data.model.Contact
 import kotlinx.coroutines.launch
+import com.mktech.contactsapp.R
 
 @Composable
 fun ContactListScreen(
@@ -44,6 +46,8 @@ fun ContactListScreen(
 ) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+
+
 
     Box(modifier = Modifier.fillMaxSize()) {
         when {
@@ -348,14 +352,14 @@ private fun EmptyContactsState(showFavoritesOnly: Boolean) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = if (showFavoritesOnly) "No favorites yet" else "No contacts",
+                text = if (showFavoritesOnly) stringResource(R.string.no_favorites_yet) else stringResource(R.string.no_contacts),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = if (showFavoritesOnly) "Tap ♥ on a contact to add favorites"
-                else "Tap sync or + to add contacts",
+                text = if (showFavoritesOnly) stringResource(R.string.tap_favorite_to_add)
+                else stringResource(R.string.tap_sync_or_add),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
             )

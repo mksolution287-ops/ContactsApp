@@ -1,6 +1,7 @@
 package com.mktech.contactsapp.ui.screens
 
 import android.Manifest
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.util.Log
@@ -23,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -32,6 +35,8 @@ import com.mktech.contactsapp.data.model.Contact
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
+import com.mktech.contactsapp.R
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
@@ -52,6 +57,8 @@ fun ContactDetailScreen(
     var isFavorite       by remember { mutableStateOf(contact?.isFavorite ?: false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var isEditMode       by remember { mutableStateOf(isNewContact) }
+
+    val activity = LocalContext.current
 
     // ── Photo permission ──────────────────────────────────────────────────────
     val photoPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
@@ -76,12 +83,36 @@ fun ContactDetailScreen(
         }
     }
 
+//    val onPickImage: () -> Unit = {
+//        if (photoPermissionState.status.isGranted) {
+//            imagePicker.launch("image/*")
+//        } else {
+//            pendingPickerOpen = true
+//            photoPermissionState.launchPermissionRequest()
+//            activity.startActivity(
+//                Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+//                    data = android.net.Uri.fromParts("package", activity.packageName, null)
+//                }
+//            )
+//        }
+//    }
+    var photoPermissionDeniedOnce by remember { mutableStateOf(false) }
+
     val onPickImage: () -> Unit = {
-        if (photoPermissionState.status.isGranted) {
-            imagePicker.launch("image/*")
-        } else {
-            pendingPickerOpen = true
-            photoPermissionState.launchPermissionRequest()
+        when {
+            photoPermissionState.status.isGranted -> {
+                imagePicker.launch("image/*")                        // ✅ granted → open picker
+            }
+            !photoPermissionDeniedOnce || photoPermissionState.status.shouldShowRationale -> {
+                pendingPickerOpen = true
+                photoPermissionDeniedOnce = true
+                photoPermissionState.launchPermissionRequest()       // 1st/2nd ask → show dialog
+            }
+            else -> {
+                activity.startActivity(Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = android.net.Uri.fromParts("package", activity.packageName, null)
+                })                          // permanently denied → settings
+            }
         }
     }
 
@@ -107,8 +138,8 @@ fun ContactDetailScreen(
             TopAppBar(
                 title = {
                     Text(
-                        if (isNewContact) "New Contact"
-                        else if (isEditMode) "Edit Contact"
+                        if (isNewContact) stringResource(R.string.new_contact)
+                        else if (isEditMode) stringResource(R.string.edit_contact)
                         else contact?.getDisplayName() ?: "Contact",
                         fontWeight = FontWeight.Bold
                     )
@@ -240,7 +271,7 @@ fun ContactDetailScreen(
                             )
                             Spacer(Modifier.width(12.dp))
                             Text(
-                                if (isFavorite) "Remove from favorites" else "Add to favorites",
+                                if (isFavorite) stringResource(R.string.remove_from_favorites) else stringResource(R.string.add_to_favorites),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = if (isFavorite) MaterialTheme.colorScheme.primary
                                 else MaterialTheme.colorScheme.onSurface
@@ -255,7 +286,7 @@ fun ContactDetailScreen(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { if (isEditMode) name = it },
-                    label = { Text("Name") },
+                    label = { Text(stringResource(R.string.name)) },
                     leadingIcon = {
                         Icon(Icons.Default.Person, null, tint = MaterialTheme.colorScheme.primary)
                     },
@@ -277,7 +308,7 @@ fun ContactDetailScreen(
                 OutlinedTextField(
                     value = phoneNumber,
                     onValueChange = { if (isEditMode) phoneNumber = it },
-                    label = { Text("Phone Number") },
+                    label = { Text(stringResource(R.string.phone_number)) },
                     leadingIcon = {
                         Icon(Icons.Default.Phone, null, tint = MaterialTheme.colorScheme.primary)
                     },
@@ -299,7 +330,7 @@ fun ContactDetailScreen(
                 OutlinedTextField(
                     value = email,
                     onValueChange = { if (isEditMode) email = it },
-                    label = { Text("Email (optional)") },
+                    label = { Text(stringResource(R.string.email_optional)) },
                     leadingIcon = {
                         Icon(Icons.Default.Email, null, tint = MaterialTheme.colorScheme.primary)
                     },
@@ -353,7 +384,7 @@ fun ContactDetailScreen(
                             contentColor   = Color.White
                         )
                     ) {
-                        Text("Save Contact", fontWeight = FontWeight.SemiBold)
+                        Text(stringResource(R.string.save_contact), fontWeight = FontWeight.SemiBold)
                     }
                 }
 
@@ -365,7 +396,7 @@ fun ContactDetailScreen(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Delete Contact", fontWeight = FontWeight.Bold) },
+            title = { Text(stringResource(R.string.delete_contact), fontWeight = FontWeight.Bold) },
             text  = { Text("Delete ${contact?.getDisplayName()}? This cannot be undone.") },
             confirmButton = {
                 TextButton(
@@ -373,10 +404,10 @@ fun ContactDetailScreen(
                     colors = ButtonDefaults.textButtonColors(
                         contentColor = MaterialTheme.colorScheme.error
                     )
-                ) { Text("Delete") }
+                ) { Text(stringResource(R.string.delete)) }
             },
             dismissButton = {
-                TextButton(onClick = { showDeleteDialog = false }) { Text("Cancel") }
+                TextButton(onClick = { showDeleteDialog = false }) { Text(stringResource(R.string.cancel)) }
             }
         )
     }
@@ -393,7 +424,7 @@ private fun CallHistorySection(callHistory: List<CallLog>) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                "Recent Calls",
+                stringResource(R.string.recent_calls),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
@@ -461,15 +492,16 @@ private fun CallHistoryItem(log: CallLog) {
     }
 }
 
+@Composable
 private fun formatTime(ts: Long): String {
     val now  = System.currentTimeMillis()
     val diff = now - ts
 
     return when {
-        diff < 60_000      -> "Just now"
+        diff < 60_000      -> stringResource(R.string.just_now)
         diff < 3_600_000   -> "${diff / 60_000}m ago"
         diff < 86_400_000  -> "${diff / 3_600_000}h ago"
-        diff < 172_800_000 -> "Yesterday"
+        diff < 172_800_000 -> stringResource(R.string.yesterday)
         else -> {
             val fmt = java.text.SimpleDateFormat("MMM d", java.util.Locale.getDefault())
             fmt.format(java.util.Date(ts))

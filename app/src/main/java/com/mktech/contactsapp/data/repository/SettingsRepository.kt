@@ -2,14 +2,20 @@ package com.mktech.contactsapp.data.repository
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
+import androidx.compose.ui.platform.LocalContext
 import com.mktech.contactsapp.data.model.AccentColor
+import com.mktech.contactsapp.data.model.AppLanguage
 import com.mktech.contactsapp.data.model.AppSettings
 import com.mktech.contactsapp.data.model.AppTheme
+import com.mktech.contactsapp.util.LocaleHelper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class SettingsRepository(context: Context) {
+
+private const val TAG = "SettingsRepository"
+class SettingsRepository(private val context: Context) {
 
     private val prefs: SharedPreferences =
         context.getSharedPreferences("app_settings", Context.MODE_PRIVATE)
@@ -22,7 +28,11 @@ class SettingsRepository(context: Context) {
         accentColor = AccentColor.valueOf(prefs.getString("accent_color", AccentColor.INDIGO.name)!!),
         sortByFirstName = prefs.getBoolean("sort_first_name", true),
         showPhoneNumberInList = prefs.getBoolean("show_phone_in_list", false),
-        confirmBeforeDelete = prefs.getBoolean("confirm_delete", true)
+        confirmBeforeDelete = prefs.getBoolean("confirm_delete", true),
+        //for language
+        language = AppLanguage.values().find {
+            it.code == prefs.getString("language", AppLanguage.SYSTEM.code)
+        } ?: AppLanguage.SYSTEM
     )
 
     fun updateTheme(theme: AppTheme) {
@@ -49,4 +59,14 @@ class SettingsRepository(context: Context) {
         prefs.edit().putBoolean("confirm_delete", confirm).apply()
         _settings.value = _settings.value.copy(confirmBeforeDelete = confirm)
     }
+
+    // for multiple languages
+    fun updateLanguage(language: AppLanguage) {
+        Log.d(TAG, "updateLanguage() called with language='${language.code}'")
+
+        prefs.edit().putString("language", language.code).apply()
+
+        _settings.value = _settings.value.copy(language = language)
+    }
+
 }

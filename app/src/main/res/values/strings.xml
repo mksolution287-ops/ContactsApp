@@ -1,3 +1,149 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Contacts</string>
+    <string name="contacts">Contacts</string>
+    <string name="recents">Recents</string>
+    <string name="dialer">Dialer</string>
+    <string name="settings">Settings</string>
+    <string name="search_contacts">Search contacts…</string>
+    <string name="new_contact">New Contact</string>
+    <string name="edit_contact">Edit Contact</string>
+    <string name="save_contact">Save Contact</string>
+    <string name="delete_contact">Delete Contact</string>
+    <string name="name">Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="email_optional">Email (optional)</string>
+    <string name="favorites">Favorites</string>
+    <string name="add_to_favorites">Add to Favorites</string>
+    <string name="remove_from_favorites">Remove from Favorites</string>
+    <string name="recent_calls">Recent Calls</string>
+    <string name="appearance">Appearance</string>
+    <string name="theme">Theme</string>
+    <string name="language">Language</string>
+    <string name="confirm_delete">Confirm before delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="just_now">Just now</string>
+    <string name="yesterday">Yesterday</string>
+
+    <!-- Contact list -->
+    <string name="add_contact">Add Contact</string>
+    <string name="call">Call</string>
+
+    <!-- Settings screen -->
+    <string name="default_app" tools:ignore="MissingTranslation">Default App</string>
+    <string name="set_as_default_contacts_app">Set as default contacts app</string>
+    <string name="set_as_default_subtitle">Make this your default contacts and dialer app</string>
+    <string name="accent_color">Accent Color</string>
+    <string name="sort_by_first_name">Sort by first name</string>
+    <string name="sort_first_name_first">Currently: First name first</string>
+    <string name="sort_last_name_first">Currently: Last name first</string>
+    <string name="show_phone_in_list">Show phone number in list</string>
+    <string name="show_phone_subtitle">Display phone number below contact name</string>
+    <string name="confirm_before_delete">Confirm before delete</string>
+    <string name="confirm_delete_subtitle">Show dialog before deleting contacts</string>
+    <string name="select_language">Select Language</string>
+    <string name="legal">Legal</string>
+    <string name="terms_and_conditions">Terms &amp; Conditions</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="set_as_default_dialer">Set as Default Dialer</string>
+    <string name="skip_for_now">Skip for now</string>
+    <string name="contacts_section">Contacts</string>
+
+    <!-- Permission screen -->
+    <string name="allow_access">Allow Access</string>
+    <string name="permission_subtitle">ContactsApp needs a few permissions\nto deliver the best experience</string>
+    <string name="grant_permissions">Grant Permissions</string>
+    <string name="data_privacy_note">Your data stays on your device.\nWe never upload your contacts.</string>
+    <string name="permission_terms_prefix">By tapping Grant Permissions, you accept our</string>
+    <string name="permission_contacts">Allow access to contacts</string>
+    <string name="permission_phone">Allow phone call access</string>
+    <string name="permission_microphone">Allow microphone access</string>
+    <string name="required">Required</string>
+    <string name="optional">Optional</string>
+
+    <!-- Set default screen -->
+    <string name="set_as_default">Set as Default</string>
+    <string name="set_default_subtitle">Make Contacts your default dialer\nto unlock the full calling experience</string>
+    <string name="one_tap_call_controls">One-tap Call Controls</string>
+    <string name="unified_contacts">Unified Contacts</string>
+
+    <!-- Splash -->
+    <string name="tagline">Smart calls. Real connections.</string>
+
+    <!-- Dial pad -->
+    <string name="clear">Clear</string>
+    <string name="keypad">Keypad</string>
+
+    <!-- Incoming call -->
+    <string name="incoming_call">Incoming Call</string>
+    <string name="answer">Answer</string>
+    <string name="decline">Decline</string>
+    <string name="unknown">Unknown</string>
+
+    <!-- Active call -->
+    <string name="end_call">End</string>
+    <string name="calling">Calling…</string>
+    <string name="dialing">Dialing…</string>
+    <string name="call_ended">Call ended</string>
+
+    <!-- Call controls -->
+    <string name="mute">Mute</string>
+    <string name="unmute">Unmute</string>
+    <string name="speaker">Speaker</string>
+    <string name="earpiece">Earpiece</string>
+    <string name="hold">Hold</string>
+    <string name="resume">Resume</string>
+    <string name="add_call">Add Call</string>
+    <string name="record_call">Record Call</string>
+    <string name="more">More</string>
+
+    <!-- Empty states -->
+    <string name="no_favorites_yet">No favorites yet</string>
+    <string name="no_contacts">No contacts</string>
+    <string name="tap_favorite_to_add">Tap ♥ on a contact to add favorites</string>
+    <string name="tap_sync_or_add">Tap sync or + to add contacts</string>
+
+
+    <!-- Call log filters -->
+    <string name="filter_all">All (%1$d)</string>
+    <string name="filter_missed">Missed (%1$d)</string>
+    <string name="filter_incoming">Incoming (%1$d)</string>
+    <string name="filter_outgoing">Outgoing (%1$d)</string>
+
+    <!-- Call log actions -->
+    <string name="sync_call_logs">Sync call logs</string>
+    <string name="clear_all">Clear all</string>
+    <string name="call_back">Call back</string>
+
+    <!-- Clear dialog -->
+    <string name="clear_call_history_title">Clear call history?</string>
+    <string name="clear_call_history_message">All call logs will be permanently deleted.</string>
+    <string name="clear_all_confirm">Clear All</string>
+
+    <!-- Empty call logs -->
+    <string name="no_missed_calls">No missed calls</string>
+    <string name="no_incoming_calls">No incoming calls</string>
+    <string name="no_outgoing_calls">No outgoing calls</string>
+    <string name="no_call_history">No call history</string>
+
+    <!-- Date labels -->
+    <string name="today">Today</string>
+
+    <!-- Permission titles -->
+    <string name="perm_contacts_title">Contacts</string>
+    <string name="perm_calls_title">Phone Calls</string>
+    <string name="perm_call_history_title">Call History</string>
+    <string name="perm_phone_state_title">Phone State</string>
+    <string name="perm_photos_title">Photos</string>
+    <string name="perm_storage_title">Storage</string>
+    <string name="perm_notifications_title">Notifications</string>
+
+    <!-- Permission descriptions -->
+    <string name="perm_contacts_desc">View and manage your contacts</string>
+    <string name="perm_calls_desc">Make and manage phone calls</string>
+    <string name="perm_call_history_desc">Access your call history</string>
+    <string name="perm_phone_state_desc">Monitor call status and state</string>
+    <string name="perm_photos_desc">Set profile pictures for contacts</string>
+    <string name="perm_storage_desc">Access photos for contact avatars</string>
+    <string name="perm_notifications_desc">Get notified about calls and messages</string>
 </resources>
