@@ -70,6 +70,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
 
+
+    implementation("androidx.appcompat:appcompat:1.6.1")
     // ── Compose BOM ───────────────────────────────────────────────────────────
     // Single BOM controls ALL compose library versions — never pin them individually
     val composeBom = platform("androidx.compose:compose-bom:2025.01.00")

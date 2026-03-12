@@ -55,8 +55,11 @@ string google_app_id
 string google_crash_reporting_api_key
 string google_storage_bucket
 string grant_permissions
+string hang_up
 string hold
 string incoming_call
+string incoming_call_channel_desc
+string incoming_call_channel_name
 string just_now
 string keypad
 string language
@@ -72,6 +75,7 @@ string no_incoming_calls
 string no_missed_calls
 string no_outgoing_calls
 string one_tap_call_controls
+string ongoing
 string optional
 string perm_call_history_desc
 string perm_call_history_title

@@ -47,6 +47,8 @@ public final class CallLogDao_Impl implements CallLogDao {
 
   private final SharedSQLiteStatement __preparedStmtOfUpdateContactNameByPhone;
 
+  private final SharedSQLiteStatement __preparedStmtOfUpdateProfileImageByPhone;
+
   public CallLogDao_Impl(@NonNull final RoomDatabase __db) {
     this.__db = __db;
     this.__insertionAdapterOfCallLog = new EntityInsertionAdapter<CallLog>(__db) {
@@ -94,6 +96,14 @@ public final class CallLogDao_Impl implements CallLogDao {
       @NonNull
       public String createQuery() {
         final String _query = "UPDATE call_logs SET contactName = ? WHERE phoneNumber = ?";
+        return _query;
+      }
+    };
+    this.__preparedStmtOfUpdateProfileImageByPhone = new SharedSQLiteStatement(__db) {
+      @Override
+      @NonNull
+      public String createQuery() {
+        final String _query = "UPDATE call_logs SET profileImageUri = ? WHERE phoneNumber = ?";
         return _query;
       }
     };
@@ -188,6 +198,38 @@ public final class CallLogDao_Impl implements CallLogDao {
           }
         } finally {
           __preparedStmtOfUpdateContactNameByPhone.release(_stmt);
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object updateProfileImageByPhone(final String phone, final String newUri,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        final SupportSQLiteStatement _stmt = __preparedStmtOfUpdateProfileImageByPhone.acquire();
+        int _argIndex = 1;
+        if (newUri == null) {
+          _stmt.bindNull(_argIndex);
+        } else {
+          _stmt.bindString(_argIndex, newUri);
+        }
+        _argIndex = 2;
+        _stmt.bindString(_argIndex, phone);
+        try {
+          __db.beginTransaction();
+          try {
+            _stmt.executeUpdateDelete();
+            __db.setTransactionSuccessful();
+            return Unit.INSTANCE;
+          } finally {
+            __db.endTransaction();
+          }
+        } finally {
+          __preparedStmtOfUpdateProfileImageByPhone.release(_stmt);
         }
       }
     }, $completion);

@@ -56,6 +56,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.mktech.contactsapp.data.model.AppLanguage
 import com.mktech.contactsapp.util.LocaleHelper
 import kotlinx.coroutines.delay
+import android.telephony.PhoneNumberUtils
 
 // ── Permission metadata ───────────────────────────────────────────────────────
 
@@ -92,7 +93,7 @@ private val notRequiredForApp = setOf(
 // MAIN ACTIVITY
 // ─────────────────────────────────────────────────────────────────────────────
 
-class MainActivity : ComponentActivity() {
+class MainActivity : BaseActivity() {
 
     // Shared state between onCreate and onNewIntent
     private var dialIntentNumber by mutableStateOf<String?>(null)
@@ -103,6 +104,13 @@ class MainActivity : ComponentActivity() {
         registerPhoneAccount(this)
         super.onCreate(savedInstanceState)
         val activity = this
+
+        // ── Read flags BEFORE setContent, at Activity level ──────────────
+        val prefs = getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+        val skipSplash = prefs.getBoolean("skip_splash", false)
+        if (skipSplash) {
+            prefs.edit().putBoolean("skip_splash", false).apply()  // clear immediately
+        }
 
         // ── Extract number from external dial intent ──────────────────────
         val intentNumber = when (intent?.action) {
@@ -165,11 +173,14 @@ class MainActivity : ComponentActivity() {
 
                 val permsState = rememberMultiplePermissionsState(permissions)
 
-                var showSplash       by remember { mutableStateOf(true) }
+                // ── skipSplash is now read at Activity level, safe to use here ──
+                var showSplash by remember { mutableStateOf(!skipSplash) }
+
                 var defaultSkipped   by remember { mutableStateOf(false) }
 
-                // Check if language has been chosen before (first launch detection)
-                val prefs = activity.getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+//                // Check if language has been chosen before (first launch detection)
+//                val prefs = activity.getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+
                 val languageAlreadyChosen = remember {
                     prefs.contains("language")
                 }
@@ -184,9 +195,15 @@ class MainActivity : ComponentActivity() {
                     if (isDefaultDialer.value) defaultSkipped = true
                 }
 
+//                LaunchedEffect(Unit) {
+//                    delay(2800)
+//                    showSplash = false
+//                }
                 LaunchedEffect(Unit) {
-                    delay(2800)
-                    showSplash = false
+                    if (!skipSplash) {
+                        delay(2800)
+                    }
+                    showSplash = false  // instant if skipSplash, delayed otherwise
                 }
 
                 LaunchedEffect(permsState.allPermissionsGranted) {
@@ -225,7 +242,8 @@ class MainActivity : ComponentActivity() {
                             "language" -> LanguagePickerScreen(        // ← NEW
                                 onLanguageSelected = { language ->
                                     viewModel.setLanguage(language)
-                                    languagePicked = true
+                                    prefs.edit().putBoolean("skip_splash", true).apply()
+//                                    languagePicked = true
                                     activity.recreate()
                                 }
                             )
@@ -305,30 +323,80 @@ class MainActivity : ComponentActivity() {
         handleDialIntent(intent)
     }
 
-    private fun handleDialIntent(intent: Intent?) {
-        val number = extractNumber(intent) ?: return
-        dialIntentNumber = number
-        shouldAutoCall = intent?.action == Intent.ACTION_CALL
+//    private fun handleDialIntent(intent: Intent?) {
+//        val number = extractNumber(intent) ?: return
+//        dialIntentNumber = number
+//        shouldAutoCall = intent?.action == Intent.ACTION_CALL
+//    }
+private fun handleDialIntent(intent: Intent?) {
+
+    val number = extractNumber(intent) ?: return
+
+    dialIntentNumber = number
+    shouldAutoCall = intent?.action == Intent.ACTION_CALL
+}
+
+//    private fun extractNumber(intent: Intent?): String? {
+//        if (intent?.action !in listOf(Intent.ACTION_DIAL, Intent.ACTION_CALL)) return null
+//        return intent?.data?.schemeSpecificPart
+//            ?.let { android.net.Uri.decode(it) }
+//            ?.replace(" ", "")
+//            ?.replace("-", "")
+//            ?.replace("(", "")
+//            ?.replace(")", "")
+//            ?.trim()
+//            .takeIf { !it.isNullOrEmpty() }
+//    }
+private fun extractNumber(intent: Intent?): String? {
+
+    if (intent == null) return null
+
+    // 1️⃣ Phone number from extras
+    intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER)?.let {
+        return sanitizeNumber(it)
     }
 
-    private fun extractNumber(intent: Intent?): String? {
-        if (intent?.action !in listOf(Intent.ACTION_DIAL, Intent.ACTION_CALL)) return null
-        return intent?.data?.schemeSpecificPart
-            ?.let { android.net.Uri.decode(it) }
-            ?.replace(" ", "")
-            ?.replace("-", "")
-            ?.replace("(", "")
-            ?.replace(")", "")
-            ?.trim()
-            .takeIf { !it.isNullOrEmpty() }
+    // 2️⃣ Handle URI schemes
+    intent.data?.let { uri ->
+
+        when (uri.scheme) {
+
+            "tel", "telprompt" -> {
+                uri.schemeSpecificPart?.let {
+                    return sanitizeNumber(it)
+                }
+            }
+
+            "sip" -> {
+                uri.schemeSpecificPart
+                    ?.substringBefore("@")
+                    ?.let { return sanitizeNumber(it) }
+            }
+
+            "sms", "smsto" -> {
+                uri.schemeSpecificPart?.let {
+                    return sanitizeNumber(it)
+                }
+            }
+        }
     }
 
-    override fun attachBaseContext(newBase: Context) {
-        val prefs = newBase.getSharedPreferences("app_settings", Context.MODE_PRIVATE)
-        val langCode = prefs.getString("language", AppLanguage.SYSTEM.code) ?: AppLanguage.SYSTEM.code
-        val language = AppLanguage.values().find { it.code == langCode } ?: AppLanguage.SYSTEM
-        super.attachBaseContext(LocaleHelper.applyLanguage(newBase, language))
+    // 3️⃣ Some apps send dataString
+    intent.dataString?.let { raw ->
+        if (raw.startsWith("tel:")) {
+            return sanitizeNumber(raw.removePrefix("tel:"))
+        }
     }
+
+    return null
+}
+
+//    override fun attachBaseContext(newBase: Context) {
+//        val prefs = newBase.getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+//        val langCode = prefs.getString("language", AppLanguage.SYSTEM.code) ?: AppLanguage.SYSTEM.code
+//        val language = AppLanguage.values().find { it.code == langCode } ?: AppLanguage.SYSTEM
+//        super.attachBaseContext(LocaleHelper.applyLanguage(newBase, language))
+//    }
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -352,6 +420,31 @@ private fun registerPhoneAccount(context: Context) {
         .setCapabilities(PhoneAccount.CAPABILITY_CALL_PROVIDER)
         .build()
     telecomManager.registerPhoneAccount(phoneAccount)
+}
+
+private fun sanitizeNumber(number: String): String {
+
+    var clean = PhoneNumberUtils.stripSeparators(number)
+
+    // Remove spaces and symbols
+    clean = clean.trim()
+
+    // Case 1: 10 digit Indian number
+    if (clean.length == 10) {
+        clean = "+91$clean"
+    }
+
+    // Case 2: Starts with 0
+    else if (clean.length == 11 && clean.startsWith("0")) {
+        clean = "+91${clean.substring(1)}"
+    }
+
+    // Case 3: 12 digits starting with 91
+    else if (clean.length == 12 && clean.startsWith("91")) {
+        clean = "+$clean"
+    }
+
+    return clean
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

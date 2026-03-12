@@ -29,6 +29,10 @@ class CallLogRepository(private val callLogDao: CallLogDao) {
         callLogDao.updateContactNameByPhone(phone, newName)
     }
 
+    suspend fun updateProfileImageByPhone(phone: String, newUri: String?) {
+        callLogDao.updateProfileImageByPhone(phone, newUri)
+    }
+
     fun getAllResolvedCallLogs(): Flow<List<ResolvedCallLog>> =
         callLogDao.getAllResolvedCallLogs()
 

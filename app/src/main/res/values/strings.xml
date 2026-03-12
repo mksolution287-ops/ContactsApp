@@ -79,6 +79,10 @@
     <string name="answer">Answer</string>
     <string name="decline">Decline</string>
     <string name="unknown">Unknown</string>
+    <string name="ongoing">Ongoing</string>
+    <string name="hang_up">Hang Up</string>
+    <string name="incoming_call_channel_name">Incoming Calls</string>
+    <string name="incoming_call_channel_desc">Shows incoming call notifications</string>
 
     <!-- Active call -->
     <string name="end_call">End</string>

@@ -7,9 +7,11 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import androidx.compose.ui.res.stringResource
 import androidx.core.app.NotificationCompat
 import com.mktech.contactsapp.CallActionReceiver
 import com.mktech.contactsapp.IncomingCallActivity
+import com.mktech.contactsapp.R
 
 object CallNotificationManager {
 
@@ -59,15 +61,15 @@ object CallNotificationManager {
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(android.R.drawable.ic_menu_call)
-            .setContentTitle("Incoming Call")
+            .setContentTitle(context.getString(R.string.incoming_call))
             .setContentText("$callerName • $phoneNumber")
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_CALL)
             .setFullScreenIntent(fullScreenPi, true)
             .setOngoing(true)
             .setAutoCancel(false)
-            .addAction(android.R.drawable.ic_menu_call, "Answer", answerPi)
-            .addAction(android.R.drawable.ic_delete, "Decline", declinePi)
+            .addAction(android.R.drawable.ic_menu_call, context.getString(R.string.answer), answerPi)
+            .addAction(android.R.drawable.ic_delete, context.getString(R.string.decline), declinePi)
             .build()
 
         nm.notify(NOTIF_ID, notification)

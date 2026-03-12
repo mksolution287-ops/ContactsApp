@@ -49,6 +49,9 @@ fun CallLogsScreen(
     var filter by remember { mutableStateOf(CallLogFilter.ALL) }
     var showClearDialog by remember { mutableStateOf(false) }
 
+    val today = stringResource(R.string.today)
+    val yesterday = stringResource(R.string.yesterday)
+
     val displayed = when (filter) {
         CallLogFilter.ALL      -> allLogs
         CallLogFilter.MISSED   -> missedLogs
@@ -78,7 +81,8 @@ fun CallLogsScreen(
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Icon(Icons.Default.History, null, modifier = Modifier.size(16.dp))
-                            Text("All (${allLogs.size})")
+//                            Text("All (${allLogs.size})")
+                            Text(stringResource(R.string.filter_all, allLogs.size))
                         }
                     }
                 )
@@ -100,7 +104,8 @@ fun CallLogsScreen(
                                 else
                                     MaterialTheme.colorScheme.onSurfaceVariant
                             )
-                            Text("Missed (${missedLogs.size})")
+//                            Text("Missed (${missedLogs.size})")
+                            Text(stringResource(R.string.filter_missed, missedLogs.size))
                         }
                     }
                 )
@@ -119,7 +124,8 @@ fun CallLogsScreen(
                                 modifier = Modifier.size(16.dp),
                                 tint = MaterialTheme.colorScheme.primary
                             )
-                            Text("Incoming ($incomingCount)")
+//                            Text("Incoming ($incomingCount)")
+                            Text(stringResource(R.string.filter_incoming, incomingCount))
                         }
                     }
                 )
@@ -138,7 +144,8 @@ fun CallLogsScreen(
                                 modifier = Modifier.size(16.dp),
                                 tint = Color(0xFF10B981)
                             )
-                            Text("Outgoing ($outgoingCount)")
+//                            Text("Outgoing ($outgoingCount)")
+                            Text(stringResource(R.string.filter_outgoing, outgoingCount))
                         }
                     }
                 )
@@ -153,12 +160,12 @@ fun CallLogsScreen(
             horizontalArrangement = Arrangement.End
         ) {
             IconButton(onClick = onSyncLogs) {
-                Icon(Icons.Default.Sync, contentDescription = "Sync call logs",
+                Icon(Icons.Default.Sync, contentDescription = stringResource(R.string.sync_call_logs),
                     tint = MaterialTheme.colorScheme.primary)
             }
             if (allLogs.isNotEmpty()) {
                 IconButton(onClick = { showClearDialog = true }) {
-                    Icon(Icons.Default.DeleteSweep, contentDescription = "Clear all",
+                    Icon(Icons.Default.DeleteSweep, contentDescription = stringResource(R.string.clear_all),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
@@ -171,10 +178,12 @@ fun CallLogsScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(bottom = 16.dp)
             ) {
+
+
                 val grouped = displayed.groupBy { log ->
                     when {
-                        isToday(log.timestamp)     -> "Today"
-                        isYesterday(log.timestamp) -> "Yesterday"
+                        isToday(log.timestamp)     -> today
+                        isYesterday(log.timestamp) -> yesterday
                         else -> SimpleDateFormat("MMMM d, yyyy", Locale.getDefault())
                             .format(Date(log.timestamp))
                     }
@@ -230,25 +239,63 @@ private fun CallLogItem(
 ) {
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = {
-            if (it == SwipeToDismissBoxValue.EndToStart) { onDelete(); true }
-            else false
+            when (it) {
+                SwipeToDismissBoxValue.StartToEnd -> {
+                    onCallBack()   // ← swipe right = call
+                    false          // ← return false so item snaps BACK (not dismissed)
+                }
+                SwipeToDismissBoxValue.EndToStart -> {
+                    onDelete()     // ← swipe left = delete
+                    true           // ← return true to dismiss the item
+                }
+                else -> false
+            }
         }
     )
 
     SwipeToDismissBox(
         state = dismissState,
+        enableDismissFromStartToEnd = true,   // ← enable right swipe
+        enableDismissFromEndToStart = true,
         backgroundContent = {
+            val isRightSwipe = dismissState.dismissDirection == SwipeToDismissBoxValue.StartToEnd
+            val isLeftSwipe  = dismissState.dismissDirection == SwipeToDismissBoxValue.EndToStart
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.error.copy(alpha = 0.12f))
-                    .padding(end = 24.dp),
-                contentAlignment = Alignment.CenterEnd
+                    .background(
+                        when {
+                            isRightSwipe -> Color.Green.copy(alpha = 0.12f)
+                            isLeftSwipe  -> MaterialTheme.colorScheme.error.copy(alpha = 0.12f)
+                            else         -> Color.Transparent
+                        }
+                    )
             ) {
-                Icon(Icons.Default.Delete, null, tint = MaterialTheme.colorScheme.error)
+                // Call icon on the LEFT (shown when swiping right)
+                if (isRightSwipe) {
+                    Icon(
+                        Icons.Default.Call,
+                        contentDescription = null,
+                        tint = Color.Green,
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(start = 24.dp)
+                    )
+                }
+                // Delete icon on the RIGHT (shown when swiping left)
+                if (isLeftSwipe) {
+                    Icon(
+                        Icons.Default.Delete,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(end = 24.dp)
+                    )
+                }
             }
-        },
-        enableDismissFromStartToEnd = false
+        }
     ) {
         Surface(
             modifier = Modifier
@@ -325,7 +372,7 @@ private fun CallLogItem(
                 }
 
                 IconButton(onClick = onCallBack) {
-                    Icon(Icons.Default.Call, contentDescription = "Call back",
+                    Icon(Icons.Default.Call, contentDescription = stringResource(R.string.call_back),
                         tint = MaterialTheme.colorScheme.primary)
                 }
             }
@@ -351,10 +398,10 @@ private fun CallLogEmptyState(filter: CallLogFilter) {
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = when (filter) {
-                    CallLogFilter.MISSED   -> "No missed calls"
-                    CallLogFilter.INCOMING -> "No incoming calls"
-                    CallLogFilter.OUTGOING -> "No outgoing calls"
-                    else                   -> "No call history"
+                    CallLogFilter.MISSED   -> stringResource(R.string.no_missed_calls)
+                    CallLogFilter.INCOMING -> stringResource(R.string.no_incoming_calls)
+                    CallLogFilter.OUTGOING -> stringResource(R.string.no_outgoing_calls)
+                    else                   -> stringResource(R.string.no_call_history)
                 },
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant

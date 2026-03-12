@@ -39,6 +39,9 @@ interface CallLogDao {
     @Query("UPDATE call_logs SET contactName = :newName WHERE phoneNumber = :phone")
     suspend fun updateContactNameByPhone(phone: String, newName: String)
 
+    @Query("UPDATE call_logs SET profileImageUri = :newUri WHERE phoneNumber = :phone")
+    suspend fun updateProfileImageByPhone(phone: String, newUri: String?)
+
     @Query("""
     SELECT 
         cl.id,

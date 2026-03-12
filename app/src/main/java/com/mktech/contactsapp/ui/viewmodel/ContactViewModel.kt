@@ -723,6 +723,11 @@ class ContactViewModel(
             updateSystemContact(context = getApplication(), phone = c.phoneNumber, newName = c.name)
             contactRepository.updateContact(c.copy(lastUpdatedAt = System.currentTimeMillis()))
             callLogRepository.updateContactNameByPhone(phone = c.phoneNumber, newName = c.name)
+            // ← sync profile image (handles both removal and change)
+            callLogRepository.updateProfileImageByPhone(
+                phone  = c.phoneNumber,
+                newUri = c.profileImageUri
+            )
             Firebase.crashlytics.log("updateContact: success id=${c.id}")
         } catch (e: Exception) {
             Firebase.crashlytics.apply {

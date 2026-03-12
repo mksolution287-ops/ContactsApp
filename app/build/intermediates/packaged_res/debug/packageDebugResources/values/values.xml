@@ -48,8 +48,11 @@
     <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBPBAPJuHMJ-rCeW5h8wGHuHYpxWNmZ9Qw</string>
     <string name="google_storage_bucket" translatable="false">contact-1e9a6.firebasestorage.app</string>
     <string name="grant_permissions">Grant Permissions</string>
+    <string name="hang_up">Hang Up</string>
     <string name="hold">Hold</string>
     <string name="incoming_call">Incoming Call</string>
+    <string name="incoming_call_channel_desc">Shows incoming call notifications</string>
+    <string name="incoming_call_channel_name">Incoming Calls</string>
     <string name="just_now">Just now</string>
     <string name="keypad">Keypad</string>
     <string name="language">Language</string>
@@ -65,6 +68,7 @@
     <string name="no_missed_calls">No missed calls</string>
     <string name="no_outgoing_calls">No outgoing calls</string>
     <string name="one_tap_call_controls">One-tap Call Controls</string>
+    <string name="ongoing">Ongoing</string>
     <string name="optional">Optional</string>
     <string name="perm_call_history_desc">Access your call history</string>
     <string name="perm_call_history_title">Call History</string>

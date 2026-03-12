@@ -22,6 +22,9 @@ import com.mktech.contactsapp.ui.screens.*
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import com.mktech.contactsapp.ui.viewmodel.ContactViewModel
 import com.mktech.contactsapp.data.AnalyticsTracker
 import com.mktech.contactsapp.data.repository.SettingsRepository
@@ -196,6 +199,14 @@ fun ContactNavigation(
                             mapOf("missed_count" to missedCount.toString()))
                     }
                 }
+
+                val lifecycleOwner = LocalLifecycleOwner.current
+
+                        LaunchedEffect(lifecycleOwner) {
+                            lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                                viewModel.loadDeviceCallLogs()  // auto-sync every time screen resumes
+                            }
+                        }
 
                 CallLogsScreen(
                     allLogs    = allLogs,

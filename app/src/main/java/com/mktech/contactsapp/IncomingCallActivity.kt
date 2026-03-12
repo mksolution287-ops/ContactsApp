@@ -31,10 +31,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mktech.contactsapp.data.CallManager
 import com.mktech.contactsapp.data.CallNotificationManager
+import com.mktech.contactsapp.data.repository.SettingsRepository
 import com.mktech.contactsapp.ui.theme.ContactsAppTheme
 import kotlinx.coroutines.delay
 
-class IncomingCallActivity : ComponentActivity() {
+class IncomingCallActivity : BaseActivity() {
 
     private val callEndedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) = finish()
@@ -262,7 +263,7 @@ fun IncomingCallScreen(
                         containerColor   = Color(0xFFE53935),
                         contentColor     = Color.White
                     ) {
-                        Icon(Icons.Default.CallEnd, "Decline", Modifier.size(34.dp))
+                        Icon(Icons.Default.CallEnd, stringResource(R.string.decline), Modifier.size(34.dp))
                     }
                     Spacer(Modifier.height(10.dp))
                     Text(stringResource(R.string.decline), color = Color.White.copy(alpha = 0.8f), fontSize = 13.sp)
@@ -277,7 +278,7 @@ fun IncomingCallScreen(
                         containerColor = Color(0xFF43A047),
                         contentColor   = Color.White
                     ) {
-                        Icon(Icons.Default.Call, "Answer", Modifier.size(34.dp))
+                        Icon(Icons.Default.Call, stringResource(R.string.answer), Modifier.size(34.dp))
                     }
                     Spacer(Modifier.height(10.dp))
                     Text("Answer", color = Color.White.copy(alpha = 0.8f), fontSize = 13.sp)
@@ -530,7 +531,7 @@ fun ActiveCallScreen(
                             containerColor = Color(0xFFE53935),
                             contentColor   = Color.White
                         ) {
-                            Icon(Icons.Default.CallEnd, "End", Modifier.size(30.dp))
+                            Icon(Icons.Default.CallEnd, stringResource(R.string.end_call), Modifier.size(30.dp))
                         }
                         Spacer(Modifier.height(6.dp))
                         Text(stringResource(R.string.end_call), color = Color.White.copy(alpha = 0.7f), fontSize = 12.sp)

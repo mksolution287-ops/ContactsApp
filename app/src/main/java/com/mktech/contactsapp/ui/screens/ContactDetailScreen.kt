@@ -234,6 +234,26 @@ fun ContactDetailScreen(
                         }
                     }
                 }
+                // ── Remove button — OUTSIDE the inner Box, INSIDE the outer Box ──
+                if (isEditMode && profileImageUri != null) {
+                    Box(
+                        modifier = Modifier
+                            .size(28.dp)
+                            .align(Alignment.Center)
+                            .offset(x = 38.dp, y = (-38).dp)   // top-right edge of 110dp circle
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.errorContainer)
+                            .clickable { profileImageUri = null },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = "Remove photo",
+                            tint = MaterialTheme.colorScheme.onErrorContainer,
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                }
             }
 
             Column(
