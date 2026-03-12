@@ -1,0 +1,154 @@
+<resources>
+    <string name="app_name">جهات الاتصال</string>
+    <string name="contacts">جهات الاتصال</string>
+    <string name="recents">الأخيرة</string>
+    <string name="dialer">لوحة الاتصال</string>
+    <string name="settings">الإعدادات</string>
+    <string name="search_contacts">البحث عن جهات الاتصال…</string>
+    <string name="new_contact">جهة اتصال جديدة</string>
+    <string name="edit_contact">تعديل جهة الاتصال</string>
+    <string name="save_contact">حفظ جهة الاتصال</string>
+    <string name="delete_contact">حذف جهة الاتصال</string>
+    <string name="name">الاسم</string>
+    <string name="phone_number">رقم الهاتف</string>
+    <string name="email_optional">البريد الإلكتروني (اختياري)</string>
+    <string name="favorites">المفضلة</string>
+    <string name="add_to_favorites">إضافة إلى المفضلة</string>
+    <string name="remove_from_favorites">إزالة من المفضلة</string>
+    <string name="recent_calls">المكالمات الأخيرة</string>
+    <string name="appearance">المظهر</string>
+    <string name="theme">السمة</string>
+    <string name="language">اللغة</string>
+    <string name="confirm_delete">تأكيد قبل الحذف</string>
+    <string name="cancel">إلغاء</string>
+    <string name="delete">حذف</string>
+    <string name="just_now">الآن</string>
+    <string name="yesterday">أمس</string>
+
+    <!-- Settings screen -->
+    <string name="default_app">التطبيق الافتراضي</string>
+    <string name="set_as_default_contacts_app">تعيين كتطبيق جهات اتصال افتراضي</string>
+    <string name="set_as_default_subtitle">اجعل هذا تطبيق جهات الاتصال والاتصال الافتراضي</string>
+    <string name="accent_color">لون التمييز</string>
+    <string name="sort_by_first_name">الترتيب بالاسم الأول</string>
+    <string name="sort_first_name_first">حالياً: الاسم الأول أولاً</string>
+    <string name="sort_last_name_first">حالياً: اسم العائلة أولاً</string>
+    <string name="show_phone_in_list">إظهار رقم الهاتف في القائمة</string>
+    <string name="show_phone_subtitle">عرض رقم الهاتف أسفل اسم جهة الاتصال</string>
+    <string name="confirm_before_delete">تأكيد قبل الحذف</string>
+    <string name="confirm_delete_subtitle">إظهار مربع حوار قبل حذف جهات الاتصال</string>
+    <string name="select_language">اختر اللغة</string>
+    <string name="legal">قانوني</string>
+    <string name="terms_and_conditions">الشروط والأحكام</string>
+    <string name="privacy_policy">سياسة الخصوصية</string>
+    <string name="set_as_default_dialer">تعيين كاتصال افتراضي</string>
+    <string name="skip_for_now">تخطي الآن</string>
+    <string name="contacts_section">جهات الاتصال</string>
+
+    <!-- Permission screen -->
+    <string name="allow_access">السماح بالوصول</string>
+    <string name="permission_subtitle">يحتاج التطبيق إلى بعض الأذونات لتقديم أفضل تجربة</string>
+    <string name="grant_permissions">منح الأذونات</string>
+    <string name="data_privacy_note">بياناتك تبقى على جهازك.\nنحن لا نرفع جهات اتصالك أبداً.</string>
+    <string name="permission_terms_prefix">بالنقر على منح الأذونات، فإنك توافق على</string>
+    <string name="permission_contacts">السماح بالوصول إلى جهات الاتصال</string>
+    <string name="permission_phone">السماح بالاتصال الهاتفي</string>
+    <string name="permission_microphone">السماح بالوصول إلى الميكروفون</string>
+    <string name="required">مطلوب</string>
+    <string name="optional">اختياري</string>
+
+    <!-- Set default screen -->
+    <string name="set_as_default">تعيين كافتراضي</string>
+    <string name="set_default_subtitle">اجعل جهات الاتصال اتصالك الافتراضي\nلتجربة اتصال كاملة</string>
+    <string name="one_tap_call_controls">التحكم بالمكالمة بنقرة واحدة</string>
+    <string name="unified_contacts">جهات اتصال موحدة</string>
+
+    <!-- Splash -->
+    <string name="tagline">مكالمات ذكية. تواصل حقيقي.</string>
+
+    <!-- Dial pad -->
+    <string name="clear">مسح</string>
+    <string name="keypad">لوحة المفاتيح</string>
+
+    <!-- Incoming call -->
+    <string name="incoming_call">مكالمة واردة</string>
+    <string name="answer">رد</string>
+    <string name="decline">رفض</string>
+    <string name="unknown">مجهول</string>
+    <string name="ongoing">جارٍ</string>
+    <string name="hang_up">إنهاء المكالمة</string>
+    <string name="incoming_call_channel_name">المكالمات الواردة</string>
+    <string name="incoming_call_channel_desc">يعرض إشعارات المكالمات الواردة</string>
+
+    <!-- Active call -->
+    <string name="end_call">إنهاء المكالمة</string>
+    <string name="calling">جارٍ الاتصال…</string>
+    <string name="dialing">جارٍ الاتصال…</string>
+    <string name="call_ended">انتهت المكالمة</string>
+
+    <!-- Call controls -->
+    <string name="mute">كتم الصوت</string>
+    <string name="unmute">إلغاء الكتم</string>
+    <string name="speaker">مكبر الصوت</string>
+    <string name="earpiece">السماعة</string>
+    <string name="hold">انتظار</string>
+    <string name="resume">استئناف</string>
+    <string name="add_call">إضافة مكالمة</string>
+    <string name="record_call">تسجيل المكالمة</string>
+    <string name="more">المزيد</string>
+
+    <!-- Empty states -->
+    <string name="no_favorites_yet">لا يوجد مفضلات بعد</string>
+    <string name="no_contacts">لا توجد جهات اتصال</string>
+    <string name="tap_favorite_to_add">اضغط ♥ على جهة اتصال لإضافتها إلى المفضلة</string>
+    <string name="tap_sync_or_add">اضغط مزامنة أو + لإضافة جهات اتصال</string>
+
+    <!-- Contact list -->
+    <string name="add_contact">إضافة جهة اتصال</string>
+    <string name="call">اتصال</string>
+
+    <!-- Call log filters -->
+    <string name="filter_all">الكل (%1$d)</string>
+    <string name="filter_missed">المكالمات الفائتة (%1$d)</string>
+    <string name="filter_incoming">الواردة (%1$d)</string>
+    <string name="filter_outgoing">الصادرة (%1$d)</string>
+
+    <!-- Call log actions -->
+    <string name="sync_call_logs">مزامنة سجل المكالمات</string>
+    <string name="clear_all">مسح الكل</string>
+    <string name="call_back">إعادة الاتصال</string>
+
+    <!-- Clear dialog -->
+    <string name="clear_call_history_title">مسح سجل المكالمات؟</string>
+    <string name="clear_call_history_message">سيتم حذف جميع سجلات المكالمات نهائيًا.</string>
+    <string name="clear_all_confirm">مسح الكل</string>
+
+    <!-- Empty call logs -->
+    <string name="no_missed_calls">لا توجد مكالمات فائتة</string>
+    <string name="no_incoming_calls">لا توجد مكالمات واردة</string>
+    <string name="no_outgoing_calls">لا توجد مكالمات صادرة</string>
+    <string name="no_call_history">لا يوجد سجل مكالمات</string>
+
+    <!-- Date labels -->
+    <string name="today">اليوم</string>
+
+    <!-- Permission titles -->
+    <string name="perm_contacts_title">جهات الاتصال</string>
+    <string name="perm_calls_title">المكالمات الهاتفية</string>
+    <string name="perm_call_history_title">سجل المكالمات</string>
+    <string name="perm_phone_state_title">حالة الهاتف</string>
+    <string name="perm_photos_title">الصور</string>
+    <string name="perm_storage_title">التخزين</string>
+    <string name="perm_notifications_title">الإشعارات</string>
+
+    <!-- Permission descriptions -->
+    <string name="perm_contacts_desc">عرض جهات الاتصال وإدارتها</string>
+    <string name="perm_calls_desc">إجراء وإدارة المكالمات الهاتفية</string>
+    <string name="perm_call_history_desc">الوصول إلى سجل المكالمات</string>
+    <string name="perm_phone_state_desc">مراقبة حالة المكالمات والهاتف</string>
+    <string name="perm_photos_desc">تعيين صور الملف الشخصي لجهات الاتصال</string>
+    <string name="perm_storage_desc">الوصول إلى الصور لصور جهات الاتصال</string>
+    <string name="perm_notifications_desc">تلقي إشعارات حول المكالمات والرسائل</string>
+
+
+</resources>

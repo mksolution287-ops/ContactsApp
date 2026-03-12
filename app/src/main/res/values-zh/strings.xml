@@ -1,0 +1,151 @@
+<resources>
+    <string name="app_name">联系人</string>
+    <string name="contacts">联系人</string>
+    <string name="recents">最近</string>
+    <string name="dialer">拨号键盘</string>
+    <string name="settings">设置</string>
+    <string name="search_contacts">搜索联系人…</string>
+    <string name="new_contact">新建联系人</string>
+    <string name="edit_contact">编辑联系人</string>
+    <string name="save_contact">保存联系人</string>
+    <string name="delete_contact">删除联系人</string>
+    <string name="name">姓名</string>
+    <string name="phone_number">电话号码</string>
+    <string name="email_optional">电子邮件（可选）</string>
+    <string name="favorites">收藏</string>
+    <string name="add_to_favorites">添加到收藏</string>
+    <string name="remove_from_favorites">从收藏中移除</string>
+    <string name="recent_calls">最近通话</string>
+    <string name="appearance">外观</string>
+    <string name="theme">主题</string>
+    <string name="language">语言</string>
+    <string name="confirm_delete">删除前确认</string>
+    <string name="cancel">取消</string>
+    <string name="delete">删除</string>
+    <string name="just_now">刚刚</string>
+    <string name="yesterday">昨天</string>
+
+    <!-- Settings screen -->
+    <string name="default_app">默认应用</string>
+    <string name="set_as_default_contacts_app">设为默认联系人应用</string>
+    <string name="set_as_default_subtitle">将此应用设为默认联系人和拨号应用</string>
+    <string name="accent_color">强调色</string>
+    <string name="sort_by_first_name">按名字排序</string>
+    <string name="sort_first_name_first">当前：名字在前</string>
+    <string name="sort_last_name_first">当前：姓氏在前</string>
+    <string name="show_phone_in_list">在列表中显示电话号码</string>
+    <string name="show_phone_subtitle">在联系人姓名下方显示电话号码</string>
+    <string name="confirm_before_delete">删除前确认</string>
+    <string name="confirm_delete_subtitle">删除联系人前显示确认对话框</string>
+    <string name="select_language">选择语言</string>
+    <string name="legal">法律</string>
+    <string name="terms_and_conditions">条款与条件</string>
+    <string name="privacy_policy">隐私政策</string>
+    <string name="set_as_default_dialer">设为默认拨号应用</string>
+    <string name="skip_for_now">暂时跳过</string>
+    <string name="contacts_section">联系人</string>
+
+    <!-- Permission screen -->
+    <string name="allow_access">允许访问</string>
+    <string name="permission_subtitle">联系人应用需要一些权限\n以提供最佳体验</string>
+    <string name="grant_permissions">授予权限</string>
+    <string name="data_privacy_note">您的数据保留在设备上。\n我们绝不上传您的联系人。</string>
+    <string name="permission_terms_prefix">点击“授予权限”即表示您同意我们的</string>
+    <string name="permission_contacts">允许访问联系人</string>
+    <string name="permission_phone">允许访问电话</string>
+    <string name="permission_microphone">允许访问麦克风</string>
+    <string name="required">必需</string>
+    <string name="optional">可选</string>
+
+    <!-- Set default screen -->
+    <string name="set_as_default">设为默认</string>
+    <string name="set_default_subtitle">将联系人设为默认拨号应用\n以解锁完整通话体验</string>
+    <string name="one_tap_call_controls">一键通话控制</string>
+    <string name="unified_contacts">统一联系人</string>
+
+    <!-- Splash -->
+    <string name="tagline">智能通话。真实连接。</string>
+
+    <!-- Dial pad -->
+    <string name="clear">清除</string>
+    <string name="keypad">键盘</string>
+
+    <!-- Incoming call -->
+    <string name="incoming_call">来电</string>
+    <string name="answer">接听</string>
+    <string name="decline">拒绝</string>
+    <string name="unknown">未知</string>
+    <string name="ongoing">通话中</string>
+    <string name="hang_up">挂断</string>
+    <string name="incoming_call_channel_name">来电</string>
+    <string name="incoming_call_channel_desc">显示来电通知</string>
+
+    <!-- Active call -->
+    <string name="end_call">结束通话</string>
+    <string name="calling">通话中…</string>
+    <string name="dialing">正在拨号…</string>
+    <string name="call_ended">通话已结束</string>
+
+    <!-- Call controls -->
+    <string name="mute">静音</string>
+    <string name="unmute">取消静音</string>
+    <string name="speaker">扬声器</string>
+    <string name="earpiece">听筒</string>
+    <string name="hold">保持</string>
+    <string name="resume">继续</string>
+    <string name="add_call">添加通话</string>
+    <string name="record_call">录音通话</string>
+    <string name="more">更多</string>
+
+    <!-- Empty states -->
+    <string name="no_favorites_yet">暂无收藏联系人</string>
+    <string name="no_contacts">没有联系人</string>
+    <string name="tap_favorite_to_add">点击联系人上的 ♥ 将其加入收藏</string>
+    <string name="tap_sync_or_add">点击同步或 + 添加联系人</string>
+
+    <!-- Contact list -->
+    <string name="add_contact">添加联系人</string>
+    <string name="call">拨打</string>
+
+    <!-- Call log filters -->
+    <string name="filter_all">全部 (%1$d)</string>
+    <string name="filter_missed">未接 (%1$d)</string>
+    <string name="filter_incoming">来电 (%1$d)</string>
+    <string name="filter_outgoing">去电 (%1$d)</string>
+
+    <!-- Call log actions -->
+    <string name="sync_call_logs">同步通话记录</string>
+    <string name="clear_all">清除全部</string>
+    <string name="call_back">回拨</string>
+
+    <!-- Clear dialog -->
+    <string name="clear_call_history_title">清除通话记录？</string>
+    <string name="clear_call_history_message">所有通话记录将被永久删除。</string>
+    <string name="clear_all_confirm">全部清除</string>
+
+    <!-- Empty call logs -->
+    <string name="no_missed_calls">没有未接来电</string>
+    <string name="no_incoming_calls">没有来电记录</string>
+    <string name="no_outgoing_calls">没有去电记录</string>
+    <string name="no_call_history">没有通话记录</string>
+
+    <!-- Date labels -->
+    <string name="today">今天</string>
+
+    <string name="perm_contacts_title">联系人</string>
+    <string name="perm_calls_title">电话通话</string>
+    <string name="perm_call_history_title">通话记录</string>
+    <string name="perm_phone_state_title">电话状态</string>
+    <string name="perm_photos_title">照片</string>
+    <string name="perm_storage_title">存储</string>
+    <string name="perm_notifications_title">通知</string>
+
+    <string name="perm_contacts_desc">查看和管理您的联系人</string>
+    <string name="perm_calls_desc">拨打和管理电话</string>
+    <string name="perm_call_history_desc">访问您的通话记录</string>
+    <string name="perm_phone_state_desc">监控通话状态</string>
+    <string name="perm_photos_desc">为联系人设置头像</string>
+    <string name="perm_storage_desc">访问照片用于联系人头像</string>
+    <string name="perm_notifications_desc">接收来电和消息通知</string>
+
+</resources>

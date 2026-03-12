@@ -1,0 +1,142 @@
+<resources>
+    <string name="app_name">Contacts</string>
+    <string name="contacts">Contacts</string>
+    <string name="recents">Récents</string>
+    <string name="dialer">Clavier</string>
+    <string name="settings">Paramètres</string>
+    <string name="search_contacts">Rechercher des contacts…</string>
+    <string name="new_contact">Nouveau contact</string>
+    <string name="edit_contact">Modifier le contact</string>
+    <string name="save_contact">Enregistrer le contact</string>
+    <string name="delete_contact">Supprimer le contact</string>
+    <string name="name">Nom</string>
+    <string name="phone_number">Numéro de téléphone</string>
+    <string name="email_optional">E-mail (facultatif)</string>
+    <string name="favorites">Favoris</string>
+    <string name="add_to_favorites">Ajouter aux favoris</string>
+    <string name="remove_from_favorites">Retirer des favoris</string>
+    <string name="recent_calls">Appels récents</string>
+    <string name="appearance">Apparence</string>
+    <string name="theme">Thème</string>
+    <string name="language">Langue</string>
+    <string name="confirm_delete">Confirmer avant de supprimer</string>
+    <string name="cancel">Annuler</string>
+    <string name="delete">Supprimer</string>
+    <string name="just_now">À l\'instant</string>
+    <string name="yesterday">Hier</string>
+
+    <!-- Settings screen -->
+    <string name="default_app">Application par défaut</string>
+    <string name="set_as_default_contacts_app">Définir comme application de contacts par défaut</string>
+    <string name="set_as_default_subtitle">Faites de cette application votre application de contacts et de numérotation par défaut</string>
+    <string name="accent_color">Couleur d\'accentuation</string>
+    <string name="sort_by_first_name">Trier par prénom</string>
+    <string name="sort_first_name_first">Actuellement : prénom en premier</string>
+    <string name="sort_last_name_first">Actuellement : nom de famille en premier</string>
+    <string name="show_phone_in_list">Afficher le numéro dans la liste</string>
+    <string name="show_phone_subtitle">Afficher le numéro de téléphone sous le nom du contact</string>
+    <string name="confirm_before_delete">Confirmer avant de supprimer</string>
+    <string name="confirm_delete_subtitle">Afficher une boîte de dialogue avant de supprimer des contacts</string>
+    <string name="select_language">Choisir la langue</string>
+    <string name="legal">Mentions légales</string>
+    <string name="terms_and_conditions">Conditions générales</string>
+    <string name="privacy_policy">Politique de confidentialité</string>
+    <string name="set_as_default_dialer">Définir comme numéroteur par défaut</string>
+    <string name="skip_for_now">Ignorer pour l\'instant</string>
+    <string name="contacts_section">Contacts</string>
+
+    <!-- Permission screen -->
+    <string name="allow_access">Autoriser l\'accès</string>
+    <string name="permission_subtitle">ContactsApp a besoin de quelques autorisations\npour offrir la meilleure expérience</string>
+    <string name="grant_permissions">Accorder les autorisations</string>
+    <string name="data_privacy_note">Vos données restent sur votre appareil.\nNous ne téléchargeons jamais vos contacts.</string>
+    <string name="permission_terms_prefix">En appuyant sur Accorder les autorisations, vous acceptez nos</string>
+    <string name="permission_contacts">Autoriser l\'accès aux contacts</string>
+    <string name="permission_phone">Autoriser l\'accès au téléphone</string>
+    <string name="permission_microphone">Autoriser l\'accès au microphone</string>
+    <string name="required">Requis</string>
+    <string name="optional">Facultatif</string>
+
+    <!-- Set default screen -->
+    <string name="set_as_default">Définir par défaut</string>
+    <string name="set_default_subtitle">Faites de Contacts votre numéroteur par défaut\npour une expérience d\'appel complète</string>
+    <string name="one_tap_call_controls">Contrôles d\'appel en un clic</string>
+    <string name="unified_contacts">Contacts unifiés</string>
+
+    <!-- Splash -->
+    <string name="tagline">Appels intelligents. Vraies connexions.</string>
+
+    <!-- Dial pad -->
+    <string name="clear">Effacer</string>
+    <string name="keypad">Clavier</string>
+
+    <!-- Incoming call -->
+    <string name="incoming_call">Appel entrant</string>
+    <string name="answer">Répondre</string>
+    <string name="decline">Refuser</string>
+    <string name="unknown">Inconnu</string>
+    <string name="ongoing">En cours</string>
+    <string name="hang_up">Raccrocher</string>
+    <string name="incoming_call_channel_name">Appels entrants</string>
+    <string name="incoming_call_channel_desc">Affiche les notifications d\'appels entrants</string>
+
+    <!-- Active call -->
+    <string name="end_call">Terminer</string>
+    <string name="calling">Appel…</string>
+    <string name="dialing">Composition…</string>
+    <string name="call_ended">Appel terminé</string>
+
+    <!-- Call controls -->
+    <string name="mute">Muet</string>
+    <string name="unmute">Activer le son</string>
+    <string name="speaker">Haut-parleur</string>
+    <string name="earpiece">Écouteur</string>
+    <string name="hold">Mettre en attente</string>
+    <string name="resume">Reprendre</string>
+    <string name="add_call">Ajouter un appel</string>
+    <string name="record_call">Enregistrer l\'appel</string>
+    <string name="more">Plus</string>
+
+    <!-- Empty states -->
+    <string name="no_favorites_yet">Aucun favori pour le moment</string>
+    <string name="no_contacts">Aucun contact</string>
+    <string name="tap_favorite_to_add">Appuyez sur le cœur sur un contact pour l\'ajouter aux favoris</string>
+    <string name="tap_sync_or_add">Appuyez sur synchroniser ou + pour ajouter des contacts</string>
+
+    <!-- Contact list -->
+    <string name="add_contact">Ajouter un contact</string>
+    <string name="call">Appeler</string>
+
+    <!-- Call logs -->
+    <string name="filter_all">Tous (%1$d)</string>
+    <string name="filter_missed">Manqués (%1$d)</string>
+    <string name="filter_incoming">Entrants (%1$d)</string>
+    <string name="filter_outgoing">Sortants (%1$d)</string>
+    <string name="sync_call_logs">Synchroniser les journaux</string>
+    <string name="clear_all">Tout effacer</string>
+    <string name="call_back">Rappeler</string>
+    <string name="clear_call_history_title">Effacer l\'historique des appels</string>
+    <string name="clear_call_history_message">Tous les journaux seront supprimés définitivement</string>
+    <string name="clear_all_confirm">Tout effacer</string>
+    <string name="no_missed_calls">Aucun appel manqué</string>
+    <string name="no_incoming_calls">Aucun appel entrant</string>
+    <string name="no_outgoing_calls">Aucun appel sortant</string>
+    <string name="no_call_history">Aucun historique d\'appel</string>
+    <string name="today">Aujourd\'hui</string>
+
+    <string name="perm_contacts_title">Contacts</string>
+    <string name="perm_calls_title">Appels téléphoniques</string>
+    <string name="perm_call_history_title">Historique des appels</string>
+    <string name="perm_phone_state_title">État du téléphone</string>
+    <string name="perm_photos_title">Photos</string>
+    <string name="perm_storage_title">Stockage</string>
+    <string name="perm_notifications_title">Notifications</string>
+
+    <string name="perm_contacts_desc">Voir et gérer vos contacts</string>
+    <string name="perm_calls_desc">Passer et gérer des appels téléphoniques</string>
+    <string name="perm_call_history_desc">Accéder à l’historique des appels</string>
+    <string name="perm_phone_state_desc">Surveiller l’état des appels</string>
+    <string name="perm_photos_desc">Définir des photos de profil pour les contacts</string>
+    <string name="perm_storage_desc">Accéder aux photos pour les avatars des contacts</string>
+    <string name="perm_notifications_desc">Recevoir des notifications pour les appels et messages</string>
+</resources>

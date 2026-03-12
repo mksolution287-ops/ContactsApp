@@ -1,0 +1,151 @@
+<resources>
+    <string name="app_name">連絡先</string>
+    <string name="contacts">連絡先</string>
+    <string name="recents">最近</string>
+    <string name="dialer">ダイヤル</string>
+    <string name="settings">設定</string>
+    <string name="search_contacts">連絡先を検索…</string>
+    <string name="new_contact">新しい連絡先</string>
+    <string name="edit_contact">連絡先を編集</string>
+    <string name="save_contact">連絡先を保存</string>
+    <string name="delete_contact">連絡先を削除</string>
+    <string name="name">名前</string>
+    <string name="phone_number">電話番号</string>
+    <string name="email_optional">メール（任意）</string>
+    <string name="favorites">お気に入り</string>
+    <string name="add_to_favorites">お気に入りに追加</string>
+    <string name="remove_from_favorites">お気に入りから削除</string>
+    <string name="recent_calls">最近の通話</string>
+    <string name="appearance">外観</string>
+    <string name="theme">テーマ</string>
+    <string name="language">言語</string>
+    <string name="confirm_delete">削除前に確認</string>
+    <string name="cancel">キャンセル</string>
+    <string name="delete">削除</string>
+    <string name="just_now">たった今</string>
+    <string name="yesterday">昨日</string>
+
+    <!-- Settings screen -->
+    <string name="default_app">デフォルトアプリ</string>
+    <string name="set_as_default_contacts_app">デフォルトの連絡先アプリとして設定</string>
+    <string name="set_as_default_subtitle">このアプリをデフォルトの連絡先・通話アプリに設定する</string>
+    <string name="accent_color">アクセントカラー</string>
+    <string name="sort_by_first_name">名前で並び替え</string>
+    <string name="sort_first_name_first">現在：名前が先</string>
+    <string name="sort_last_name_first">現在：苗字が先</string>
+    <string name="show_phone_in_list">リストに電話番号を表示</string>
+    <string name="show_phone_subtitle">連絡先名の下に電話番号を表示</string>
+    <string name="confirm_before_delete">削除前に確認</string>
+    <string name="confirm_delete_subtitle">連絡先削除前に確認ダイアログを表示</string>
+    <string name="select_language">言語を選択</string>
+    <string name="legal">法的情報</string>
+    <string name="terms_and_conditions">利用規約</string>
+    <string name="privacy_policy">プライバシーポリシー</string>
+    <string name="set_as_default_dialer">デフォルトの電話アプリとして設定</string>
+    <string name="skip_for_now">今はスキップ</string>
+    <string name="contacts_section">連絡先</string>
+
+    <!-- Permission screen -->
+    <string name="allow_access">アクセスを許可</string>
+    <string name="permission_subtitle">最高の体験のために\nいくつかの権限が必要です</string>
+    <string name="grant_permissions">権限を許可する</string>
+    <string name="data_privacy_note">データはデバイスに保存されます。\n連絡先をアップロードすることはありません。</string>
+    <string name="permission_terms_prefix">「権限を許可する」をタップすると、以下に同意したことになります</string>
+    <string name="permission_contacts">連絡先へのアクセスを許可</string>
+    <string name="permission_phone">電話へのアクセスを許可</string>
+    <string name="permission_microphone">マイクへのアクセスを許可</string>
+    <string name="required">必須</string>
+    <string name="optional">任意</string>
+
+    <!-- Set default screen -->
+    <string name="set_as_default">デフォルトとして設定</string>
+    <string name="set_default_subtitle">連絡先をデフォルトの電話アプリに設定して\n完全な通話体験をお楽しみください</string>
+    <string name="one_tap_call_controls">ワンタップ通話コントロール</string>
+    <string name="unified_contacts">統合連絡先</string>
+
+    <!-- Splash -->
+    <string name="tagline">スマートな通話。本物のつながり。</string>
+
+    <!-- Dial pad -->
+    <string name="clear">クリア</string>
+    <string name="keypad">キーパッド</string>
+
+    <!-- Incoming call -->
+    <string name="incoming_call">着信</string>
+    <string name="answer">応答</string>
+    <string name="decline">拒否</string>
+    <string name="unknown">不明</string>
+    <string name="ongoing">通話中</string>
+    <string name="hang_up">通話を終了</string>
+    <string name="incoming_call_channel_name">着信通話</string>
+    <string name="incoming_call_channel_desc">着信通話の通知を表示します</string>
+
+    <!-- Active call -->
+    <string name="end_call">通話終了</string>
+    <string name="calling">通話中…</string>
+    <string name="dialing">発信中…</string>
+    <string name="call_ended">通話が終了しました</string>
+
+    <!-- Call controls -->
+    <string name="mute">ミュート</string>
+    <string name="unmute">ミュート解除</string>
+    <string name="speaker">スピーカー</string>
+    <string name="earpiece">受話口</string>
+    <string name="hold">保留</string>
+    <string name="resume">再開</string>
+    <string name="add_call">通話を追加</string>
+    <string name="record_call">通話を録音</string>
+    <string name="more">その他</string>
+
+    <!-- Empty states -->
+    <string name="no_favorites_yet">お気に入りはまだありません</string>
+    <string name="no_contacts">連絡先がありません</string>
+    <string name="tap_favorite_to_add">連絡先の ♥ をタップしてお気に入りに追加</string>
+    <string name="tap_sync_or_add">同期または + をタップして連絡先を追加</string>
+
+    <!-- Contact list -->
+    <string name="add_contact">連絡先を追加</string>
+    <string name="call">通話</string>
+
+    <!-- Call log filters -->
+    <string name="filter_all">すべて (%1$d)</string>
+    <string name="filter_missed">不在着信 (%1$d)</string>
+    <string name="filter_incoming">着信 (%1$d)</string>
+    <string name="filter_outgoing">発信 (%1$d)</string>
+
+    <!-- Call log actions -->
+    <string name="sync_call_logs">通話履歴を同期</string>
+    <string name="clear_all">すべて削除</string>
+    <string name="call_back">折り返し電話</string>
+
+    <!-- Clear dialog -->
+    <string name="clear_call_history_title">通話履歴を削除しますか？</string>
+    <string name="clear_call_history_message">すべての通話履歴が完全に削除されます。</string>
+    <string name="clear_all_confirm">すべて削除</string>
+
+    <!-- Empty call logs -->
+    <string name="no_missed_calls">不在着信はありません</string>
+    <string name="no_incoming_calls">着信履歴はありません</string>
+    <string name="no_outgoing_calls">発信履歴はありません</string>
+    <string name="no_call_history">通話履歴はありません</string>
+
+    <!-- Date labels -->
+    <string name="today">今日</string>
+
+    <string name="perm_contacts_title">連絡先</string>
+    <string name="perm_calls_title">電話</string>
+    <string name="perm_call_history_title">通話履歴</string>
+    <string name="perm_phone_state_title">電話の状態</string>
+    <string name="perm_photos_title">写真</string>
+    <string name="perm_storage_title">ストレージ</string>
+    <string name="perm_notifications_title">通知</string>
+
+    <string name="perm_contacts_desc">連絡先を表示および管理します</string>
+    <string name="perm_calls_desc">電話を発信および管理します</string>
+    <string name="perm_call_history_desc">通話履歴にアクセスします</string>
+    <string name="perm_phone_state_desc">通話状態を監視します</string>
+    <string name="perm_photos_desc">連絡先のプロフィール写真を設定します</string>
+    <string name="perm_storage_desc">連絡先アバター用の写真にアクセスします</string>
+    <string name="perm_notifications_desc">通話やメッセージの通知を受け取ります</string>
+
+</resources>

@@ -1,0 +1,151 @@
+<resources>
+    <string name="app_name">कॉन्टैक्ट्स</string>
+    <string name="contacts">संपर्क</string>
+    <string name="recents">हाल के</string>
+    <string name="dialer">डायलर</string>
+    <string name="settings">सेटिंग्स</string>
+    <string name="search_contacts">संपर्क खोजें…</string>
+    <string name="new_contact">नया संपर्क</string>
+    <string name="edit_contact">संपर्क संपादित करें</string>
+    <string name="save_contact">संपर्क सहेजें</string>
+    <string name="delete_contact">संपर्क हटाएं</string>
+    <string name="name">नाम</string>
+    <string name="phone_number">फ़ोन नंबर</string>
+    <string name="email_optional">ईमेल (वैकल्पिक)</string>
+    <string name="favorites">पसंदीदा</string>
+    <string name="add_to_favorites">पसंदीदा में जोड़ें</string>
+    <string name="remove_from_favorites">पसंदीदा से हटाएं</string>
+    <string name="recent_calls">हाल की कॉल</string>
+    <string name="appearance">रूप-रंग</string>
+    <string name="theme">थीम</string>
+    <string name="language">भाषा</string>
+    <string name="confirm_delete">हटाने से पहले पुष्टि करें</string>
+    <string name="cancel">रद्द करें</string>
+    <string name="delete">हटाएं</string>
+    <string name="just_now">अभी</string>
+    <string name="yesterday">कल</string>
+
+    <!-- Settings screen -->
+    <string name="default_app">डिफ़ॉल्ट ऐप</string>
+    <string name="set_as_default_contacts_app">डिफ़ॉल्ट कॉन्टैक्ट्स ऐप सेट करें</string>
+    <string name="set_as_default_subtitle">इसे अपना डिफ़ॉल्ट कॉन्टैक्ट्स और डायलर ऐप बनाएं</string>
+    <string name="accent_color">एक्सेंट रंग</string>
+    <string name="sort_by_first_name">पहले नाम से क्रमबद्ध करें</string>
+    <string name="sort_first_name_first">वर्तमान: पहला नाम पहले</string>
+    <string name="sort_last_name_first">वर्तमान: अंतिम नाम पहले</string>
+    <string name="show_phone_in_list">सूची में फ़ोन नंबर दिखाएं</string>
+    <string name="show_phone_subtitle">संपर्क नाम के नीचे फ़ोन नंबर दिखाएं</string>
+    <string name="confirm_before_delete">हटाने से पहले पुष्टि करें</string>
+    <string name="confirm_delete_subtitle">संपर्क हटाने से पहले डायलॉग दिखाएं</string>
+    <string name="select_language">भाषा चुनें</string>
+    <string name="legal">कानूनी</string>
+    <string name="terms_and_conditions">नियम और शर्तें</string>
+    <string name="privacy_policy">गोपनीयता नीति</string>
+    <string name="set_as_default_dialer">डिफ़ॉल्ट डायलर सेट करें</string>
+    <string name="skip_for_now">अभी के लिए छोड़ें</string>
+    <string name="contacts_section">संपर्क</string>
+
+    <!-- Permission screen -->
+    <string name="allow_access">अनुमति दें</string>
+    <string name="permission_subtitle">ContactsApp को बेहतरीन अनुभव के लिए कुछ अनुमतियां चाहिए</string>
+    <string name="grant_permissions">अनुमतियां दें</string>
+    <string name="data_privacy_note">आपका डेटा आपके डिवाइस पर रहता है।\nहम आपके संपर्क अपलोड नहीं करते।</string>
+    <string name="permission_terms_prefix">अनुमतियां देकर आप हमारी शर्तें स्वीकार करते हैं</string>
+    <string name="permission_contacts">संपर्कों तक पहुंच की अनुमति दें</string>
+    <string name="permission_phone">फ़ोन कॉल की अनुमति दें</string>
+    <string name="permission_microphone">माइक्रोफोन की अनुमति दें</string>
+    <string name="required">आवश्यक</string>
+    <string name="optional">वैकल्पिक</string>
+
+    <!-- Set default screen -->
+    <string name="set_as_default">डिफ़ॉल्ट सेट करें</string>
+    <string name="set_default_subtitle">कॉन्टैक्ट्स को अपना डिफ़ॉल्ट डायलर बनाएं\nपूर्ण कॉलिंग अनुभव के लिए</string>
+    <string name="one_tap_call_controls">एक टैप कॉल नियंत्रण</string>
+    <string name="unified_contacts">एकीकृत संपर्क</string>
+
+    <!-- Splash -->
+    <string name="tagline">स्मार्ट कॉल। वास्तविक कनेक्शन।</string>
+
+    <!-- Dial pad -->
+    <string name="clear">साफ़ करें</string>
+    <string name="keypad">कीपैड</string>
+
+    <!-- Incoming call -->
+    <string name="incoming_call">आने वाली कॉल</string>
+    <string name="answer">स्वीकार करें</string>
+    <string name="decline">अस्वीकार करें</string>
+    <string name="unknown">अज्ञात</string>
+    <string name="ongoing">जारी</string>
+    <string name="hang_up">कॉल समाप्त करें</string>
+    <string name="incoming_call_channel_name">आने वाली कॉलें</string>
+    <string name="incoming_call_channel_desc">आने वाली कॉल की सूचनाएँ दिखाता है</string>
+
+    <!-- Active call -->
+    <string name="end_call">कॉल समाप्त</string>
+    <string name="calling">कॉल हो रही है…</string>
+    <string name="dialing">डायल किया जा रहा है…</string>
+    <string name="call_ended">कॉल समाप्त हुई</string>
+
+    <!-- Call controls -->
+    <string name="mute">म्यूट</string>
+    <string name="unmute">अनम्यूट</string>
+    <string name="speaker">स्पीकर</string>
+    <string name="earpiece">ईयरपीस</string>
+    <string name="hold">होल्ड</string>
+    <string name="resume">फिर शुरू करें</string>
+    <string name="add_call">कॉल जोड़ें</string>
+    <string name="record_call">कॉल रिकॉर्ड करें</string>
+    <string name="more">और</string>
+
+    <!-- Empty states -->
+    <string name="no_favorites_yet">अभी तक कोई पसंदीदा संपर्क नहीं</string>
+    <string name="no_contacts">कोई संपर्क नहीं</string>
+    <string name="tap_favorite_to_add">पसंदीदा जोड़ने के लिए किसी संपर्क पर ♥ दबाएं</string>
+    <string name="tap_sync_or_add">संपर्क जोड़ने के लिए सिंक या + दबाएं</string>
+
+    <!-- Contact list -->
+    <string name="add_contact">संपर्क जोड़ें</string>
+    <string name="call">कॉल करें</string>
+
+    <!-- Call log filters -->
+    <string name="filter_all">सभी (%1$d)</string>
+    <string name="filter_missed">मिस्ड (%1$d)</string>
+    <string name="filter_incoming">आने वाली (%1$d)</string>
+    <string name="filter_outgoing">जाने वाली (%1$d)</string>
+
+    <!-- Call log actions -->
+    <string name="sync_call_logs">कॉल लॉग सिंक करें</string>
+    <string name="clear_all">सभी साफ़ करें</string>
+    <string name="call_back">वापस कॉल करें</string>
+
+    <!-- Clear dialog -->
+    <string name="clear_call_history_title">कॉल इतिहास साफ़ करें?</string>
+    <string name="clear_call_history_message">सभी कॉल लॉग स्थायी रूप से हटा दिए जाएंगे।</string>
+    <string name="clear_all_confirm">सभी साफ़ करें</string>
+
+    <!-- Empty call logs -->
+    <string name="no_missed_calls">कोई मिस्ड कॉल नहीं</string>
+    <string name="no_incoming_calls">कोई आने वाली कॉल नहीं</string>
+    <string name="no_outgoing_calls">कोई जाने वाली कॉल नहीं</string>
+    <string name="no_call_history">कोई कॉल इतिहास नहीं</string>
+
+    <!-- Date labels -->
+    <string name="today">आज</string>
+
+    <string name="perm_contacts_title">संपर्क</string>
+    <string name="perm_calls_title">फोन कॉल</string>
+    <string name="perm_call_history_title">कॉल इतिहास</string>
+    <string name="perm_phone_state_title">फोन स्थिति</string>
+    <string name="perm_photos_title">फोटो</string>
+    <string name="perm_storage_title">स्टोरेज</string>
+    <string name="perm_notifications_title">सूचनाएँ</string>
+
+    <string name="perm_contacts_desc">अपने संपर्क देखें और प्रबंधित करें</string>
+    <string name="perm_calls_desc">फोन कॉल करें और प्रबंधित करें</string>
+    <string name="perm_call_history_desc">अपने कॉल इतिहास तक पहुँचें</string>
+    <string name="perm_phone_state_desc">कॉल की स्थिति की निगरानी करें</string>
+    <string name="perm_photos_desc">संपर्कों के लिए प्रोफ़ाइल तस्वीर सेट करें</string>
+    <string name="perm_storage_desc">संपर्क अवतार के लिए फोटो एक्सेस करें</string>
+    <string name="perm_notifications_desc">कॉल और संदेशों के बारे में सूचनाएँ प्राप्त करें</string>
+
+</resources>
