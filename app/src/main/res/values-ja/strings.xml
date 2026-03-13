@@ -148,4 +148,27 @@
     <string name="perm_storage_desc">連絡先アバター用の写真にアクセスします</string>
     <string name="perm_notifications_desc">通話やメッセージの通知を受け取ります</string>
 
+    <!-- Onboarding -->
+    <string name="onboarding_skip">スキップ</string>
+    <string name="onboarding_next">次へ</string>
+    <string name="onboarding_get_started">開始</string>
+
+    <string name="onboarding_title_1">ワンタップ通話</string>
+    <string name="onboarding_desc_1">連絡先リストやダイヤルパッドからワンタップで直接電話できます。</string>
+
+    <string name="onboarding_title_2">スマート発信者ID</string>
+    <string name="onboarding_desc_2">連絡先から同期された名前と写真で誰が電話しているか確認できます。</string>
+
+    <string name="onboarding_title_3">スワイプ操作</string>
+    <string name="onboarding_desc_3">最近の通話を右にスワイプしてすぐ折り返し、左にスワイプして削除できます。</string>
+
+    <string name="onboarding_title_4">テーマとカラー</string>
+    <string name="onboarding_desc_4">ライトまたはダークテーマとさまざまなアクセントカラーで体験をカスタマイズできます。</string>
+
+    <string name="onboarding_title_5">スマート並び替え</string>
+    <string name="onboarding_desc_5">連絡先を名前のアルファベット順で並び替えます。数秒で見つけられます。</string>
+
+    <string name="onboarding_title_6">お気に入りと検索</string>
+    <string name="onboarding_desc_6">重要な連絡先をお気に入りに追加し、すばやく検索できます。</string>
+
 </resources>

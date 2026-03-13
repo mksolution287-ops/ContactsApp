@@ -57,6 +57,9 @@ import com.mktech.contactsapp.data.model.AppLanguage
 import com.mktech.contactsapp.util.LocaleHelper
 import kotlinx.coroutines.delay
 import android.telephony.PhoneNumberUtils
+import com.mktech.contactsapp.ui.components.BannerAd
+import com.mktech.contactsapp.ui.components.NativeAdCard
+import com.mktech.contactsapp.ui.onboarding.OnboardingActivity
 
 // ── Permission metadata ───────────────────────────────────────────────────────
 
@@ -186,6 +189,8 @@ class MainActivity : BaseActivity() {
                 }
                 var languagePicked by remember { mutableStateOf(languageAlreadyChosen) }
 
+                val onboardingDone = remember { prefs.getBoolean("onboarding_done", false) }
+
                 val isDefaultDialer = remember { mutableStateOf(isDefaultDialer(this)) }
 
                 val defaultDialerLauncher = rememberLauncherForActivityResult(
@@ -220,6 +225,7 @@ class MainActivity : BaseActivity() {
                 val currentScreen = when {
                     showSplash                                 -> "splash"
                     !languagePicked                            -> "language"
+                    !onboardingDone                            -> "onboarding"
                     !isDefaultDialer.value && !defaultSkipped -> "set_default"
                     !requiredPermissionsGranted                -> "permission"
                     else                                       -> "main"
@@ -239,7 +245,7 @@ class MainActivity : BaseActivity() {
                         when (screen) {
                             "splash" -> SplashScreen()
 
-                            "language" -> LanguagePickerScreen(        // ← NEW
+                            "language" -> LanguagePickerScreen(
                                 onLanguageSelected = { language ->
                                     viewModel.setLanguage(language)
                                     prefs.edit().putBoolean("skip_splash", true).apply()
@@ -247,6 +253,18 @@ class MainActivity : BaseActivity() {
                                     activity.recreate()
                                 }
                             )
+
+                            "onboarding" -> {
+                                LaunchedEffect(Unit) {
+                                    startActivity(Intent(activity, OnboardingActivity::class.java))
+                                    activity.finish()
+                                }
+                                // Blank screen while navigating
+                                Box(modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center) {
+                                    CircularProgressIndicator()
+                                }
+                            }
 
                             "permission" -> {
                                 var deniedCount by remember { mutableStateOf(0) }
@@ -473,7 +491,7 @@ private fun LanguagePickerScreen(
         animationSpec = tween(700, delayMillis = 600), label = "button"
     )
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(
@@ -484,7 +502,7 @@ private fun LanguagePickerScreen(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .weight(1f)
                 .padding(horizontal = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -499,7 +517,7 @@ private fun LanguagePickerScreen(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(86.dp)
+                        .size(60.dp)
                         .background(
                             Brush.linearGradient(
                                 colors = listOf(Color(0xFF1565C0), Color(0xFF42A5F5))
@@ -516,12 +534,12 @@ private fun LanguagePickerScreen(
                     )
                 }
 
-                Spacer(Modifier.height(28.dp))
+                Spacer(Modifier.height(15.dp))
 
                 Text(
                     text = "Choose Language",
                     color = Color.White,
-                    fontSize = 30.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = (-0.3).sp
                 )
@@ -537,7 +555,7 @@ private fun LanguagePickerScreen(
                 )
             }
 
-            Spacer(Modifier.height(32.dp))
+            Spacer(Modifier.height(15.dp))
 
             // Language list
             LazyColumn(
@@ -621,7 +639,7 @@ private fun LanguagePickerScreen(
             Column(
                 modifier = Modifier
                     .alpha(buttonAlpha)
-                    .padding(bottom = 32.dp),
+                    .padding(bottom = 10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button(
@@ -648,6 +666,9 @@ private fun LanguagePickerScreen(
                 }
             }
         }
+
+        // NativeAdCard sits here — outside the padded Column, no overlap possible
+        NativeAdCard()
     }
 }
 
@@ -1074,6 +1095,8 @@ private fun PermissionScreen(
                 }
             }
         }
+            //banner ads
+            BannerAd()
     }
 }
 
@@ -1253,6 +1276,9 @@ private fun SetDefaultScreen(
                     Text(stringResource(R.string.skip_for_now), color = Color(0xFF546E7A), fontSize = 14.sp)
                 }
             }
+
+            //banner ads
+            BannerAd()
         }
     }
 }

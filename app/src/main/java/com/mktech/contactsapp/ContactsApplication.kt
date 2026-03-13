@@ -3,13 +3,16 @@ package com.mktech.contactsapp
 import android.app.Application
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.room.Room
+import com.google.android.gms.ads.MobileAds
 import com.mktech.contactsapp.data.local.ContactDatabase
 import com.mktech.contactsapp.data.model.AppLanguage
 import com.mktech.contactsapp.data.repository.CallLogRepository
 import com.mktech.contactsapp.data.repository.ContactRepository
 import com.mktech.contactsapp.data.repository.SettingsRepository
+import com.mktech.contactsapp.util.AdManager
 import com.mktech.contactsapp.util.LocaleHelper
 
 class ContactsApplication : Application() {
@@ -39,6 +42,14 @@ class ContactsApplication : Application() {
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate() {
         super.onCreate()
+
+        // Initialize AdMob
+        MobileAds.initialize(this) { initStatus ->
+            Log.d("AdMob", "Initialized: ${initStatus.adapterStatusMap}")
+            // ← Init AdManager INSIDE the callback, after MobileAds is ready
+            AdManager.init(this)
+        }
+
         // ── Detect fresh install and clear stale prefs ───────────────────
         val prefs = getSharedPreferences("app_settings", Context.MODE_PRIVATE)
         val currentVersionCode = packageManager

@@ -148,4 +148,27 @@
     <string name="perm_storage_desc">访问照片用于联系人头像</string>
     <string name="perm_notifications_desc">接收来电和消息通知</string>
 
+    <!-- Onboarding -->
+    <string name="onboarding_skip">跳过</string>
+    <string name="onboarding_next">下一步</string>
+    <string name="onboarding_get_started">开始使用</string>
+
+    <string name="onboarding_title_1">即时通话</string>
+    <string name="onboarding_desc_1">从联系人列表或拨号盘一键直接拨打电话。</string>
+
+    <string name="onboarding_title_2">智能来电识别</string>
+    <string name="onboarding_desc_2">自动从联系人同步姓名和照片，轻松识别来电。</string>
+
+    <string name="onboarding_title_3">滑动操作</string>
+    <string name="onboarding_desc_3">向右滑动最近通话即可立即回拨，向左滑动删除记录。</string>
+
+    <string name="onboarding_title_4">主题和颜色</string>
+    <string name="onboarding_desc_4">使用浅色或深色主题以及多种强调颜色来个性化你的体验。</string>
+
+    <string name="onboarding_title_5">智能排序</string>
+    <string name="onboarding_desc_5">按名字字母顺序排列联系人。几秒钟内找到任何人。</string>
+
+    <string name="onboarding_title_6">收藏与搜索</string>
+    <string name="onboarding_desc_6">将重要联系人加入收藏，并在整个联系人列表中快速搜索。</string>
+
 </resources>

@@ -150,5 +150,28 @@
     <string name="perm_storage_desc">الوصول إلى الصور لصور جهات الاتصال</string>
     <string name="perm_notifications_desc">تلقي إشعارات حول المكالمات والرسائل</string>
 
+    <!-- Onboarding -->
+    <string name="onboarding_skip">تخطي</string>
+    <string name="onboarding_next">التالي</string>
+    <string name="onboarding_get_started">ابدأ</string>
+
+    <string name="onboarding_title_1">اتصال فوري</string>
+    <string name="onboarding_desc_1">اتصل بأي شخص مباشرة من قائمة جهات الاتصال أو لوحة الاتصال بنقرة واحدة فقط. بدون خطوات إضافية.</string>
+
+    <string name="onboarding_title_2">معرّف متصل ذكي</string>
+    <string name="onboarding_desc_2">اعرف من يتصل بك مع الأسماء والصور المتزامنة تلقائيًا من جهات الاتصال.</string>
+
+    <string name="onboarding_title_3">اسحب للتنفيذ</string>
+    <string name="onboarding_desc_3">اسحب لليمين على أي مكالمة حديثة للاتصال فورًا. اسحب لليسار لحذفها من السجل.</string>
+
+    <string name="onboarding_title_4">السمات والألوان</string>
+    <string name="onboarding_desc_4">خصص تجربتك باستخدام السمات الفاتحة أو الداكنة ومجموعة من الألوان المميزة التي تناسب أسلوبك.</string>
+
+    <string name="onboarding_title_5">فرز ذكي</string>
+    <string name="onboarding_desc_5">رتب جهات الاتصال أبجديًا حسب الاسم الأول. اعثر على أي شخص خلال ثوانٍ.</string>
+
+    <string name="onboarding_title_6">المفضلة والبحث</string>
+    <string name="onboarding_desc_6">ضع علامة نجمة على جهات الاتصال المهمة للوصول السريع. ابحث في قائمة جهات الاتصال بالكامل فورًا.</string>
+
 
 </resources>

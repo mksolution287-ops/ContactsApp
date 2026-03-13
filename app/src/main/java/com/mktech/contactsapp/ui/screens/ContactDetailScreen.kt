@@ -37,6 +37,7 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import com.mktech.contactsapp.R
+import com.mktech.contactsapp.ui.components.BannerAd
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
@@ -408,6 +409,10 @@ fun ContactDetailScreen(
                     }
                 }
 
+                // Banner ad at TOP of the bottom bar area
+                BannerAd(modifier = Modifier
+                    .fillMaxWidth()
+                )
                 Spacer(Modifier.height(24.dp))
             }
         }

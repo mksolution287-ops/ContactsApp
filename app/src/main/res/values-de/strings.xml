@@ -1,0 +1,173 @@
+<resources>
+    <string name="app_name">Kontakte</string>
+    <string name="contacts">Kontakte</string>
+    <string name="recents">Zuletzt</string>
+    <string name="dialer">Wähltastatur</string>
+    <string name="settings">Einstellungen</string>
+    <string name="search_contacts">Kontakte suchen…</string>
+    <string name="new_contact">Neuer Kontakt</string>
+    <string name="edit_contact">Kontakt bearbeiten</string>
+    <string name="save_contact">Kontakt speichern</string>
+    <string name="delete_contact">Kontakt löschen</string>
+    <string name="name">Name</string>
+    <string name="phone_number">Telefonnummer</string>
+    <string name="email_optional">E-Mail (optional)</string>
+    <string name="favorites">Favoriten</string>
+    <string name="add_to_favorites">Zu Favoriten hinzufügen</string>
+    <string name="remove_from_favorites">Aus Favoriten entfernen</string>
+    <string name="recent_calls">Letzte Anrufe</string>
+    <string name="appearance">Erscheinungsbild</string>
+    <string name="theme">Design</string>
+    <string name="language">Sprache</string>
+    <string name="confirm_delete">Vor dem Löschen bestätigen</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="delete">Löschen</string>
+    <string name="just_now">Gerade eben</string>
+    <string name="yesterday">Gestern</string>
+
+    <!-- Settings screen -->
+    <string name="default_app">Standard-App</string>
+    <string name="set_as_default_contacts_app">Als Standard-Kontakte-App festlegen</string>
+    <string name="set_as_default_subtitle">Diese App als Standard-Kontakte- und Wähl-App festlegen</string>
+    <string name="accent_color">Akzentfarbe</string>
+    <string name="sort_by_first_name">Nach Vorname sortieren</string>
+    <string name="sort_first_name_first">Aktuell: Vorname zuerst</string>
+    <string name="sort_last_name_first">Aktuell: Nachname zuerst</string>
+    <string name="show_phone_in_list">Telefonnummer in Liste anzeigen</string>
+    <string name="show_phone_subtitle">Telefonnummer unter dem Kontaktnamen anzeigen</string>
+    <string name="confirm_before_delete">Vor dem Löschen bestätigen</string>
+    <string name="confirm_delete_subtitle">Dialog vor dem Löschen von Kontakten anzeigen</string>
+    <string name="select_language">Sprache auswählen</string>
+    <string name="legal">Rechtliches</string>
+    <string name="terms_and_conditions">Nutzungsbedingungen</string>
+    <string name="privacy_policy">Datenschutzrichtlinie</string>
+    <string name="set_as_default_dialer">Als Standard-Wähler festlegen</string>
+    <string name="skip_for_now">Jetzt überspringen</string>
+    <string name="contacts_section">Kontakte</string>
+
+    <!-- Permission screen -->
+    <string name="allow_access">Zugriff erlauben</string>
+    <string name="permission_subtitle">ContactsApp benötigt einige Berechtigungen\nfür das beste Erlebnis</string>
+    <string name="grant_permissions">Berechtigungen erteilen</string>
+    <string name="data_privacy_note">Ihre Daten bleiben auf Ihrem Gerät.\nWir laden Ihre Kontakte niemals hoch.</string>
+    <string name="permission_terms_prefix">Durch Tippen auf „Berechtigungen erteilen“ stimmen Sie unseren</string>
+    <string name="permission_contacts">Zugriff auf Kontakte erlauben</string>
+    <string name="permission_phone">Telefonzugriff erlauben</string>
+    <string name="permission_microphone">Mikrofonzugriff erlauben</string>
+    <string name="required">Erforderlich</string>
+    <string name="optional">Optional</string>
+
+    <!-- Set default screen -->
+    <string name="set_as_default">Als Standard festlegen</string>
+    <string name="set_default_subtitle">Machen Sie Kontakte zu Ihrem Standard-Wähler\nfür das vollständige Anruferlebnis</string>
+    <string name="one_tap_call_controls">Anrufsteuerung mit einem Tippen</string>
+    <string name="unified_contacts">Einheitliche Kontakte</string>
+
+    <!-- Splash -->
+    <string name="tagline">Smarte Anrufe. Echte Verbindungen.</string>
+
+    <!-- Dial pad -->
+    <string name="clear">Löschen</string>
+    <string name="keypad">Tastenfeld</string>
+
+    <!-- Incoming call -->
+    <string name="incoming_call">Eingehender Anruf</string>
+    <string name="answer">Annehmen</string>
+    <string name="decline">Ablehnen</string>
+    <string name="unknown">Unbekannt</string>
+    <string name="ongoing">Laufend</string>
+    <string name="hang_up">Auflegen</string>
+    <string name="incoming_call_channel_name">Eingehende Anrufe</string>
+    <string name="incoming_call_channel_desc">Zeigt Benachrichtigungen für eingehende Anrufe an</string>
+
+    <!-- Active call -->
+    <string name="end_call">Beenden</string>
+    <string name="calling">Anruf läuft…</string>
+    <string name="dialing">Wird gewählt…</string>
+    <string name="call_ended">Anruf beendet</string>
+
+    <!-- Call controls -->
+    <string name="mute">Stumm</string>
+    <string name="unmute">Stummschaltung aufheben</string>
+    <string name="speaker">Lautsprecher</string>
+    <string name="earpiece">Hörer</string>
+    <string name="hold">Halten</string>
+    <string name="resume">Fortsetzen</string>
+    <string name="add_call">Anruf hinzufügen</string>
+    <string name="record_call">Anruf aufnehmen</string>
+    <string name="more">Mehr</string>
+
+    <!-- Empty states -->
+    <string name="no_favorites_yet">Noch keine Favoriten</string>
+    <string name="no_contacts">Keine Kontakte</string>
+    <string name="tap_favorite_to_add">Tippe ♥ bei einem Kontakt, um ihn zu Favoriten hinzuzufügen</string>
+    <string name="tap_sync_or_add">Tippe auf Synchronisieren oder +, um Kontakte hinzuzufügen</string>
+
+    <!-- Contact list -->
+    <string name="add_contact">Kontakt hinzufügen</string>
+    <string name="call">Anrufen</string>
+
+    <!-- Call log filters -->
+    <string name="filter_all">Alle (%1$d)</string>
+    <string name="filter_missed">Verpasst (%1$d)</string>
+    <string name="filter_incoming">Eingehend (%1$d)</string>
+    <string name="filter_outgoing">Ausgehend (%1$d)</string>
+
+    <!-- Call log actions -->
+    <string name="sync_call_logs">Anrufprotokolle synchronisieren</string>
+    <string name="clear_all">Alles löschen</string>
+    <string name="call_back">Zurückrufen</string>
+
+    <!-- Clear dialog -->
+    <string name="clear_call_history_title">Anrufverlauf löschen?</string>
+    <string name="clear_call_history_message">Alle Anrufprotokolle werden dauerhaft gelöscht.</string>
+    <string name="clear_all_confirm">Alles löschen</string>
+
+    <!-- Empty call logs -->
+    <string name="no_missed_calls">Keine verpassten Anrufe</string>
+    <string name="no_incoming_calls">Keine eingehenden Anrufe</string>
+    <string name="no_outgoing_calls">Keine ausgehenden Anrufe</string>
+    <string name="no_call_history">Kein Anrufverlauf</string>
+
+    <!-- Date labels -->
+    <string name="today">Heute</string>
+
+    <string name="perm_contacts_title">Kontakte</string>
+    <string name="perm_calls_title">Telefonanrufe</string>
+    <string name="perm_call_history_title">Anrufverlauf</string>
+    <string name="perm_phone_state_title">Telefonstatus</string>
+    <string name="perm_photos_title">Fotos</string>
+    <string name="perm_storage_title">Speicher</string>
+    <string name="perm_notifications_title">Benachrichtigungen</string>
+
+    <string name="perm_contacts_desc">Kontakte anzeigen und verwalten</string>
+    <string name="perm_calls_desc">Telefonanrufe tätigen und verwalten</string>
+    <string name="perm_call_history_desc">Auf Ihren Anrufverlauf zugreifen</string>
+    <string name="perm_phone_state_desc">Anrufstatus überwachen</string>
+    <string name="perm_photos_desc">Profilbilder für Kontakte festlegen</string>
+    <string name="perm_storage_desc">Auf Fotos für Kontakt-Avatare zugreifen</string>
+    <string name="perm_notifications_desc">Benachrichtigungen über Anrufe und Nachrichten erhalten</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_skip">Überspringen</string>
+    <string name="onboarding_next">Weiter</string>
+    <string name="onboarding_get_started">Loslegen</string>
+
+    <string name="onboarding_title_1">Sofort anrufen</string>
+    <string name="onboarding_desc_1">Rufen Sie jemanden direkt aus Ihrer Kontaktliste oder dem Wählfeld mit nur einem Tippen an.</string>
+
+    <string name="onboarding_title_2">Intelligente Anruferkennung</string>
+    <string name="onboarding_desc_2">Sehen Sie, wer anruft – mit Namen und Fotos aus Ihren Kontakten.</string>
+
+    <string name="onboarding_title_3">Wischen zum Handeln</string>
+    <string name="onboarding_desc_3">Wischen Sie bei einem letzten Anruf nach rechts, um sofort zurückzurufen. Nach links, um ihn zu löschen.</string>
+
+    <string name="onboarding_title_4">Designs und Farben</string>
+    <string name="onboarding_desc_4">Passen Sie Ihr Erlebnis mit hellen oder dunklen Designs und verschiedenen Akzentfarben an.</string>
+
+    <string name="onboarding_title_5">Intelligente Sortierung</string>
+    <string name="onboarding_desc_5">Sortieren Sie Ihre Kontakte alphabetisch nach dem Vornamen. Finden Sie jeden in Sekunden.</string>
+
+    <string name="onboarding_title_6">Favoriten und Suche</string>
+    <string name="onboarding_desc_6">Markieren Sie wichtige Kontakte als Favoriten und finden Sie sie sofort.</string>
+</resources>

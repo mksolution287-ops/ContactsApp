@@ -43,7 +43,7 @@ private val dialKeys = listOf(
     Triple("8", "TUV", ""),
     Triple("9", "WXYZ", ""),
     Triple("*", "", ""),
-    Triple("0", "+", ""),
+    Triple("0", "", ""),
     Triple("#", "", "")
 )
 
@@ -127,7 +127,7 @@ fun DialPadScreen(
 
                 // Add contact button
                 this@Column.AnimatedVisibility(
-                    visible = number.length >= 5,
+                    visible = number.length >= 3,
                     modifier = Modifier.align(Alignment.CenterEnd)
                 ) {
                     IconButton(onClick = onSaveContact) {

@@ -150,4 +150,27 @@
     <string name="perm_photos_desc">Set profile pictures for contacts</string>
     <string name="perm_storage_desc">Access photos for contact avatars</string>
     <string name="perm_notifications_desc">Get notified about calls and messages</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_get_started">Get Started</string>
+
+    <string name="onboarding_title_1">Instant Calling</string>
+    <string name="onboarding_desc_1">Call anyone directly from your contact list or dial pad with a single tap. No extra steps.</string>
+
+    <string name="onboarding_title_2">Smart Caller ID</string>
+    <string name="onboarding_desc_2">See who\'s calling with names and photos synced from your contacts automatically.</string>
+
+    <string name="onboarding_title_3">Swipe to Act</string>
+    <string name="onboarding_desc_3">Swipe left on any recent call to call back instantly. Swipe right to delete it from your history.</string>
+
+    <string name="onboarding_title_4">Themes &amp; Colors</string>
+    <string name="onboarding_desc_4">Personalize your experience with light or dark themes and a variety of accent colors to match your style.</string>
+
+    <string name="onboarding_title_5">Smart Sorting</string>
+    <string name="onboarding_desc_5">Sort your contacts alphabetically by first name. Find anyone in seconds.</string>
+
+    <string name="onboarding_title_6">Favorites &amp; Search</string>
+    <string name="onboarding_desc_6">Star your most important contacts for quick access. Search across your entire contact list instantly.</string>
 </resources>

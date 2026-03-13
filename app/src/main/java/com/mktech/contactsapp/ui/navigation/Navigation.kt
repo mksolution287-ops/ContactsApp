@@ -30,6 +30,8 @@ import com.mktech.contactsapp.data.AnalyticsTracker
 import com.mktech.contactsapp.data.repository.SettingsRepository
 import kotlinx.coroutines.launch
 import com.mktech.contactsapp.R
+import com.mktech.contactsapp.ui.components.BannerAd
+import com.mktech.contactsapp.util.AdManager
 
 // ── Route constants ──────────────────────────────────────────────────────────
 object Routes {
@@ -48,7 +50,7 @@ data class BottomNavItem(
     val badgeCount: Int = 0
 )
 
-@SuppressLint("MissingPermission")
+@SuppressLint("MissingPermission", "SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContactNavigation(
@@ -110,6 +112,8 @@ fun ContactNavigation(
                     onToggleFavorites = {
                         viewModel.toggleFavoritesFilter()
                         AnalyticsTracker.logFilterToggled(!showFavOnly) // toggled state
+                        //interstitial ad
+                        AdManager.trackAction(context, activity)
                     },
                     onSyncContacts = {
                         viewModel.loadDeviceContacts()
@@ -125,34 +129,43 @@ fun ContactNavigation(
         },
         bottomBar = {
             if (showBottomBar) {
-                NavigationBar(tonalElevation = 4.dp) {
-                    bottomItems.forEach { item ->
-                        NavigationBarItem(
-                            selected = currentRoute == item.route,
-                            onClick = {
-                                // ── Track bottom nav tab taps ────────────────
-                                AnalyticsTracker.logBottomNavTapped(item.route)
-
-                                navController.navigate(item.route) {
-                                    popUpTo(Routes.CONTACTS) { saveState = true }
-                                    launchSingleTop = true
-                                    restoreState    = true
-                                }
-                            },
-                            icon = {
-                                if (item.badgeCount > 0) {
-                                    BadgedBox(badge = {
-                                        Badge { Text(item.badgeCount.toString()) }
-                                    }) {
+                Column {
+                    NavigationBar(tonalElevation = 4.dp) {
+                        bottomItems.forEach { item ->
+                            NavigationBarItem(
+                                selected = currentRoute == item.route,
+                                onClick = {
+                                    AnalyticsTracker.logBottomNavTapped(item.route)
+                                    if (item.route == Routes.DIALER && currentRoute != Routes.DIALER) {
+                                        viewModel.dialPadClear()
+                                    }
+                                    navController.navigate(item.route) {
+                                        popUpTo(Routes.CONTACTS) { saveState = true }
+                                        launchSingleTop = true
+                                        restoreState    = true
+                                    }
+                                    //interstitial ad
+                                    AdManager.trackAction(context, activity)
+                                },
+                                icon = {
+                                    if (item.badgeCount > 0) {
+                                        BadgedBox(badge = {
+                                            Badge { Text(item.badgeCount.toString()) }
+                                        }) {
+                                            Icon(item.icon, contentDescription = item.label)
+                                        }
+                                    } else {
                                         Icon(item.icon, contentDescription = item.label)
                                     }
-                                } else {
-                                    Icon(item.icon, contentDescription = item.label)
-                                }
-                            },
-                            label = { Text(item.label) }
-                        )
+                                },
+                                label = { Text(item.label) }
+                            )
+                        }
                     }
+                    // Banner ad at TOP of the bottom bar area
+                    BannerAd(modifier = Modifier
+                        .fillMaxWidth()
+                    )
                 }
             }
         }
@@ -177,10 +190,14 @@ fun ContactNavigation(
                     onToggleFavorite  = { id, currentState ->
                         AnalyticsTracker.logFavoriteToggled(id, !currentState)
                         viewModel.toggleFavorite(id, currentState)
+                        //interstitial ad
+                        AdManager.trackAction(context, activity)
                     },
                     onAddContact      = {
                         AnalyticsTracker.logEvent("add_contact_tapped", mapOf("source" to "contacts_fab"))
                         navController.navigate(Routes.contactDetail(null))
+                        //interstitial ad
+                        AdManager.trackAction(context, activity)
                     },
                     onCallContact     = { number ->
                         AnalyticsTracker.logContactCalled(hasImage = false)
@@ -219,10 +236,14 @@ fun ContactNavigation(
                     onDeleteLog = { log ->
                         AnalyticsTracker.logEvent("call_log_deleted")
                         viewModel.deleteCallLog(log)
+                        //interstitial ad
+                        AdManager.trackAction(context, activity)
                     },
                     onClearAll  = {
                         AnalyticsTracker.logEvent("call_logs_cleared_all")
                         viewModel.clearAllCallLogs()
+                        //interstitial ad
+                        AdManager.trackAction(context, activity)
                     },
                     onSyncLogs  = {
                         AnalyticsTracker.logEvent("call_logs_synced")
@@ -259,10 +280,20 @@ fun ContactNavigation(
                     }
                 }
 
+//                val matchingContacts by remember {
+//                    derivedStateOf {
+//                        if (dialNumber.isNotEmpty()) viewModel.getMatchingContacts(dialNumber)
+//                        else emptyList()
+//                    }
+//                }
                 val matchingContacts by remember {
                     derivedStateOf {
-                        if (dialNumber.isNotEmpty()) viewModel.getMatchingContacts(dialNumber)
-                        else emptyList()
+                        val isSpecialCode = dialNumber.any { it == '*' || it == '#' || it == '+' }
+                        if (dialNumber.isNotEmpty() && !isSpecialCode) {
+                            viewModel.getMatchingContacts(dialNumber)
+                        } else {
+                            emptyList()
+                        }
                     }
                 }
 
@@ -294,6 +325,8 @@ fun ContactNavigation(
                     onSaveContact = {
                         AnalyticsTracker.logEvent("save_contact_from_dialpad")
                         navController.navigate(Routes.contactDetail(-1L))
+                        //interstitial ad
+                        AdManager.trackAction(context, activity)
                     },
                     matchingContacts = matchingContacts,
                     settings         = settings,
@@ -317,32 +350,44 @@ fun ContactNavigation(
                         AnalyticsTracker.logEvent("setting_changed",
                             mapOf("setting" to "theme", "value" to theme.toString()))
                         viewModel.setTheme(theme)
+                        //interstitial ad
+                        AdManager.trackAction(context, activity)
                     },
                     onAccentColorChange = { color ->
                         AnalyticsTracker.logEvent("setting_changed",
                             mapOf("setting" to "accent_color", "value" to color.toString()))
                         viewModel.setAccentColor(color)
+                        //interstitial ad
+                        AdManager.trackAction(context, activity)
                     },
                     onSortOrderChange   = { sort ->
                         AnalyticsTracker.logEvent("setting_changed",
                             mapOf("setting" to "sort_order", "value" to sort.toString()))
                         viewModel.setSortOrder(sort)
+                        //interstitial ad
+                        AdManager.trackAction(context, activity)
                     },
                     onShowPhoneChange   = { show ->
                         AnalyticsTracker.logEvent("setting_changed",
                             mapOf("setting" to "show_phone", "value" to show.toString()))
                         viewModel.setShowPhone(show)
+                        //interstitial ad
+                        AdManager.trackAction(context, activity)
                     },
                     onConfirmDeleteChange = { confirm ->
                         AnalyticsTracker.logEvent("setting_changed",
                             mapOf("setting" to "confirm_delete", "value" to confirm.toString()))
                         viewModel.setConfirmDelete(confirm)
+                        //interstitial ad
+                        AdManager.trackAction(context, activity)
                     },
                     onLanguageChange = { lang ->
                         AnalyticsTracker.logEvent("setting_changed",
                             mapOf("setting" to "language", "value" to lang.code))
                         viewModel.setLanguage(lang)
                         activity?.recreate()   // ← applies new locale immediately
+                        //interstitial ad
+                        AdManager.trackAction(context, activity)
                     }
                 )
             }
@@ -394,11 +439,15 @@ fun ContactNavigation(
                                     AnalyticsTracker.logContactAdded()
                                     viewModel.addContact(updated)
                                     viewModel.dialPadClear()
+                                    //interstitial ad
+                                    AdManager.trackAction(context, activity)
                                 } else {
                                     AnalyticsTracker.logEvent("contact_updated",
                                         mapOf("contact_id" to updated.id.toString()))
                                     Log.d("ContactSave", "Calling updateContact id=${updated.id}")
                                     viewModel.updateContact(updated)
+                                    //interstitial ad
+                                    AdManager.trackAction(context, activity)
                                 }
                                 navController.popBackStack()
                             }
@@ -409,6 +458,8 @@ fun ContactNavigation(
                                     AnalyticsTracker.logEvent("contact_deleted",
                                         mapOf("contact_id" to it.id.toString()))
                                     viewModel.deleteContact(it)
+                                    //interstitial ad
+                                    AdManager.trackAction(context, activity)
                                 }
                                 navController.popBackStack()
                             }

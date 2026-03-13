@@ -148,4 +148,27 @@
     <string name="perm_storage_desc">Acceder a fotos para avatares de contactos</string>
     <string name="perm_notifications_desc">Recibir notificaciones sobre llamadas y mensajes</string>
 
+    <!-- Onboarding -->
+    <string name="onboarding_skip">Omitir</string>
+    <string name="onboarding_next">Siguiente</string>
+    <string name="onboarding_get_started">Comenzar</string>
+
+    <string name="onboarding_title_1">Llamadas instantáneas</string>
+    <string name="onboarding_desc_1">Llama a cualquier persona directamente desde tu lista de contactos o el marcador con un solo toque.</string>
+
+    <string name="onboarding_title_2">Identificador de llamadas inteligente</string>
+    <string name="onboarding_desc_2">Mira quién llama con nombres y fotos sincronizados automáticamente desde tus contactos.</string>
+
+    <string name="onboarding_title_3">Desliza para actuar</string>
+    <string name="onboarding_desc_3">Desliza a la derecha en cualquier llamada reciente para devolver la llamada al instante. Desliza a la izquierda para eliminarla.</string>
+
+    <string name="onboarding_title_4">Temas y colores</string>
+    <string name="onboarding_desc_4">Personaliza tu experiencia con temas claros u oscuros y una variedad de colores de acento.</string>
+
+    <string name="onboarding_title_5">Orden inteligente</string>
+    <string name="onboarding_desc_5">Ordena tus contactos alfabéticamente por nombre. Encuentra a cualquiera en segundos.</string>
+
+    <string name="onboarding_title_6">Favoritos y búsqueda</string>
+    <string name="onboarding_desc_6">Marca tus contactos importantes como favoritos para acceso rápido y búscalos al instante.</string>
+
 </resources>

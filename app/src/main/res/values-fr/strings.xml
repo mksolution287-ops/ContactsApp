@@ -139,4 +139,27 @@
     <string name="perm_photos_desc">Définir des photos de profil pour les contacts</string>
     <string name="perm_storage_desc">Accéder aux photos pour les avatars des contacts</string>
     <string name="perm_notifications_desc">Recevoir des notifications pour les appels et messages</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_skip">Ignorer</string>
+    <string name="onboarding_next">Suivant</string>
+    <string name="onboarding_get_started">Commencer</string>
+
+    <string name="onboarding_title_1">Appel instantané</string>
+    <string name="onboarding_desc_1">Appelez directement depuis votre liste de contacts ou le clavier avec un seul appui.</string>
+
+    <string name="onboarding_title_2">Identification intelligente</string>
+    <string name="onboarding_desc_2">Voyez qui vous appelle avec les noms et photos synchronisés depuis vos contacts.</string>
+
+    <string name="onboarding_title_3">Glisser pour agir</string>
+    <string name="onboarding_desc_3">Glissez à droite sur un appel récent pour rappeler immédiatement. Glissez à gauche pour le supprimer.</string>
+
+    <string name="onboarding_title_4">Thèmes et couleurs</string>
+    <string name="onboarding_desc_4">Personnalisez votre expérience avec des thèmes clairs ou sombres et une variété de couleurs d\'accent.</string>
+
+    <string name="onboarding_title_5">Tri intelligent</string>
+    <string name="onboarding_desc_5">Triez vos contacts par ordre alphabétique selon le prénom. Trouvez n\'importe qui en quelques secondes.</string>
+
+    <string name="onboarding_title_6">Favoris et recherche</string>
+    <string name="onboarding_desc_6">Ajoutez vos contacts importants aux favoris et recherchez instantanément.</string>
 </resources>
