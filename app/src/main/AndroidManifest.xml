@@ -32,6 +32,7 @@
         android:theme="@style/Theme.ContactsApp"
         tools:ignore="MissingClass"
         tools:replace="android:fullBackupContent"
+        android:localeConfig="@xml/locales_config"
         tools:targetApi="31">
 
         <activity
@@ -83,6 +84,7 @@
 
         <activity
             android:name=".MainActivity"
+            android:configChanges="locale|layoutDirection|fontScale|screenSize|uiMode"
             android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/Theme.ContactsApp"

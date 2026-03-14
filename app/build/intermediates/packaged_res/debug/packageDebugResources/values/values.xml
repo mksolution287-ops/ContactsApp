@@ -135,12 +135,15 @@
     <string name="tap_sync_or_add">Tap sync or + to add contacts</string>
     <string name="terms_and_conditions">Terms &amp; Conditions</string>
     <string name="theme">Theme</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_system">System</string>
     <string name="today">Today</string>
     <string name="unified_contacts">Unified Contacts</string>
     <string name="unknown">Unknown</string>
     <string name="unmute">Unmute</string>
     <string name="yesterday">Yesterday</string>
-    <style name="Theme.ContactsApp" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="Theme.ContactsApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowBackground">@color/splash_background</item>

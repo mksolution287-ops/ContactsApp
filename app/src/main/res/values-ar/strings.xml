@@ -45,6 +45,10 @@
     <string name="skip_for_now">تخطي الآن</string>
     <string name="contacts_section">جهات الاتصال</string>
 
+    <string name="theme_system">افتراضي</string>
+    <string name="theme_light">فاتح</string>
+    <string name="theme_dark">داكن</string>
+
     <!-- Permission screen -->
     <string name="allow_access">السماح بالوصول</string>
     <string name="permission_subtitle">يحتاج التطبيق إلى بعض الأذونات لتقديم أفضل تجربة</string>

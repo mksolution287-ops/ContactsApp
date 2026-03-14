@@ -250,6 +250,9 @@ private fun CallLogItem(
                 }
                 else -> false
             }
+        },
+        positionalThreshold = { totalDistance ->
+            totalDistance * 0.5f  // ← must swipe 50% to trigger
         }
     )
 

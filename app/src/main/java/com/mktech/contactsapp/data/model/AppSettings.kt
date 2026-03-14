@@ -12,7 +12,7 @@ enum class AppLanguage(val code: String, val displayName: String, val nativeName
     GERMAN("de",     "German",         "Deutsch"),
 //    PORTUGUESE("pt", "Portuguese",     "Português"),
 //    RUSSIAN("ru",    "Russian",        "Русский"),
-    CHINESE("zh",    "Chinese",        "中文"),
+    CHINESE("zh",    "Mandarin",        "中文"),
     JAPANESE("ja",   "Japanese",       "日本語"),
     KOREAN("ko",     "Korean",         "한국어")
 }

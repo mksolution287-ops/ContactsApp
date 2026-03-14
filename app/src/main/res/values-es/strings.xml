@@ -45,6 +45,10 @@
     <string name="skip_for_now">Omitir por ahora</string>
     <string name="contacts_section">Contactos</string>
 
+    <string name="theme_system">Sistema</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_dark">Oscuro</string>
+
     <!-- Permission screen -->
     <string name="allow_access">Permitir acceso</string>
     <string name="permission_subtitle">ContactsApp necesita algunos permisos\npara ofrecer la mejor experiencia</string>

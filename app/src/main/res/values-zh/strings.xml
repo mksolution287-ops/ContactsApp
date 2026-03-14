@@ -45,6 +45,10 @@
     <string name="skip_for_now">暂时跳过</string>
     <string name="contacts_section">联系人</string>
 
+    <string name="theme_system">系统</string>
+    <string name="theme_light">浅色</string>
+    <string name="theme_dark">深色</string>
+
     <!-- Permission screen -->
     <string name="allow_access">允许访问</string>
     <string name="permission_subtitle">联系人应用需要一些权限\n以提供最佳体验</string>

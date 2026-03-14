@@ -707,6 +707,70 @@ public final class CallLogDao_Impl implements CallLogDao {
     });
   }
 
+  @Override
+  public Object getLogByNumberAndTimeWindow(final String phone, final long timestamp,
+      final long windowMs, final Continuation<? super CallLog> $completion) {
+    final String _sql = "\n"
+            + "    SELECT * FROM call_logs \n"
+            + "    WHERE REPLACE(REPLACE(phoneNumber, ' ', ''), '-', '') = REPLACE(REPLACE(?, ' ', ''), '-', '')\n"
+            + "    AND ABS(timestamp - ?) < ?\n"
+            + "    LIMIT 1\n";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 3);
+    int _argIndex = 1;
+    _statement.bindString(_argIndex, phone);
+    _argIndex = 2;
+    _statement.bindLong(_argIndex, timestamp);
+    _argIndex = 3;
+    _statement.bindLong(_argIndex, windowMs);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<CallLog>() {
+      @Override
+      @Nullable
+      public CallLog call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfContactName = CursorUtil.getColumnIndexOrThrow(_cursor, "contactName");
+          final int _cursorIndexOfPhoneNumber = CursorUtil.getColumnIndexOrThrow(_cursor, "phoneNumber");
+          final int _cursorIndexOfCallType = CursorUtil.getColumnIndexOrThrow(_cursor, "callType");
+          final int _cursorIndexOfTimestamp = CursorUtil.getColumnIndexOrThrow(_cursor, "timestamp");
+          final int _cursorIndexOfDurationSeconds = CursorUtil.getColumnIndexOrThrow(_cursor, "durationSeconds");
+          final int _cursorIndexOfProfileImageUri = CursorUtil.getColumnIndexOrThrow(_cursor, "profileImageUri");
+          final CallLog _result;
+          if (_cursor.moveToFirst()) {
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final String _tmpContactName;
+            _tmpContactName = _cursor.getString(_cursorIndexOfContactName);
+            final String _tmpPhoneNumber;
+            _tmpPhoneNumber = _cursor.getString(_cursorIndexOfPhoneNumber);
+            final CallType _tmpCallType;
+            final String _tmp;
+            _tmp = _cursor.getString(_cursorIndexOfCallType);
+            _tmpCallType = __converters.toCallType(_tmp);
+            final long _tmpTimestamp;
+            _tmpTimestamp = _cursor.getLong(_cursorIndexOfTimestamp);
+            final int _tmpDurationSeconds;
+            _tmpDurationSeconds = _cursor.getInt(_cursorIndexOfDurationSeconds);
+            final String _tmpProfileImageUri;
+            if (_cursor.isNull(_cursorIndexOfProfileImageUri)) {
+              _tmpProfileImageUri = null;
+            } else {
+              _tmpProfileImageUri = _cursor.getString(_cursorIndexOfProfileImageUri);
+            }
+            _result = new CallLog(_tmpId,_tmpContactName,_tmpPhoneNumber,_tmpCallType,_tmpTimestamp,_tmpDurationSeconds,_tmpProfileImageUri);
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
   @NonNull
   public static List<Class<?>> getRequiredConverters() {
     return Collections.emptyList();

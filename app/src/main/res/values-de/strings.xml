@@ -45,6 +45,10 @@
     <string name="skip_for_now">Jetzt überspringen</string>
     <string name="contacts_section">Kontakte</string>
 
+    <string name="theme_system">Systemstandard</string>
+    <string name="theme_light">Hell</string>
+    <string name="theme_dark">Dunkel</string>
+
     <!-- Permission screen -->
     <string name="allow_access">Zugriff erlauben</string>
     <string name="permission_subtitle">ContactsApp benötigt einige Berechtigungen\nfür das beste Erlebnis</string>

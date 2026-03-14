@@ -38,4 +38,11 @@ class CallLogRepository(private val callLogDao: CallLogDao) {
 
     fun getMissedResolvedCalls(): Flow<List<ResolvedCallLog>> =
         callLogDao.getMissedResolvedCalls()
+
+
+    suspend fun getLogByNumberAndTimeWindow(
+        phone: String,
+        timestamp: Long,
+        windowMs: Long
+    ): CallLog? = callLogDao.getLogByNumberAndTimeWindow(phone, timestamp, windowMs)
 }

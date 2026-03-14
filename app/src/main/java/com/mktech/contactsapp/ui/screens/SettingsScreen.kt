@@ -126,7 +126,16 @@ fun SettingsScreen(
                     FilterChip(
                         selected = selected,
                         onClick = { onThemeChange(theme) },
-                        label = { Text(theme.name.lowercase().replaceFirstChar { it.uppercase() }) },
+                        label = {
+//                            Text(theme.name.lowercase().replaceFirstChar { it.uppercase() })
+                            Text(
+                                when (theme) {
+                                    AppTheme.SYSTEM -> stringResource(R.string.theme_system)
+                                    AppTheme.LIGHT -> stringResource(R.string.theme_light)
+                                    AppTheme.DARK -> stringResource(R.string.theme_dark)
+                                }
+                            )
+                                },
                         modifier = Modifier.weight(1f)
                     )
                 }

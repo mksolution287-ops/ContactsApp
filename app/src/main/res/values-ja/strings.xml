@@ -45,6 +45,10 @@
     <string name="skip_for_now">今はスキップ</string>
     <string name="contacts_section">連絡先</string>
 
+    <string name="theme_system">システム</string>
+    <string name="theme_light">ライト</string>
+    <string name="theme_dark">ダーク</string>
+
     <!-- Permission screen -->
     <string name="allow_access">アクセスを許可</string>
     <string name="permission_subtitle">最高の体験のために\nいくつかの権限が必要です</string>

@@ -38,6 +38,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import com.mktech.contactsapp.R
 import com.mktech.contactsapp.ui.components.BannerAd
+import com.mktech.contactsapp.ui.components.NativeAdCard
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
@@ -257,163 +258,163 @@ fun ContactDetailScreen(
                 }
             }
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-            ) {
-                // Call history in view mode
-                if (!isEditMode && callHistory.isNotEmpty()) {
-                    CallHistorySection(callHistory = callHistory)
-                    Spacer(Modifier.height(24.dp))
-                    HorizontalDivider()
-                    Spacer(Modifier.height(24.dp))
-                }
+            Column{
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp)
+                ) {
+                    // Call history in view mode
+                    if (!isEditMode && callHistory.isNotEmpty()) {
+                        CallHistorySection(callHistory = callHistory)
+                        Spacer(Modifier.height(24.dp))
+                        HorizontalDivider()
+                        Spacer(Modifier.height(24.dp))
+                    }
 
-                // Favorite toggle - only in edit mode
-                if (isEditMode) {
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { isFavorite = !isFavorite },
-                        shape = RoundedCornerShape(12.dp),
-                        color = if (isFavorite) MaterialTheme.colorScheme.primary.copy(0.1f)
-                        else MaterialTheme.colorScheme.surfaceVariant
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                    // Favorite toggle - only in edit mode
+                    if (isEditMode) {
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { isFavorite = !isFavorite },
+                            shape = RoundedCornerShape(12.dp),
+                            color = if (isFavorite) MaterialTheme.colorScheme.primary.copy(0.1f)
+                            else MaterialTheme.colorScheme.surfaceVariant
                         ) {
-                            Icon(
-                                if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                                null,
-                                tint = if (isFavorite) MaterialTheme.colorScheme.primary
-                                else MaterialTheme.colorScheme.onSurfaceVariant
+                            Row(
+                                modifier = Modifier.padding(16.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                                    null,
+                                    tint = if (isFavorite) MaterialTheme.colorScheme.primary
+                                    else MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Spacer(Modifier.width(12.dp))
+                                Text(
+                                    if (isFavorite) stringResource(R.string.remove_from_favorites) else stringResource(R.string.add_to_favorites),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = if (isFavorite) MaterialTheme.colorScheme.primary
+                                    else MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
+
+                        Spacer(Modifier.height(20.dp))
+                    }
+
+                    // Name field
+                    OutlinedTextField(
+                        value = name,
+                        onValueChange = { if (isEditMode) name = it },
+                        label = { Text(stringResource(R.string.name)) },
+                        leadingIcon = {
+                            Icon(Icons.Default.Person, null, tint = MaterialTheme.colorScheme.primary)
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        singleLine = true,
+                        enabled = isEditMode,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor   = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
+                            disabledBorderColor  = MaterialTheme.colorScheme.surfaceVariant,
+                            disabledTextColor    = MaterialTheme.colorScheme.onSurface
+                        )
+                    )
+
+                    Spacer(Modifier.height(12.dp))
+
+                    // Phone field
+                    OutlinedTextField(
+                        value = phoneNumber,
+                        onValueChange = { if (isEditMode) phoneNumber = it },
+                        label = { Text(stringResource(R.string.phone_number)) },
+                        leadingIcon = {
+                            Icon(Icons.Default.Phone, null, tint = MaterialTheme.colorScheme.primary)
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        singleLine = true,
+                        enabled = isEditMode,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor   = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
+                            disabledBorderColor  = MaterialTheme.colorScheme.surfaceVariant,
+                            disabledTextColor    = MaterialTheme.colorScheme.onSurface
+                        )
+                    )
+
+                    Spacer(Modifier.height(12.dp))
+
+                    // Email field
+                    OutlinedTextField(
+                        value = email,
+                        onValueChange = { if (isEditMode) email = it },
+                        label = { Text(stringResource(R.string.email_optional)) },
+                        leadingIcon = {
+                            Icon(Icons.Default.Email, null, tint = MaterialTheme.colorScheme.primary)
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        singleLine = true,
+                        enabled = isEditMode,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor   = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
+                            disabledBorderColor  = MaterialTheme.colorScheme.surfaceVariant,
+                            disabledTextColor    = MaterialTheme.colorScheme.onSurface
+                        )
+                    )
+
+                    Spacer(Modifier.height(28.dp))
+
+                    // Save button - only in edit mode
+                    if (isEditMode) {
+                        Button(
+                            onClick = {
+                                if (name.isNotBlank() && phoneNumber.isNotBlank()) {
+                                    val updated = if (isNewContact) {
+                                        Contact(
+                                            name            = name.trim(),
+                                            phoneNumber     = phoneNumber.trim(),
+                                            email           = email.trim(),
+                                            profileImageUri = profileImageUri,
+                                            isFavorite      = isFavorite
+                                        )
+                                    } else {
+                                        contact!!.copy(
+                                            name            = name.trim(),
+                                            phoneNumber     = phoneNumber.trim(),
+                                            email           = email.trim(),
+                                            profileImageUri = profileImageUri,
+                                            isFavorite      = isFavorite
+                                        )
+                                    }
+                                    Log.d("ContactSave", "Save button clicked, contact=$updated id=${updated.id}")
+                                    onSave(updated)
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(54.dp),
+                            enabled = name.isNotBlank() && phoneNumber.isNotBlank(),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor   = Color.White
                             )
-                            Spacer(Modifier.width(12.dp))
-                            Text(
-                                if (isFavorite) stringResource(R.string.remove_from_favorites) else stringResource(R.string.add_to_favorites),
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = if (isFavorite) MaterialTheme.colorScheme.primary
-                                else MaterialTheme.colorScheme.onSurface
-                            )
+                        ) {
+                            Text(stringResource(R.string.save_contact), fontWeight = FontWeight.SemiBold)
                         }
                     }
-
-                    Spacer(Modifier.height(20.dp))
                 }
-
-                // Name field
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = { if (isEditMode) name = it },
-                    label = { Text(stringResource(R.string.name)) },
-                    leadingIcon = {
-                        Icon(Icons.Default.Person, null, tint = MaterialTheme.colorScheme.primary)
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    singleLine = true,
-                    enabled = isEditMode,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor   = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
-                        disabledBorderColor  = MaterialTheme.colorScheme.surfaceVariant,
-                        disabledTextColor    = MaterialTheme.colorScheme.onSurface
-                    )
-                )
-
-                Spacer(Modifier.height(12.dp))
-
-                // Phone field
-                OutlinedTextField(
-                    value = phoneNumber,
-                    onValueChange = { if (isEditMode) phoneNumber = it },
-                    label = { Text(stringResource(R.string.phone_number)) },
-                    leadingIcon = {
-                        Icon(Icons.Default.Phone, null, tint = MaterialTheme.colorScheme.primary)
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    singleLine = true,
-                    enabled = isEditMode,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor   = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
-                        disabledBorderColor  = MaterialTheme.colorScheme.surfaceVariant,
-                        disabledTextColor    = MaterialTheme.colorScheme.onSurface
-                    )
-                )
-
-                Spacer(Modifier.height(12.dp))
-
-                // Email field
-                OutlinedTextField(
-                    value = email,
-                    onValueChange = { if (isEditMode) email = it },
-                    label = { Text(stringResource(R.string.email_optional)) },
-                    leadingIcon = {
-                        Icon(Icons.Default.Email, null, tint = MaterialTheme.colorScheme.primary)
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    singleLine = true,
-                    enabled = isEditMode,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor   = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
-                        disabledBorderColor  = MaterialTheme.colorScheme.surfaceVariant,
-                        disabledTextColor    = MaterialTheme.colorScheme.onSurface
-                    )
-                )
-
-                Spacer(Modifier.height(28.dp))
-
-                // Save button - only in edit mode
-                if (isEditMode) {
-                    Button(
-                        onClick = {
-                            if (name.isNotBlank() && phoneNumber.isNotBlank()) {
-                                val updated = if (isNewContact) {
-                                    Contact(
-                                        name            = name.trim(),
-                                        phoneNumber     = phoneNumber.trim(),
-                                        email           = email.trim(),
-                                        profileImageUri = profileImageUri,
-                                        isFavorite      = isFavorite
-                                    )
-                                } else {
-                                    contact!!.copy(
-                                        name            = name.trim(),
-                                        phoneNumber     = phoneNumber.trim(),
-                                        email           = email.trim(),
-                                        profileImageUri = profileImageUri,
-                                        isFavorite      = isFavorite
-                                    )
-                                }
-                                Log.d("ContactSave", "Save button clicked, contact=$updated id=${updated.id}")
-                                onSave(updated)
-                            }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(54.dp),
-                        enabled = name.isNotBlank() && phoneNumber.isNotBlank(),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor   = Color.White
-                        )
-                    ) {
-                        Text(stringResource(R.string.save_contact), fontWeight = FontWeight.SemiBold)
-                    }
-                }
-
                 // Banner ad at TOP of the bottom bar area
-                BannerAd(modifier = Modifier
-                    .fillMaxWidth()
-                )
-                Spacer(Modifier.height(24.dp))
+//                NativeAdCard(modifier = Modifier
+//                    .fillMaxWidth()
+//                )
             }
         }
     }

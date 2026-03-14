@@ -35,10 +35,10 @@ object AdManager {
     private var interstitialAd: InterstitialAd? = null
     private var actionCount = 0
 
-    private val _adsEnabled = MutableStateFlow(true)
+    private val _adsEnabled = MutableStateFlow(false)
     val adsEnabled: StateFlow<Boolean> = _adsEnabled
 
-    private val _bannerEnabled = MutableStateFlow(true)
+    private val _bannerEnabled = MutableStateFlow(false)
     val bannerEnabled: StateFlow<Boolean> = _bannerEnabled
 
     // ── Native Ad state ───────────────────────────────────────────────────────
@@ -61,28 +61,42 @@ object AdManager {
         val remoteConfig = Firebase.remoteConfig
         remoteConfig.setConfigSettingsAsync(
             remoteConfigSettings {
-                // Fetch every 1 hour in production (minimum 1 hour)
-                // Use 0 for debug builds
-                minimumFetchIntervalInSeconds = 3600
+                minimumFetchIntervalInSeconds = 3600  //temp 0 but in production keep it 3600
             }
         )
         remoteConfig.setDefaultsAsync(remoteConfigDefaults)
-        fetchRemoteConfig()
-        preloadInterstitial(context)
-        preloadNativeAd(context)
-    }
 
-    fun fetchRemoteConfig() {
+        // ── Fetch config FIRST, then preload ads only if enabled ──────────────
         Firebase.remoteConfig.fetchAndActivate().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val config = Firebase.remoteConfig
-                _adsEnabled.value    = config.getBoolean(KEY_ADS_ENABLED)
-                _bannerEnabled.value = config.getBoolean(KEY_ADS_ENABLED) &&
-                        config.getBoolean(KEY_BANNER_ENABLED)
-                Log.d("AdManager", "Remote config fetched: ads=${_adsEnabled.value}")
+            val config = Firebase.remoteConfig
+
+            _adsEnabled.value = config.getBoolean(KEY_ADS_ENABLED)
+            _bannerEnabled.value = config.getBoolean(KEY_ADS_ENABLED) &&
+                    config.getBoolean(KEY_BANNER_ENABLED)
+
+            Log.d("AdManager", "Remote config fetched: ads=${_adsEnabled.value}")
+
+            // Only preload if ads are enabled
+            if (_adsEnabled.value) {
+                preloadInterstitial(context)
+                preloadNativeAd(context)
             }
         }
     }
+
+// ── Remove fetchRemoteConfig() separate call — it's now inside init() ────
+
+//    fun fetchRemoteConfig() {
+//        Firebase.remoteConfig.fetchAndActivate().addOnCompleteListener { task ->
+//            if (task.isSuccessful) {
+//                val config = Firebase.remoteConfig
+//                _adsEnabled.value    = config.getBoolean(KEY_ADS_ENABLED)
+//                _bannerEnabled.value = config.getBoolean(KEY_ADS_ENABLED) &&
+//                        config.getBoolean(KEY_BANNER_ENABLED)
+//                Log.d("AdManager", "Remote config fetched: ads=${_adsEnabled.value}")
+//            }
+//        }
+//    }
 
     // ── Banner ad unit ID from Remote Config ──────────────────────────────
     fun getBannerAdUnitId(): String {
@@ -192,5 +206,17 @@ object AdManager {
         nativeAd?.destroy()
         nativeAd = null
         _nativeAdReady.value = false
+    }
+
+    // ── Show immediately after splash, bypasses counter ──────────────────────
+    fun immediateInterstitialAd(activity: Activity?) {
+        if (!_adsEnabled.value) return
+        if (interstitialAd == null) {
+            Log.w("AdManager", "Splash ad not ready yet")
+            return
+        }
+        showInterstitial(activity) {
+            preloadInterstitial(activity ?: return@showInterstitial)
+        }
     }
 }

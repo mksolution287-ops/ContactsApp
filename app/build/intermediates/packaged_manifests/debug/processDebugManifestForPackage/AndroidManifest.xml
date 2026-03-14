@@ -67,9 +67,9 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:localeConfig="@xml/locales_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:testOnly="true"
         android:theme="@style/Theme.ContactsApp" >
         <activity
             android:name="com.mktech.contactsapp.ui.onboarding.OnboardingActivity"
@@ -119,6 +119,7 @@
 
         <activity
             android:name="com.mktech.contactsapp.MainActivity"
+            android:configChanges="locale|layoutDirection|fontScale|screenSize|uiMode"
             android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/Theme.ContactsApp"

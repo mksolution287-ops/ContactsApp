@@ -249,13 +249,41 @@ fun ContactNavigation(
                         AnalyticsTracker.logEvent("call_logs_synced")
                         viewModel.loadDeviceCallLogs()
                     },
+//                    onContactClick = { phoneNumber ->
+//                        AnalyticsTracker.logEvent("recents_contact_tapped",
+//                            mapOf("source" to "recents_list"))
+//                        val scope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main)
+//                        scope.launch {
+//                            val contact = viewModel.contactRepository.getContactByPhone(phoneNumber)
+//                            if (contact != null) {
+//                                AnalyticsTracker.logContactOpened(contact.id, contact.isFavorite)
+//                                viewModel.dialPadClear()
+//                                navController.navigate(Routes.contactDetail(contact.id))
+//                            } else {
+//                                AnalyticsTracker.logEvent("new_contact_from_recents")
+//                                viewModel.dialPadSetNumber(phoneNumber)
+//                                navController.navigate(Routes.contactDetail(-1L))
+//                            }
+//                        }
+//                    }
                     onContactClick = { phoneNumber ->
                         AnalyticsTracker.logEvent("recents_contact_tapped",
                             mapOf("source" to "recents_list"))
                         val scope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main)
                         scope.launch {
                             val contact = viewModel.contactRepository.getContactByPhone(phoneNumber)
-                            if (contact != null) {
+
+                            // Only treat as a known contact if last 10 digits truly match
+                            // Prevents "957" matching "+919876543210" via substring
+                            val isExactMatch = contact?.phoneNumber
+                                ?.replace(Regex("[^0-9+]"), "")
+                                ?.let { storedClean ->
+                                    val dialedClean = phoneNumber.replace(Regex("[^0-9+]"), "")
+                                    storedClean == dialedClean ||
+                                            storedClean.takeLast(10) == dialedClean.takeLast(10)
+                                } ?: false
+
+                            if (contact != null && isExactMatch) {
                                 AnalyticsTracker.logContactOpened(contact.id, contact.isFavorite)
                                 viewModel.dialPadClear()
                                 navController.navigate(Routes.contactDetail(contact.id))
@@ -325,8 +353,8 @@ fun ContactNavigation(
                     onSaveContact = {
                         AnalyticsTracker.logEvent("save_contact_from_dialpad")
                         navController.navigate(Routes.contactDetail(-1L))
-                        //interstitial ad
-                        AdManager.trackAction(context, activity)
+                        //immediate ad
+                        AdManager.immediateInterstitialAd(activity)
                     },
                     matchingContacts = matchingContacts,
                     settings         = settings,
@@ -385,7 +413,7 @@ fun ContactNavigation(
                         AnalyticsTracker.logEvent("setting_changed",
                             mapOf("setting" to "language", "value" to lang.code))
                         viewModel.setLanguage(lang)
-                        activity?.recreate()   // ← applies new locale immediately
+//                        activity?.recreate()   // ← applies new locale immediately
                         //interstitial ad
                         AdManager.trackAction(context, activity)
                     }
@@ -439,15 +467,15 @@ fun ContactNavigation(
                                     AnalyticsTracker.logContactAdded()
                                     viewModel.addContact(updated)
                                     viewModel.dialPadClear()
-                                    //interstitial ad
-                                    AdManager.trackAction(context, activity)
+                                    //immediate ad
+                                    AdManager.immediateInterstitialAd( activity)
                                 } else {
                                     AnalyticsTracker.logEvent("contact_updated",
                                         mapOf("contact_id" to updated.id.toString()))
                                     Log.d("ContactSave", "Calling updateContact id=${updated.id}")
                                     viewModel.updateContact(updated)
-                                    //interstitial ad
-                                    AdManager.trackAction(context, activity)
+                                    //immediate ad
+                                    AdManager.immediateInterstitialAd( activity)
                                 }
                                 navController.popBackStack()
                             }

@@ -11,8 +11,11 @@ id ad_attribution
 id ad_body
 id ad_call_to_action
 id ad_headline
+id ad_price
+id ad_stars
 id main
-id native_ad_view
+id native_card
+id unified
 layout activity_onboarding
 layout native_ad_view
 mipmap ic_launcher
@@ -151,6 +154,9 @@ string tap_favorite_to_add
 string tap_sync_or_add
 string terms_and_conditions
 string theme
+string theme_dark
+string theme_light
+string theme_system
 string today
 string unified_contacts
 string unknown
@@ -159,3 +165,4 @@ string yesterday
 style Theme.ContactsApp
 xml backup_rules
 xml data_extraction_rules
+xml locales_config

@@ -55,6 +55,7 @@ class OnboardingActivity : BaseActivity() {
         getSharedPreferences("app_settings", MODE_PRIVATE)
             .edit()
             .putBoolean("onboarding_done", true)
+            .putBoolean("skip_splash", true)
             .apply()
 
         startActivity(Intent(this, MainActivity::class.java))
@@ -207,7 +208,7 @@ private fun OnboardingPageContent(
             style      = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             textAlign  = TextAlign.Center,
-            color      = MaterialTheme.colorScheme.onBackground
+            color      = Color.White
         )
 
         // Description
@@ -215,7 +216,7 @@ private fun OnboardingPageContent(
             text      = stringResource(page.descRes),
             style     = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
-            color     = MaterialTheme.colorScheme.onSurfaceVariant,
+            color     = Color.White,
             lineHeight = 24.sp
         )
 
@@ -267,13 +268,13 @@ private fun rememberOnboardingPages(): List<OnboardingPage> {
                 iconTint  = primary,
                 bgColor   = primaryContainer.copy(alpha = 0.4f)
             ),
-            OnboardingPage(
-                titleRes  = R.string.onboarding_title_2,
-                descRes   = R.string.onboarding_desc_2,
-                icon      = Icons.Default.ContactPhone,
-                iconTint  = secondary,
-                bgColor   = secondaryContainer.copy(alpha = 0.4f)
-            ),
+//            OnboardingPage(
+//                titleRes  = R.string.onboarding_title_2,
+//                descRes   = R.string.onboarding_desc_2,
+//                icon      = Icons.Default.ContactPhone,
+//                iconTint  = secondary,
+//                bgColor   = secondaryContainer.copy(alpha = 0.4f)
+//            ),
             OnboardingPage(
                 titleRes  = R.string.onboarding_title_3,
                 descRes   = R.string.onboarding_desc_3,

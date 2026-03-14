@@ -44,8 +44,7 @@ fun NativeAdCard(modifier: Modifier = Modifier) {
     ) {
         AndroidView(
             modifier = modifier
-                .fillMaxWidth()
-                .padding(horizontal = 2.dp, vertical = 2.dp),
+                .fillMaxWidth(),
             factory = { ctx ->
                 val adView = LayoutInflater.from(ctx)
                     .inflate(R.layout.native_ad_view, null) as NativeAdView

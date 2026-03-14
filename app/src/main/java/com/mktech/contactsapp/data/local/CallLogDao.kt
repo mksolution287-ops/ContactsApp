@@ -83,4 +83,17 @@ interface CallLogDao {
 """)
     fun getMissedResolvedCalls(): Flow<List<ResolvedCallLog>>
 
+
+    @Query("""
+    SELECT * FROM call_logs 
+    WHERE REPLACE(REPLACE(phoneNumber, ' ', ''), '-', '') = REPLACE(REPLACE(:phone, ' ', ''), '-', '')
+    AND ABS(timestamp - :timestamp) < :windowMs
+    LIMIT 1
+""")
+    suspend fun getLogByNumberAndTimeWindow(
+        phone: String,
+        timestamp: Long,
+        windowMs: Long
+    ): CallLog?
+
 }
