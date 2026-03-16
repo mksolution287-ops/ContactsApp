@@ -164,7 +164,7 @@
     <string name="onboarding_desc_2">自动从联系人同步姓名和照片，轻松识别来电。</string>
 
     <string name="onboarding_title_3">滑动操作</string>
-    <string name="onboarding_desc_3">向右滑动最近通话即可立即回拨，向左滑动删除记录。</string>
+    <string name="onboarding_desc_3">在任意最近通话上向右滑动即可立即回拨。向左滑动可从通话记录中删除。</string>
 
     <string name="onboarding_title_4">主题和颜色</string>
     <string name="onboarding_desc_4">使用浅色或深色主题以及多种强调颜色来个性化你的体验。</string>

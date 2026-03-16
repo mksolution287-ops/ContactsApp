@@ -164,7 +164,7 @@
     <string name="onboarding_desc_2">Mira quién llama con nombres y fotos sincronizados automáticamente desde tus contactos.</string>
 
     <string name="onboarding_title_3">Desliza para actuar</string>
-    <string name="onboarding_desc_3">Desliza a la derecha en cualquier llamada reciente para devolver la llamada al instante. Desliza a la izquierda para eliminarla.</string>
+    <string name="onboarding_desc_3">Desliza hacia la derecha en cualquier llamada reciente para devolver la llamada al instante. Desliza hacia la izquierda para eliminarla del historial.</string>
 
     <string name="onboarding_title_4">Temas y colores</string>
     <string name="onboarding_desc_4">Personaliza tu experiencia con temas claros u oscuros y una variedad de colores de acento.</string>

@@ -164,7 +164,7 @@
     <string name="onboarding_desc_2">連絡先から同期された名前と写真で誰が電話しているか確認できます。</string>
 
     <string name="onboarding_title_3">スワイプ操作</string>
-    <string name="onboarding_desc_3">最近の通話を右にスワイプしてすぐ折り返し、左にスワイプして削除できます。</string>
+    <string name="onboarding_desc_3">最近の通話を右にスワイプするとすぐに折り返し電話できます。左にスワイプすると履歴から削除されます。</string>
 
     <string name="onboarding_title_4">テーマとカラー</string>
     <string name="onboarding_desc_4">ライトまたはダークテーマとさまざまなアクセントカラーで体験をカスタマイズできます。</string>

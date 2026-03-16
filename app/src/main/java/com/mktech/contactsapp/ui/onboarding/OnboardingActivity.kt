@@ -261,13 +261,13 @@ private fun rememberOnboardingPages(): List<OnboardingPage> {
 
     return remember {
         listOf(
-            OnboardingPage(
-                titleRes  = R.string.onboarding_title_1,
-                descRes   = R.string.onboarding_desc_1,
-                icon      = Icons.Default.Call,
-                iconTint  = primary,
-                bgColor   = primaryContainer.copy(alpha = 0.4f)
-            ),
+//            OnboardingPage(
+//                titleRes  = R.string.onboarding_title_1,
+//                descRes   = R.string.onboarding_desc_1,
+//                icon      = Icons.Default.Call,
+//                iconTint  = primary,
+//                bgColor   = primaryContainer.copy(alpha = 0.4f)
+//            ),
 //            OnboardingPage(
 //                titleRes  = R.string.onboarding_title_2,
 //                descRes   = R.string.onboarding_desc_2,

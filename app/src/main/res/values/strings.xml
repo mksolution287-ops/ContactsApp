@@ -168,7 +168,7 @@
     <string name="onboarding_desc_2">See who\'s calling with names and photos synced from your contacts automatically.</string>
 
     <string name="onboarding_title_3">Swipe to Act</string>
-    <string name="onboarding_desc_3">Swipe left on any recent call to call back instantly. Swipe right to delete it from your history.</string>
+    <string name="onboarding_desc_3">Swipe right on any recent call to call back instantly. Swipe left to delete it from your history.</string>
 
     <string name="onboarding_title_4">Themes &amp; Colors</string>
     <string name="onboarding_desc_4">Personalize your experience with light or dark themes and a variety of accent colors to match your style.</string>

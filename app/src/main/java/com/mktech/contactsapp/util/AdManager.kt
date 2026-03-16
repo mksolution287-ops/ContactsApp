@@ -19,17 +19,17 @@ object AdManager {
     // ── Test Ad Unit IDs (replace with real ones for production) ─────────
     private const val TEST_BANNER_ID       = "ca-app-pub-3940256099942544/6300978111"
     private const val TEST_INTERSTITIAL_ID = "ca-app-pub-3940256099942544/1033173712"
-    private const val TEST_NATIVE_ID = "ca-app-pub-3940256099942544/2247696110"
+    private const val TEST_NATIVE_ID       = "ca-app-pub-3940256099942544/2247696110"
 
     // ── Remote Config keys ────────────────────────────────────────────────
-    private const val KEY_ADS_ENABLED              = "ads_enabled"
-    private const val KEY_BANNER_ENABLED           = "banner_ad_enabled"
-    private const val KEY_INTERSTITIAL_ENABLED     = "interstitial_ad_enabled"
-    private const val KEY_NATIVE_ENABLED  = "native_ad_enabled"
-    private const val KEY_INTERSTITIAL_TRIGGER     = "interstitial_trigger_count"
-    private const val KEY_BANNER_AD_UNIT           = "banner_ad_unit_id"
-    private const val KEY_INTERSTITIAL_AD_UNIT     = "interstitial_ad_unit_id"
-    private const val KEY_NATIVE_AD_UNIT  = "native_ad_unit_id"
+    private const val KEY_ADS_ENABLED          = "ads_enabled"
+    private const val KEY_BANNER_ENABLED       = "banner_ad_enabled"
+    private const val KEY_INTERSTITIAL_ENABLED = "interstitial_ad_enabled"
+    private const val KEY_NATIVE_ENABLED       = "native_ad_enabled"
+    private const val KEY_INTERSTITIAL_TRIGGER = "interstitial_trigger_count"
+    private const val KEY_BANNER_AD_UNIT       = "banner_ad_unit_id"
+    private const val KEY_INTERSTITIAL_AD_UNIT = "interstitial_ad_unit_id"
+    private const val KEY_NATIVE_AD_UNIT       = "native_ad_unit_id"
 
     // ── State ─────────────────────────────────────────────────────────────
     private var interstitialAd: InterstitialAd? = null
@@ -41,7 +41,10 @@ object AdManager {
     private val _bannerEnabled = MutableStateFlow(false)
     val bannerEnabled: StateFlow<Boolean> = _bannerEnabled
 
-    // ── Native Ad state ───────────────────────────────────────────────────────
+    private val _nativeEnabled = MutableStateFlow(false)
+    val nativeEnabled: StateFlow<Boolean> = _nativeEnabled
+
+    // ── Native Ad state ───────────────────────────────────────────────────
     private var nativeAd: NativeAd? = null
     private val _nativeAdReady = MutableStateFlow(false)
     val nativeAdReady: StateFlow<Boolean> = _nativeAdReady
@@ -51,9 +54,11 @@ object AdManager {
         KEY_ADS_ENABLED          to true,
         KEY_BANNER_ENABLED       to true,
         KEY_INTERSTITIAL_ENABLED to true,
+        KEY_NATIVE_ENABLED       to true,
         KEY_INTERSTITIAL_TRIGGER to 3L,
         KEY_BANNER_AD_UNIT       to TEST_BANNER_ID,
         KEY_INTERSTITIAL_AD_UNIT to TEST_INTERSTITIAL_ID,
+        KEY_NATIVE_AD_UNIT       to TEST_NATIVE_ID
     )
 
     // ── Init Remote Config and fetch ──────────────────────────────────────
@@ -61,42 +66,31 @@ object AdManager {
         val remoteConfig = Firebase.remoteConfig
         remoteConfig.setConfigSettingsAsync(
             remoteConfigSettings {
-                minimumFetchIntervalInSeconds = 3600  //temp 0 but in production keep it 3600
+                minimumFetchIntervalInSeconds = 0
             }
         )
         remoteConfig.setDefaultsAsync(remoteConfigDefaults)
 
-        // ── Fetch config FIRST, then preload ads only if enabled ──────────────
-        Firebase.remoteConfig.fetchAndActivate().addOnCompleteListener { task ->
+        Firebase.remoteConfig.fetchAndActivate().addOnCompleteListener {
             val config = Firebase.remoteConfig
 
             _adsEnabled.value = config.getBoolean(KEY_ADS_ENABLED)
             _bannerEnabled.value = config.getBoolean(KEY_ADS_ENABLED) &&
                     config.getBoolean(KEY_BANNER_ENABLED)
+            _nativeEnabled.value = config.getBoolean(KEY_ADS_ENABLED) &&
+                    config.getBoolean(KEY_NATIVE_ENABLED)
 
-            Log.d("AdManager", "Remote config fetched: ads=${_adsEnabled.value}")
+            Log.d("AdManager", "Remote config fetched: " +
+                    "ads=${_adsEnabled.value} " +
+                    "banner=${_bannerEnabled.value} " +
+                    "native=${_nativeEnabled.value}")
 
-            // Only preload if ads are enabled
             if (_adsEnabled.value) {
                 preloadInterstitial(context)
-                preloadNativeAd(context)
+                if (_nativeEnabled.value) preloadNativeAd(context)
             }
         }
     }
-
-// ── Remove fetchRemoteConfig() separate call — it's now inside init() ────
-
-//    fun fetchRemoteConfig() {
-//        Firebase.remoteConfig.fetchAndActivate().addOnCompleteListener { task ->
-//            if (task.isSuccessful) {
-//                val config = Firebase.remoteConfig
-//                _adsEnabled.value    = config.getBoolean(KEY_ADS_ENABLED)
-//                _bannerEnabled.value = config.getBoolean(KEY_ADS_ENABLED) &&
-//                        config.getBoolean(KEY_BANNER_ENABLED)
-//                Log.d("AdManager", "Remote config fetched: ads=${_adsEnabled.value}")
-//            }
-//        }
-//    }
 
     // ── Banner ad unit ID from Remote Config ──────────────────────────────
     fun getBannerAdUnitId(): String {
@@ -104,9 +98,9 @@ object AdManager {
             .ifBlank { TEST_BANNER_ID }
     }
 
-    // ── Preload interstitial ───────────────────────────────────────────────
+    // ── Preload interstitial ──────────────────────────────────────────────
     fun preloadInterstitial(context: Context) {
-        val config  = Firebase.remoteConfig
+        val config = Firebase.remoteConfig
         if (!config.getBoolean(KEY_ADS_ENABLED) ||
             !config.getBoolean(KEY_INTERSTITIAL_ENABLED)) return
 
@@ -119,11 +113,11 @@ object AdManager {
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {
                     interstitialAd = ad
-                    Log.d("AdManager", "Interstitial loaded")
+                    Log.d("AdManager", "Interstitial loaded ✅")
                 }
                 override fun onAdFailedToLoad(error: LoadAdError) {
                     interstitialAd = null
-                    Log.e("AdManager", "Interstitial failed: ${error.message}")
+                    Log.e("AdManager", "Interstitial failed ❌ ${error.message}")
                 }
             }
         )
@@ -141,7 +135,7 @@ object AdManager {
         if (actionCount >= triggerCount) {
             actionCount = 0
             showInterstitial(activity) {
-                preloadInterstitial(context) // preload next one
+                preloadInterstitial(context)
             }
         }
     }
@@ -165,9 +159,9 @@ object AdManager {
         interstitialAd?.show(activity)
     }
 
-    // ── Preload native ad ─────────────────────────────────────────────────────
+    // ── Preload native ad ─────────────────────────────────────────────────
     fun preloadNativeAd(context: Context) {
-        if (!_adsEnabled.value) return
+        if (!_adsEnabled.value || !_nativeEnabled.value) return
 
         val adUnitId = try {
             Firebase.remoteConfig.getString(KEY_NATIVE_AD_UNIT).ifBlank { TEST_NATIVE_ID }
@@ -179,7 +173,6 @@ object AdManager {
 
         val adLoader = AdLoader.Builder(context, adUnitId)
             .forNativeAd { ad ->
-                // Destroy old ad before replacing
                 nativeAd?.destroy()
                 nativeAd = ad
                 _nativeAdReady.value = true
@@ -198,17 +191,17 @@ object AdManager {
         adLoader.loadAd(AdRequest.Builder().build())
     }
 
-    // ── Get the loaded native ad (call after nativeAdReady = true) ───────────
+    // ── Get the loaded native ad (call after nativeAdReady = true) ───────
     fun getNativeAd(): NativeAd? = nativeAd
 
-    // ── Must call when the screen/composable is destroyed ────────────────────
+    // ── Must call when the screen/composable is destroyed ────────────────
     fun destroyNativeAd() {
         nativeAd?.destroy()
         nativeAd = null
         _nativeAdReady.value = false
     }
 
-    // ── Show immediately after splash, bypasses counter ──────────────────────
+    // ── Show immediately after splash, bypasses counter ──────────────────
     fun immediateInterstitialAd(activity: Activity?) {
         if (!_adsEnabled.value) return
         if (interstitialAd == null) {

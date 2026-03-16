@@ -166,8 +166,8 @@
     <string name="onboarding_desc_2">اعرف من يتصل بك مع الأسماء والصور المتزامنة تلقائيًا من جهات الاتصال.</string>
 
     <string name="onboarding_title_3">اسحب للتنفيذ</string>
-    <string name="onboarding_desc_3">اسحب لليمين على أي مكالمة حديثة للاتصال فورًا. اسحب لليسار لحذفها من السجل.</string>
-
+    <string name="onboarding_desc_3">اسحب لليمين على أي مكالمة حديثة للاتصال مرة أخرى فورًا. اسحب لليسار لحذفها من السجل.</string>
+    
     <string name="onboarding_title_4">السمات والألوان</string>
     <string name="onboarding_desc_4">خصص تجربتك باستخدام السمات الفاتحة أو الداكنة ومجموعة من الألوان المميزة التي تناسب أسلوبك.</string>
 
