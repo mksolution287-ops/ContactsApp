@@ -169,10 +169,13 @@
     <string name="onboarding_title_4">主题和颜色</string>
     <string name="onboarding_desc_4">使用浅色或深色主题以及多种强调颜色来个性化你的体验。</string>
 
-    <string name="onboarding_title_5">智能排序</string>
-    <string name="onboarding_desc_5">按名字字母顺序排列联系人。几秒钟内找到任何人。</string>
+    <string name="onboarding_title_5">隐藏号码</string>
+    <string name="onboarding_desc_5">在联系人列表中隐藏联系人号码的显示。</string>
 
     <string name="onboarding_title_6">收藏与搜索</string>
     <string name="onboarding_desc_6">将重要联系人加入收藏，并在整个联系人列表中快速搜索。</string>
+
+    <string name="sim_preferences">SIM 偏好设置</string>
+    <string name="sim_preferences_subtitle">管理 SIM 卡和移动网络</string>
 
 </resources>

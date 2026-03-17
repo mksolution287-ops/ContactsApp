@@ -4904,6 +4904,8 @@ string show_phone_in_list
 string show_phone_subtitle
 string side_sheet_accessibility_pane_title
 string side_sheet_behavior
+string sim_preferences
+string sim_preferences_subtitle
 string skip_for_now
 string sort_by_first_name
 string sort_first_name_first

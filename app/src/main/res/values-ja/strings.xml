@@ -169,10 +169,13 @@
     <string name="onboarding_title_4">テーマとカラー</string>
     <string name="onboarding_desc_4">ライトまたはダークテーマとさまざまなアクセントカラーで体験をカスタマイズできます。</string>
 
-    <string name="onboarding_title_5">スマート並び替え</string>
-    <string name="onboarding_desc_5">連絡先を名前のアルファベット順で並び替えます。数秒で見つけられます。</string>
+    <string name="onboarding_title_5">番号を非表示</string>
+    <string name="onboarding_desc_5">連絡先リストから連絡先番号の表示を非表示にします。</string>
 
     <string name="onboarding_title_6">お気に入りと検索</string>
     <string name="onboarding_desc_6">重要な連絡先をお気に入りに追加し、すばやく検索できます。</string>
+
+    <string name="sim_preferences">SIM設定</string>
+    <string name="sim_preferences_subtitle">SIMカードとモバイルネットワークを管理</string>
 
 </resources>

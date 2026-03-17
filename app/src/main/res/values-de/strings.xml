@@ -169,9 +169,12 @@
     <string name="onboarding_title_4">Designs und Farben</string>
     <string name="onboarding_desc_4">Passen Sie Ihr Erlebnis mit hellen oder dunklen Designs und verschiedenen Akzentfarben an.</string>
 
-    <string name="onboarding_title_5">Intelligente Sortierung</string>
-    <string name="onboarding_desc_5">Sortieren Sie Ihre Kontakte alphabetisch nach dem Vornamen. Finden Sie jeden in Sekunden.</string>
+    <string name="onboarding_title_5">Nummer ausblenden</string>
+    <string name="onboarding_desc_5">Blendet die Anzeige der Kontaktnummer aus der Kontaktliste aus.</string>
 
     <string name="onboarding_title_6">Favoriten und Suche</string>
     <string name="onboarding_desc_6">Markieren Sie wichtige Kontakte als Favoriten und finden Sie sie sofort.</string>
+
+    <string name="sim_preferences">SIM-Einstellungen</string>
+    <string name="sim_preferences_subtitle">SIM-Karten und Mobilfunknetz verwalten</string>
 </resources>

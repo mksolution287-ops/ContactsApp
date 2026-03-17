@@ -292,7 +292,7 @@ private fun rememberOnboardingPages(): List<OnboardingPage> {
             OnboardingPage(
                 titleRes  = R.string.onboarding_title_5,
                 descRes   = R.string.onboarding_desc_5,
-                icon      = Icons.Default.SortByAlpha,
+                icon      = Icons.Default.HideImage,
                 iconTint  = primary,
                 bgColor   = primaryContainer.copy(alpha = 0.4f)
             ),

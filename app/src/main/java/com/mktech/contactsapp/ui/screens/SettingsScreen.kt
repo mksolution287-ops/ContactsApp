@@ -127,7 +127,6 @@ fun SettingsScreen(
                         selected = selected,
                         onClick = { onThemeChange(theme) },
                         label = {
-//                            Text(theme.name.lowercase().replaceFirstChar { it.uppercase() })
                             Text(
                                 when (theme) {
                                     AppTheme.SYSTEM -> stringResource(R.string.theme_system)
@@ -135,7 +134,7 @@ fun SettingsScreen(
                                     AppTheme.DARK -> stringResource(R.string.theme_dark)
                                 }
                             )
-                                },
+                        },
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -293,6 +292,52 @@ fun SettingsScreen(
                 checked = settings.confirmBeforeDelete,
                 onCheckedChange = onConfirmDeleteChange
             )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // ── SIM Preferences ──────────────────────────────────────────────
+        SettingsSection(title = stringResource(R.string.sim_preferences)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS)
+                        } else {
+                            Intent(Settings.ACTION_DATA_ROAMING_SETTINGS)
+                        }
+                        context.startActivity(intent)
+                    }
+                    .padding(horizontal = 16.dp, vertical = 14.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.SimCard,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(22.dp)
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = stringResource(R.string.sim_preferences),
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Text(
+                        text = stringResource(R.string.sim_preferences_subtitle),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Icon(
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(8.dp))

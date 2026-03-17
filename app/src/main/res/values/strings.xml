@@ -173,9 +173,12 @@
     <string name="onboarding_title_4">Themes &amp; Colors</string>
     <string name="onboarding_desc_4">Personalize your experience with light or dark themes and a variety of accent colors to match your style.</string>
 
-    <string name="onboarding_title_5">Smart Sorting</string>
-    <string name="onboarding_desc_5">Sort your contacts alphabetically by first name. Find anyone in seconds.</string>
+    <string name="onboarding_title_5">Hide Number</string>
+    <string name="onboarding_desc_5">Hide displaying contact number from the contact list.</string>
 
     <string name="onboarding_title_6">Favorites &amp; Search</string>
     <string name="onboarding_desc_6">Star your most important contacts for quick access. Search across your entire contact list instantly.</string>
+
+    <string name="sim_preferences">SIM Preferences</string>
+    <string name="sim_preferences_subtitle">Manage SIM cards and mobile network</string>
 </resources>

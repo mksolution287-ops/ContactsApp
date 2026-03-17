@@ -171,11 +171,14 @@
     <string name="onboarding_title_4">السمات والألوان</string>
     <string name="onboarding_desc_4">خصص تجربتك باستخدام السمات الفاتحة أو الداكنة ومجموعة من الألوان المميزة التي تناسب أسلوبك.</string>
 
-    <string name="onboarding_title_5">فرز ذكي</string>
-    <string name="onboarding_desc_5">رتب جهات الاتصال أبجديًا حسب الاسم الأول. اعثر على أي شخص خلال ثوانٍ.</string>
+    <string name="onboarding_title_5">إخفاء الرقم</string>
+    <string name="onboarding_desc_5">إخفاء عرض رقم جهة الاتصال من قائمة جهات الاتصال.</string>
 
     <string name="onboarding_title_6">المفضلة والبحث</string>
     <string name="onboarding_desc_6">ضع علامة نجمة على جهات الاتصال المهمة للوصول السريع. ابحث في قائمة جهات الاتصال بالكامل فورًا.</string>
+
+    <string name="sim_preferences">تفضيلات شريحة SIM</string>
+    <string name="sim_preferences_subtitle">إدارة بطاقات SIM وشبكة الهاتف المحمول</string>
 
 
 </resources>

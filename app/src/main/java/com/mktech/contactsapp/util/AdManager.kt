@@ -66,7 +66,7 @@ object AdManager {
         val remoteConfig = Firebase.remoteConfig
         remoteConfig.setConfigSettingsAsync(
             remoteConfigSettings {
-                minimumFetchIntervalInSeconds = 0
+                minimumFetchIntervalInSeconds = 0 //temp 0, in production 3600
             }
         )
         remoteConfig.setDefaultsAsync(remoteConfigDefaults)

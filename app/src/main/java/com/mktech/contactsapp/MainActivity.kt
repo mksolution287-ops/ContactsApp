@@ -85,12 +85,12 @@ private val hiddenFromCards = setOf("WRITE_CONTACTS", "WRITE_CALL_LOG")
 private val optionalPermissionNames = setOf(
     "READ_MEDIA_IMAGES",
     "READ_EXTERNAL_STORAGE",
-//    "POST_NOTIFICATIONS"
+    "POST_NOTIFICATIONS"
 )
 private val notRequiredForApp = setOf(
     Manifest.permission.READ_EXTERNAL_STORAGE,
     Manifest.permission.READ_MEDIA_IMAGES,
-//    Manifest.permission.POST_NOTIFICATIONS
+    Manifest.permission.POST_NOTIFICATIONS
 )
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -219,7 +219,7 @@ class MainActivity : BaseActivity() {
                 val currentScreen = when {
                     showSplash                                 -> "splash"
                     !languagePicked                            -> "language"
-                    !onboardingDone                            -> "onboarding"
+//                    !onboardingDone                            -> "onboarding"
                     !isDefaultDialer.value && !defaultSkipped -> "set_default"
                     !requiredPermissionsGranted                -> "permission"
                     else                                       -> "main"
@@ -249,18 +249,18 @@ class MainActivity : BaseActivity() {
                                 }
                             )
 
-                            "onboarding" -> {
-                                LaunchedEffect(Unit) {
-                                    startActivity(Intent(activity, OnboardingActivity::class.java))
-                                    activity.finish()
-                                }
-                                Box(
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    CircularProgressIndicator()
-                                }
-                            }
+//                            "onboarding" -> {
+//                                LaunchedEffect(Unit) {
+//                                    startActivity(Intent(activity, OnboardingActivity::class.java))
+//                                    activity.finish()
+//                                }
+//                                Box(
+//                                    modifier = Modifier.fillMaxSize(),
+//                                    contentAlignment = Alignment.Center
+//                                ) {
+//                                    CircularProgressIndicator()
+//                                }
+//                            }
 
                             "permission" -> {
                                 var deniedCount by remember { mutableStateOf(0) }

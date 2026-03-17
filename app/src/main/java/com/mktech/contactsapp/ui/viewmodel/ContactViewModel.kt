@@ -434,6 +434,7 @@ class ContactViewModel(
                 }
                 null
             }
+            Log.d("makeCall", "cleanNumber=$cleanNumber contact=${contact?.name} phone=${contact?.phoneNumber}")
 
             // isExactMatch = true only when the stored number's last 10 digits
             // equal the dialed number's last 10 digits.
@@ -447,9 +448,11 @@ class ContactViewModel(
                             storedClean.takeLast(10) == cleanDialed.takeLast(10)
                 } ?: false
 
+
             // Use the contact's stored number (e.g. +919876543210) if matched,
             // otherwise dial exactly what was typed (e.g. 987)
             val resolvedNumber = if (isExactMatch) contact!!.phoneNumber else cleanNumber
+            Log.d("makeCall", "isExactMatch=$isExactMatch resolvedNumber=$resolvedNumber")
 
             // ── Step 2: Place the call on Main thread ─────────────────────────
             withContext(Dispatchers.Main) {
@@ -458,9 +461,10 @@ class ContactViewModel(
 
             // ── Step 3: Log to Room ───────────────────────────────────────────
             try {
+                val contactName = resolveContactName(getApplication(), resolvedNumber)
                 callLogRepository.insertCallLog(
                     CallLog(
-                        contactName     = if (isExactMatch) contact!!.name else resolvedNumber,
+                        contactName     = contactName ?: resolvedNumber,
                         phoneNumber     = resolvedNumber,
                         callType        = CallType.OUTGOING,
                         timestamp       = System.currentTimeMillis(),
@@ -476,49 +480,144 @@ class ContactViewModel(
             }
         }
     }
+    private fun resolveContactName(context: Context, number: String): String? {
+        return try {
+            val uri = Uri.withAppendedPath(
+                ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
+                Uri.encode(number)
+            )
+            val cursor = context.contentResolver.query(
+                uri,
+                arrayOf(ContactsContract.PhoneLookup.DISPLAY_NAME),
+                null, null, null
+            )
+            cursor?.use {
+                if (it.moveToFirst()) it.getString(0) else null
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
 
     // ── Place call (non-suspend, runs on Main) ────────────────────────────────
+//    private fun placeCall(context: Context, number: String) {
+//        Firebase.crashlytics.apply {
+//            setCustomKey("last_dialed_number_length", number.length)
+//            setCustomKey("is_default_dialer",         isDefaultDialer(context))
+//            log("placeCall: initiated")
+//        }
+//        try {
+//            if (isDefaultDialer(context)) {
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    val telecomManager = context.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
+//                    telecomManager.placeCall(Uri.fromParts("tel", number, null), android.os.Bundle())
+//                } else {
+//                    context.startActivity(Intent(Intent.ACTION_CALL).apply {
+//                        data  = Uri.parse("tel:$number")
+//                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//                    })
+//                }
+//                Firebase.crashlytics.log("placeCall: placed via TelecomManager")
+//            } else {
+//                val defaultDialerPackage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    (context.getSystemService(Context.TELECOM_SERVICE) as TelecomManager).defaultDialerPackage
+//                } else null
+//
+//                val dialIntent = Intent(Intent.ACTION_DIAL).apply {
+//                    data  = Uri.parse("tel:$number")
+//                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//                }
+//                if (!defaultDialerPackage.isNullOrBlank()) {
+//                    dialIntent.setPackage(defaultDialerPackage)
+//                }
+//                try {
+//                    context.startActivity(dialIntent)
+//                    Firebase.crashlytics.log("placeCall: launched default dialer package")
+//                } catch (e: Exception) {
+//                    Firebase.crashlytics.log("placeCall: package launch failed, retrying without package")
+//                    dialIntent.setPackage(null)
+//                    context.startActivity(dialIntent)
+//                }
+//            }
+//            AnalyticsTracker.logEvent("call_placed",
+//                mapOf("method" to if (isDefaultDialer(context)) "telecom" else "intent"))
+//        } catch (e: SecurityException) {
+//            Firebase.crashlytics.apply {
+//                setCustomKey("operation",  "placeCall")
+//                setCustomKey("error_type", "SecurityException")
+//                recordException(e)
+//            }
+//            Log.e("makeCall", "Permission denied", e)
+//            fallbackDial(context, number)
+//        } catch (e: Exception) {
+//            Firebase.crashlytics.apply {
+//                setCustomKey("operation",  "placeCall")
+//                setCustomKey("error_type", e.javaClass.simpleName)
+//                recordException(e)
+//            }
+//            Log.e("makeCall", "Call failed", e)
+//            fallbackDial(context, number)
+//        }
+//    }
     private fun placeCall(context: Context, number: String) {
         Firebase.crashlytics.apply {
             setCustomKey("last_dialed_number_length", number.length)
-            setCustomKey("is_default_dialer",         isDefaultDialer(context))
+            setCustomKey("is_default_dialer", isDefaultDialer(context))
             log("placeCall: initiated")
         }
         try {
             if (isDefaultDialer(context)) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     val telecomManager = context.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
-                    telecomManager.placeCall(Uri.fromParts("tel", number, null), android.os.Bundle())
+                    val extras = android.os.Bundle()
+
+                    try {
+                        // READ_PHONE_STATE required — wrap in its own try/catch
+                        val accounts = telecomManager.callCapablePhoneAccounts
+                        if (accounts.size == 1) {
+                            extras.putParcelable(
+                                TelecomManager.EXTRA_PHONE_ACCOUNT_HANDLE,
+                                accounts[0]
+                            )
+                        }
+                        // size > 1 → don't set account → system shows SIM picker
+                    } catch (e: SecurityException) {
+                        // READ_PHONE_STATE not granted — proceed without account
+                        // telecom will use default SIM or show picker itself
+                        Firebase.crashlytics.log("placeCall: READ_PHONE_STATE denied, proceeding without account")
+                    } catch (e: Exception) {
+                        Firebase.crashlytics.log("placeCall: couldn't read phone accounts, proceeding without")
+                    }
+
+                    telecomManager.placeCall(Uri.fromParts("tel", number, null), extras)
+                    Firebase.crashlytics.log("placeCall: placed via TelecomManager")
                 } else {
                     context.startActivity(Intent(Intent.ACTION_CALL).apply {
                         data  = Uri.parse("tel:$number")
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     })
                 }
-                Firebase.crashlytics.log("placeCall: placed via TelecomManager")
             } else {
-                val defaultDialerPackage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    (context.getSystemService(Context.TELECOM_SERVICE) as TelecomManager).defaultDialerPackage
-                } else null
-
-                val dialIntent = Intent(Intent.ACTION_DIAL).apply {
+                // Not default dialer — use ACTION_CALL which also triggers
+                // system SIM picker on dual-SIM devices automatically
+                val callIntent = Intent(Intent.ACTION_CALL).apply {
                     data  = Uri.parse("tel:$number")
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 }
-                if (!defaultDialerPackage.isNullOrBlank()) {
-                    dialIntent.setPackage(defaultDialerPackage)
-                }
                 try {
-                    context.startActivity(dialIntent)
-                    Firebase.crashlytics.log("placeCall: launched default dialer package")
-                } catch (e: Exception) {
-                    Firebase.crashlytics.log("placeCall: package launch failed, retrying without package")
-                    dialIntent.setPackage(null)
-                    context.startActivity(dialIntent)
+                    context.startActivity(callIntent)
+                    Firebase.crashlytics.log("placeCall: placed via ACTION_CALL")
+                } catch (e: SecurityException) {
+                    // CALL_PHONE not granted — fall back to ACTION_DIAL
+                    // ACTION_DIAL never requires permission and still shows SIM picker
+                    Firebase.crashlytics.log("placeCall: CALL_PHONE denied, falling back to ACTION_DIAL")
+                    fallbackDial(context, number)
                 }
             }
-            AnalyticsTracker.logEvent("call_placed",
-                mapOf("method" to if (isDefaultDialer(context)) "telecom" else "intent"))
+            AnalyticsTracker.logEvent(
+                "call_placed",
+                mapOf("method" to if (isDefaultDialer(context)) "telecom" else "intent")
+            )
         } catch (e: SecurityException) {
             Firebase.crashlytics.apply {
                 setCustomKey("operation",  "placeCall")

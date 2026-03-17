@@ -169,10 +169,14 @@
     <string name="onboarding_title_4">Temas y colores</string>
     <string name="onboarding_desc_4">Personaliza tu experiencia con temas claros u oscuros y una variedad de colores de acento.</string>
 
-    <string name="onboarding_title_5">Orden inteligente</string>
-    <string name="onboarding_desc_5">Ordena tus contactos alfabéticamente por nombre. Encuentra a cualquiera en segundos.</string>
+    <string name="onboarding_title_5">Ocultar número</string>
+    <string name="onboarding_desc_5">Oculta la visualización del número de contacto de la lista de contactos.</string>
 
     <string name="onboarding_title_6">Favoritos y búsqueda</string>
     <string name="onboarding_desc_6">Marca tus contactos importantes como favoritos para acceso rápido y búscalos al instante.</string>
+
+    <string name="sim_preferences">Preferencias de SIM</string>
+    <string name="sim_preferences_subtitle">Administrar tarjetas SIM y red móvil</string>
+
 
 </resources>
