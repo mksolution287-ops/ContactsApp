@@ -20,16 +20,21 @@ object AdManager {
     private const val TEST_BANNER_ID       = "ca-app-pub-3940256099942544/6300978111"
     private const val TEST_INTERSTITIAL_ID = "ca-app-pub-3940256099942544/1033173712"
     private const val TEST_NATIVE_ID       = "ca-app-pub-3940256099942544/2247696110"
+    private const val TEST_APP_OPEN_ID     = "ca-app-pub-3940256099942544/9257395921"
+
 
     // ── Remote Config keys ────────────────────────────────────────────────
     private const val KEY_ADS_ENABLED          = "ads_enabled"
     private const val KEY_BANNER_ENABLED       = "banner_ad_enabled"
     private const val KEY_INTERSTITIAL_ENABLED = "interstitial_ad_enabled"
     private const val KEY_NATIVE_ENABLED       = "native_ad_enabled"
+    private const val KEY_APP_OPEN_ENABLED     = "app_open_ad_enabled"
     private const val KEY_INTERSTITIAL_TRIGGER = "interstitial_trigger_count"
     private const val KEY_BANNER_AD_UNIT       = "banner_ad_unit_id"
     private const val KEY_INTERSTITIAL_AD_UNIT = "interstitial_ad_unit_id"
     private const val KEY_NATIVE_AD_UNIT       = "native_ad_unit_id"
+    private const val KEY_APP_OPEN_AD_UNIT     = "app_open_ad_unit_id"
+
 
     // ── State ─────────────────────────────────────────────────────────────
     private var interstitialAd: InterstitialAd? = null
@@ -44,10 +49,16 @@ object AdManager {
     private val _nativeEnabled = MutableStateFlow(false)
     val nativeEnabled: StateFlow<Boolean> = _nativeEnabled
 
+    private val _appOpenEnabled = MutableStateFlow(false)
+    val appOpenEnabled: StateFlow<Boolean> = _appOpenEnabled
+
     // ── Native Ad state ───────────────────────────────────────────────────
     private var nativeAd: NativeAd? = null
     private val _nativeAdReady = MutableStateFlow(false)
     val nativeAdReady: StateFlow<Boolean> = _nativeAdReady
+
+    var isInterstitialShowing = false
+        private set
 
     // ── Remote Config defaults ────────────────────────────────────────────
     private val remoteConfigDefaults = mapOf(
@@ -55,10 +66,12 @@ object AdManager {
         KEY_BANNER_ENABLED       to true,
         KEY_INTERSTITIAL_ENABLED to true,
         KEY_NATIVE_ENABLED       to true,
+        KEY_APP_OPEN_ENABLED     to true,
         KEY_INTERSTITIAL_TRIGGER to 3L,
         KEY_BANNER_AD_UNIT       to TEST_BANNER_ID,
         KEY_INTERSTITIAL_AD_UNIT to TEST_INTERSTITIAL_ID,
-        KEY_NATIVE_AD_UNIT       to TEST_NATIVE_ID
+        KEY_NATIVE_AD_UNIT       to TEST_NATIVE_ID,
+        KEY_APP_OPEN_AD_UNIT     to TEST_APP_OPEN_ID
     )
 
     // ── Init Remote Config and fetch ──────────────────────────────────────
@@ -79,11 +92,14 @@ object AdManager {
                     config.getBoolean(KEY_BANNER_ENABLED)
             _nativeEnabled.value = config.getBoolean(KEY_ADS_ENABLED) &&
                     config.getBoolean(KEY_NATIVE_ENABLED)
+            _appOpenEnabled.value = config.getBoolean(KEY_ADS_ENABLED) &&
+                    config.getBoolean(KEY_APP_OPEN_ENABLED)
 
             Log.d("AdManager", "Remote config fetched: " +
                     "ads=${_adsEnabled.value} " +
                     "banner=${_bannerEnabled.value} " +
-                    "native=${_nativeEnabled.value}")
+                    "native=${_nativeEnabled.value} " +
+                    "appOpen=${_appOpenEnabled.value}")
 
             if (_adsEnabled.value) {
                 preloadInterstitial(context)
@@ -91,6 +107,26 @@ object AdManager {
             }
         }
     }
+
+    // Cooldown: blocks app open ad briefly after interstitial dismisses
+    private var interstitialDismissedAt = 0L
+    private const val INTERSTITIAL_COOLDOWN_MS = 2000L // 2 seconds
+
+    fun isInterstitialRecentlyActive(): Boolean {
+        return isInterstitialShowing ||
+                (System.currentTimeMillis() - interstitialDismissedAt < INTERSTITIAL_COOLDOWN_MS)
+    }
+
+    // ── App Open Ad helpers (called by AppOpenAdManager) ──────────────────
+    fun isAppOpenAdEnabled(): Boolean {
+        val config = Firebase.remoteConfig
+        return config.getBoolean(KEY_ADS_ENABLED) &&
+                config.getBoolean(KEY_APP_OPEN_ENABLED)
+    }
+
+    fun getAppOpenAdUnitId(): String =
+        Firebase.remoteConfig.getString(KEY_APP_OPEN_AD_UNIT).ifBlank { TEST_APP_OPEN_ID }
+
 
     // ── Banner ad unit ID from Remote Config ──────────────────────────────
     fun getBannerAdUnitId(): String {
@@ -132,8 +168,21 @@ object AdManager {
         actionCount++
         val triggerCount = config.getLong(KEY_INTERSTITIAL_TRIGGER).toInt()
 
+//        if (actionCount >= triggerCount) {
+//            actionCount = 0
+//            showInterstitial(activity) {
+//                preloadInterstitial(context)
+//            }
+//        }
         if (actionCount >= triggerCount) {
             actionCount = 0
+
+            // 🚫 Block interstitial if app just resumed (App Open should take priority)
+            if (isInterstitialRecentlyActive()) {
+                Log.d("AdManager", "Skipping interstitial due to recent app open")
+                return
+            }
+
             showInterstitial(activity) {
                 preloadInterstitial(context)
             }
@@ -146,18 +195,25 @@ object AdManager {
             onDismiss()
             return
         }
+
+        isInterstitialShowing = true  // ← ADD THIS
+
         interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
                 interstitialAd = null
+                isInterstitialShowing = false
+                interstitialDismissedAt = System.currentTimeMillis()  // ← ADD THIS too
                 onDismiss()
             }
             override fun onAdFailedToShowFullScreenContent(error: AdError) {
                 interstitialAd = null
+                isInterstitialShowing = false
                 onDismiss()
             }
         }
         interstitialAd?.show(activity)
     }
+
 
     // ── Preload native ad ─────────────────────────────────────────────────
     fun preloadNativeAd(context: Context) {
@@ -212,4 +268,36 @@ object AdManager {
             preloadInterstitial(activity ?: return@showInterstitial)
         }
     }
+
+    fun showInterstitialOnAppResume(activity: Activity?) {
+        if (!_adsEnabled.value) return
+        if (activity == null) return
+
+        // 🚫 Block if already showing something
+        if (isInterstitialShowing) return
+
+        if (interstitialAd != null) {
+            isInterstitialShowing = true
+
+            interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                override fun onAdDismissedFullScreenContent() {
+                    interstitialAd = null
+                    isInterstitialShowing = false
+                    interstitialDismissedAt = System.currentTimeMillis()
+                    preloadInterstitial(activity)
+                }
+
+                override fun onAdFailedToShowFullScreenContent(error: AdError) {
+                    interstitialAd = null
+                    isInterstitialShowing = false
+                    preloadInterstitial(activity)
+                }
+            }
+
+            interstitialAd?.show(activity)
+        } else {
+            preloadInterstitial(activity)
+        }
+    }
+
 }

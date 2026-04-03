@@ -2,19 +2,17 @@ package com.mktech.contactsapp.data.model
 
 enum class AppTheme { LIGHT, DARK, SYSTEM }
 
-enum class AppLanguage(val code: String, val displayName: String, val nativeName: String) {
-    SYSTEM("system", "System Default", "System Default"),
-    ENGLISH("en",    "English",        "English"),
-    HINDI("hi",      "Hindi",          "हिन्दी"),
-    SPANISH("es",    "Spanish",        "Español"),
-    FRENCH("fr",     "French",         "Français"),
-    ARABIC("ar",     "Arabic",         "العربية"),
-    GERMAN("de",     "German",         "Deutsch"),
-//    PORTUGUESE("pt", "Portuguese",     "Português"),
-//    RUSSIAN("ru",    "Russian",        "Русский"),
-    CHINESE("zh",    "Mandarin",        "中文"),
-    JAPANESE("ja",   "Japanese",       "日本語"),
-    KOREAN("ko",     "Korean",         "한국어")
+enum class AppLanguage(val code: String, val displayName: String, val nativeName: String, val flag: String) {
+    SYSTEM("system", "System Default", "System Default", "🌐"),
+    ENGLISH("en",    "English",        "English",        "🇬🇧"),
+    HINDI("hi",      "Hindi",          "हिन्दी",           "🇮🇳"),
+    SPANISH("es",    "Spanish",        "Español",        "🇪🇸"),
+    FRENCH("fr",     "French",         "Français",       "🇫🇷"),
+    ARABIC("ar",     "Arabic",         "العربية",         "🇸🇦"),
+    GERMAN("de",     "German",         "Deutsch",        "🇩🇪"),
+    CHINESE("zh",    "Mandarin",       "中文",            "🇨🇳"),
+    JAPANESE("ja",   "Japanese",       "日本語",           "🇯🇵"),
+    KOREAN("ko",     "Korean",         "한국어",           "🇰🇷")
 }
 
 enum class AccentColor(val hex: Long) {

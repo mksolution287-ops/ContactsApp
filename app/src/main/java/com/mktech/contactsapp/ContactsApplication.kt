@@ -13,6 +13,7 @@ import com.mktech.contactsapp.data.repository.CallLogRepository
 import com.mktech.contactsapp.data.repository.ContactRepository
 import com.mktech.contactsapp.data.repository.SettingsRepository
 import com.mktech.contactsapp.util.AdManager
+import com.mktech.contactsapp.util.AppOpenAdManager
 import com.mktech.contactsapp.util.LocaleHelper
 
 class ContactsApplication : Application() {
@@ -39,6 +40,11 @@ class ContactsApplication : Application() {
     lateinit var settingsRepository: SettingsRepository
         private set
 
+    // ── App Open Ad Manager ───────────────────────────────────────────────
+    lateinit var appOpenAdManager: AppOpenAdManager
+        private set
+
+
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate() {
         super.onCreate()
@@ -48,6 +54,10 @@ class ContactsApplication : Application() {
             Log.d("AdMob", "Initialized: ${initStatus.adapterStatusMap}")
             // ← Init AdManager INSIDE the callback, after MobileAds is ready
             AdManager.init(this)
+            // AppOpenAdManager registers lifecycle callbacks and loads first ad
+            // Must be initialized AFTER AdManager so Remote Config flags are ready
+            appOpenAdManager = AppOpenAdManager(this)
+            appOpenAdManager.loadAd(this)
         }
 
         // ── Detect fresh install and clear stale prefs ───────────────────

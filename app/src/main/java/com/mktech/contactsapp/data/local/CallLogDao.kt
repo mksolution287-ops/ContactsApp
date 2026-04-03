@@ -42,6 +42,19 @@ interface CallLogDao {
     @Query("UPDATE call_logs SET profileImageUri = :newUri WHERE phoneNumber = :phone")
     suspend fun updateProfileImageByPhone(phone: String, newUri: String?)
 
+    @Query("DELETE FROM call_logs WHERE phoneNumber = :phoneNumber")
+    suspend fun deleteByPhone(phoneNumber: String)
+
+    @Query("DELETE FROM call_logs WHERE callType = 'MISSED'")
+    suspend fun deleteMissedCallLogs()
+
+    @Query("DELETE FROM call_logs WHERE callType = 'INCOMING'")
+    suspend fun deleteIncomingCallLogs()
+
+    @Query("DELETE FROM call_logs WHERE callType = 'OUTGOING'")
+    suspend fun deleteOutgoingCallLogs()
+
+
     @Query("""
     SELECT 
         cl.id,

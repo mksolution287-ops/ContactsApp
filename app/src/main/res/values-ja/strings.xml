@@ -25,6 +25,11 @@
     <string name="just_now">たった今</string>
     <string name="yesterday">昨日</string>
 
+    <string name="filter_all_label">すべて</string>
+    <string name="filter_missed_label">不在着信</string>
+    <string name="filter_incoming_label">着信</string>
+    <string name="filter_outgoing_label">発信</string>
+
     <!-- Settings screen -->
     <string name="default_app">デフォルトアプリ</string>
     <string name="set_as_default_contacts_app">デフォルトの連絡先アプリとして設定</string>

@@ -25,6 +25,11 @@
     <string name="just_now">À l\'instant</string>
     <string name="yesterday">Hier</string>
 
+    <string name="filter_all_label">tous</string>
+    <string name="filter_missed_label">manqués</string>
+    <string name="filter_incoming_label">entrants</string>
+    <string name="filter_outgoing_label">sortants</string>
+
     <!-- Settings screen -->
     <string name="default_app">Application par défaut</string>
     <string name="set_as_default_contacts_app">Définir comme application de contacts par défaut</string>

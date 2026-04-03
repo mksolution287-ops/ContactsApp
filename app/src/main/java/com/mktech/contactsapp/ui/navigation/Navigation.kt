@@ -202,7 +202,8 @@ fun ContactNavigation(
                     onCallContact     = { number ->
                         AnalyticsTracker.logContactCalled(hasImage = false)
                         viewModel.makeCall(context = context, number)
-                    }
+                    },
+                    onSyncContacts = {viewModel.loadDeviceContactsOnce()}
                 )
             }
 
@@ -243,6 +244,12 @@ fun ContactNavigation(
                         AnalyticsTracker.logEvent("call_logs_cleared_all")
                         viewModel.clearAllCallLogs()
                         //interstitial ad
+                        AdManager.trackAction(context, activity)
+                    },
+                    onClearByFilter = { filter ->                           // ← new
+                        AnalyticsTracker.logEvent("call_logs_cleared_by_filter",
+                            mapOf("filter" to filter.name))
+                        viewModel.clearCallLogsByFilter(filter)
                         AdManager.trackAction(context, activity)
                     },
                     onSyncLogs  = {
@@ -360,7 +367,8 @@ fun ContactNavigation(
                     settings         = settings,
                     onContactClick   = { contact ->
                         AnalyticsTracker.logContactOpened(contact.id, contact.isFavorite)
-                        navController.navigate(Routes.contactDetail(contact.id))
+//                        navController.navigate(Routes.contactDetail(contact.id))
+                        viewModel.dialPadSetNumber(contact.phoneNumber)
                     },
                     onCallContact    = { phoneNumber ->
                         AnalyticsTracker.logEvent("quick_call_from_suggestion",

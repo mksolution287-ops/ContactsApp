@@ -25,6 +25,11 @@
     <string name="just_now">Just now</string>
     <string name="yesterday">Yesterday</string>
 
+    <string name="filter_all_label">all</string>
+    <string name="filter_missed_label">missed</string>
+    <string name="filter_incoming_label">incoming</string>
+    <string name="filter_outgoing_label">outgoing</string>
+
     <!-- Contact list -->
     <string name="add_contact">Add Contact</string>
     <string name="call">Call</string>

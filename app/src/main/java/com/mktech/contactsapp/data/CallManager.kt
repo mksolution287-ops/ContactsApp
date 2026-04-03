@@ -32,11 +32,6 @@ object CallManager {
     fun decline() { currentCall?.reject(false, null) }
     fun hangUp() { currentCall?.disconnect() }
 
-//    fun toggleMute() {
-//        val service = inCallService ?: return
-//        val isMuted = service.callAudioState?.isMuted ?: false
-//        service.setMuted(!isMuted)
-//    }
 fun toggleMute() {
     val service = inCallService ?: return
     _isMuted = !_isMuted          // ← flip local state first
@@ -44,15 +39,6 @@ fun toggleMute() {
     notifyListeners()
 }
 
-//    fun toggleSpeaker() {
-//        val service = inCallService ?: return
-//        val current = service.callAudioState?.route ?: return
-//        val newRoute = if (current == CallAudioState.ROUTE_SPEAKER)
-//            CallAudioState.ROUTE_EARPIECE
-//        else
-//            CallAudioState.ROUTE_SPEAKER
-//        service.setAudioRoute(newRoute)
-//    }
 fun toggleSpeaker() {
     val service = inCallService ?: return
     _isSpeaker = !_isSpeaker      // ← flip local state first
@@ -70,12 +56,6 @@ fun toggleSpeaker() {
         _isSpeaker = state.route == CallAudioState.ROUTE_SPEAKER
         notifyListeners()
     }
-
-//    fun isMuted(): Boolean =
-//        inCallService?.callAudioState?.isMuted ?: false
-//
-//    fun isSpeakerOn(): Boolean =
-//        inCallService?.callAudioState?.route == CallAudioState.ROUTE_SPEAKER
 
     fun isMuted(): Boolean = _isMuted
     fun isSpeakerOn(): Boolean = _isSpeaker

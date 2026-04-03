@@ -20,6 +20,7 @@ import com.mktech.contactsapp.data.model.*
 import com.mktech.contactsapp.data.repository.CallLogRepository
 import com.mktech.contactsapp.data.repository.ContactRepository
 import com.mktech.contactsapp.data.repository.SettingsRepository
+import com.mktech.contactsapp.ui.screens.CallLogFilter
 import com.mktech.contactsapp.util.DeviceCallLogHelper
 import com.mktech.contactsapp.util.DeviceContactsHelper
 import com.mktech.contactsapp.util.LocaleHelper
@@ -78,6 +79,16 @@ class ContactViewModel(
 
     fun updateSearchQuery(q: String) { _searchQuery.value = q }
     fun toggleFavoritesFilter() { _showFavoritesOnly.value = !_showFavoritesOnly.value }
+
+
+    private var contactsLoadedOnce = false
+
+    fun loadDeviceContactsOnce() {
+        if(!contactsLoadedOnce){
+            loadDeviceContacts()
+            contactsLoadedOnce = true
+        }
+    }
 
     // ── Load device contacts ─────────────────────────────────────────────────
     fun loadDeviceContacts() = viewModelScope.launch {
@@ -265,6 +276,12 @@ class ContactViewModel(
         try {
             withContext(Dispatchers.IO) { deleteSystemContact(getApplication(), c.phoneNumber) }
             contactRepository.deleteContact(c)
+            // ── Also delete all call logs for this contact's number ──────────
+            callLogRepository.deleteCallLogsByPhone(c.phoneNumber)
+            withContext(Dispatchers.IO) {
+                deleteSystemCallLogsByPhone(getApplication(), c.phoneNumber)
+            }
+
             Firebase.crashlytics.log("deleteContact: success id=${c.id}")
         } catch (e: Exception) {
             Firebase.crashlytics.apply {
@@ -394,9 +411,57 @@ class ContactViewModel(
         }
     }
 
+//    fun clearAllCallLogs() = viewModelScope.launch {
+//        try {
+//            callLogRepository.deleteAllCallLogs()
+//            // ── Also delete from system call log so sync doesn't re-import them ──
+//            withContext(Dispatchers.IO) {
+//                try {
+//                    val deleted = getApplication<Application>().contentResolver.delete(
+//                        android.provider.CallLog.Calls.CONTENT_URI,
+//                        null,
+//                        null
+//                    )
+//                    Log.d("clearAllCallLogs", "Deleted $deleted system call log(s)")
+//                    Firebase.crashlytics.log("clearAllCallLogs: deleted $deleted system rows")
+//                } catch (e: Exception) {
+//                    Firebase.crashlytics.apply {
+//                        setCustomKey("operation", "clearSystemCallLogs")
+//                        recordException(e)
+//                    }
+//                    Log.e("clearAllCallLogs", "Failed to clear system call logs", e)
+//                }
+//            }
+//            Firebase.crashlytics.log("clearAllCallLogs: success")
+//        } catch (e: Exception) {
+//            Firebase.crashlytics.apply {
+//                setCustomKey("operation", "clearAllCallLogs")
+//                recordException(e)
+//            }
+//            Log.e("ContactViewModel", "Failed to clear all call logs", e)
+//        }
+//    }
+
     fun clearAllCallLogs() = viewModelScope.launch {
         try {
             callLogRepository.deleteAllCallLogs()
+            withContext(Dispatchers.IO) {
+                try {
+                    val deleted = getApplication<Application>().contentResolver.delete(
+                        android.provider.CallLog.Calls.CONTENT_URI,
+                        null,
+                        null
+                    )
+                    Log.d("clearAllCallLogs", "Deleted $deleted system call log(s)")
+                    Firebase.crashlytics.log("clearAllCallLogs: deleted $deleted system rows")
+                } catch (e: Exception) {
+                    Firebase.crashlytics.apply {
+                        setCustomKey("operation", "clearSystemCallLogs")
+                        recordException(e)
+                    }
+                    Log.e("clearAllCallLogs", "Failed to clear system call logs", e)
+                }
+            }
             Firebase.crashlytics.log("clearAllCallLogs: success")
         } catch (e: Exception) {
             Firebase.crashlytics.apply {
@@ -407,10 +472,68 @@ class ContactViewModel(
         }
     }
 
+    // ── Clear call logs by category ───────────────────────────────────────────
+    fun clearCallLogsByFilter(filter: CallLogFilter) = viewModelScope.launch {
+        try {
+            // Map filter to system call log type constant
+            val systemType: Int? = when (filter) {
+                CallLogFilter.ALL      -> null  // handled separately
+                CallLogFilter.MISSED   -> android.provider.CallLog.Calls.MISSED_TYPE
+                CallLogFilter.INCOMING -> android.provider.CallLog.Calls.INCOMING_TYPE
+                CallLogFilter.OUTGOING -> android.provider.CallLog.Calls.OUTGOING_TYPE
+            }
+
+            if (filter == CallLogFilter.ALL) {
+                clearAllCallLogs()
+                return@launch
+            }
+
+            // Delete from Room
+            when (filter) {
+                CallLogFilter.MISSED   -> callLogRepository.deleteMissedCallLogs()
+                CallLogFilter.INCOMING -> callLogRepository.deleteIncomingCallLogs()
+                CallLogFilter.OUTGOING -> callLogRepository.deleteOutgoingCallLogs()
+                else -> {}
+            }
+
+            // Delete from system call log for this type
+            withContext(Dispatchers.IO) {
+                try {
+                    val deleted = getApplication<Application>().contentResolver.delete(
+                        android.provider.CallLog.Calls.CONTENT_URI,
+                        "${android.provider.CallLog.Calls.TYPE} = ?",
+                        arrayOf(systemType.toString())
+                    )
+                    Log.d("clearCallLogsByFilter", "Deleted $deleted system log(s) for filter=$filter")
+                    Firebase.crashlytics.log("clearCallLogsByFilter: deleted $deleted rows filter=$filter")
+                } catch (e: Exception) {
+                    Firebase.crashlytics.apply {
+                        setCustomKey("operation", "clearSystemCallLogsByFilter")
+                        setCustomKey("filter",    filter.name)
+                        recordException(e)
+                    }
+                    Log.e("clearCallLogsByFilter", "Failed to clear system call logs", e)
+                }
+            }
+
+            Firebase.crashlytics.log("clearCallLogsByFilter: success filter=$filter")
+        } catch (e: Exception) {
+            Firebase.crashlytics.apply {
+                setCustomKey("operation", "clearCallLogsByFilter")
+                setCustomKey("filter",    filter.name)
+                recordException(e)
+            }
+            Log.e("ContactViewModel", "Failed to clear call logs for filter=$filter", e)
+        }
+    }
+
     fun dialPadAppend(c: String) { _dialPadNumber.value += c }
     fun dialPadDelete() { if (_dialPadNumber.value.isNotEmpty()) _dialPadNumber.value = _dialPadNumber.value.dropLast(1) }
     fun dialPadClear()  { _dialPadNumber.value = "" }
-    fun dialPadSetNumber(n: String) { _dialPadNumber.value = n }
+    fun dialPadSetNumber(n: String) {
+        val cleaned = n.replace(Regex("[^0-9+]"), "")
+        _dialPadNumber.value = cleaned
+    }
 
     // ── Make call ────────────────────────────────────────────────────────────
     // Restructured as a single coroutine so we can:
@@ -756,4 +879,55 @@ class ContactViewModel(
             LocaleHelper.changeLanguage(language.code)
         }
     }
+
+
+    // ── Delete contact AND its associated call logs ──────────────────────────
+    fun deleteContactWithCallLogs(c: Contact) = viewModelScope.launch {
+        Firebase.crashlytics.log("deleteContactWithCallLogs: id=${c.id} name=${c.name}")
+        try {
+            // Delete from system contacts
+            withContext(Dispatchers.IO) { deleteSystemContact(getApplication(), c.phoneNumber) }
+
+            // Delete from Room contacts table
+            contactRepository.deleteContact(c)
+
+            // Delete all call logs matching this phone number from Room
+            callLogRepository.deleteCallLogsByPhone(c.phoneNumber)
+
+            // Delete from system call log as well
+            withContext(Dispatchers.IO) {
+                deleteSystemCallLogsByPhone(getApplication(), c.phoneNumber)
+            }
+
+            Firebase.crashlytics.log("deleteContactWithCallLogs: success id=${c.id}")
+        } catch (e: Exception) {
+            Firebase.crashlytics.apply {
+                setCustomKey("operation",  "deleteContactWithCallLogs")
+                setCustomKey("contact_id", c.id.toString())
+                recordException(e)
+            }
+            Log.e("ContactViewModel", "Failed to delete contact with call logs", e)
+        }
+    }
+
+    // ── Delete all system call logs for a phone number ───────────────────────
+    private fun deleteSystemCallLogsByPhone(context: Context, phoneNumber: String) {
+        try {
+            val deleted = context.contentResolver.delete(
+                android.provider.CallLog.Calls.CONTENT_URI,
+                "${android.provider.CallLog.Calls.NUMBER} = ?",
+                arrayOf(phoneNumber)
+            )
+            Log.d("deleteContact", "Deleted $deleted system call log(s) for $phoneNumber")
+            Firebase.crashlytics.log("deleteSystemCallLogsByPhone: deleted $deleted rows")
+        } catch (e: Exception) {
+            Firebase.crashlytics.apply {
+                setCustomKey("operation", "deleteSystemCallLogsByPhone")
+                setCustomKey("phone",     phoneNumber)
+                recordException(e)
+            }
+            Log.e("ContactViewModel", "Failed to delete system call logs for $phoneNumber", e)
+        }
+    }
+
 }

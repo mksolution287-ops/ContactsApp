@@ -25,6 +25,11 @@
     <string name="just_now">방금</string>
     <string name="yesterday">어제</string>
 
+    <string name="filter_all_label">전체</string>
+    <string name="filter_missed_label">부재중</string>
+    <string name="filter_incoming_label">수신</string>
+    <string name="filter_outgoing_label">발신</string>
+
     <!-- Settings screen -->
     <string name="default_app">기본 앱</string>
     <string name="set_as_default_contacts_app">기본 연락처 앱으로 설정</string>

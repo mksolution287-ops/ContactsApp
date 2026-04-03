@@ -25,6 +25,12 @@
     <string name="just_now">अभी</string>
     <string name="yesterday">कल</string>
 
+    <string name="filter_all_label">सभी</string>
+    <string name="filter_missed_label">मिस्ड</string>
+    <string name="filter_incoming_label">आने वाली</string>
+    <string name="filter_outgoing_label">जाने वाली</string>
+
+
     <!-- Settings screen -->
     <string name="default_app">डिफ़ॉल्ट ऐप</string>
     <string name="set_as_default_contacts_app">डिफ़ॉल्ट कॉन्टैक्ट्स ऐप सेट करें</string>

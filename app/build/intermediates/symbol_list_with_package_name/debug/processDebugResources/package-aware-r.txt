@@ -4614,9 +4614,13 @@ string fallback_menu_item_open_in_browser
 string fallback_menu_item_share_link
 string favorites
 string filter_all
+string filter_all_label
 string filter_incoming
+string filter_incoming_label
 string filter_missed
+string filter_missed_label
 string filter_outgoing
+string filter_outgoing_label
 string gcm_defaultSenderId
 string google_api_key
 string google_app_id

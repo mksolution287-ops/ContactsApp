@@ -18,8 +18,8 @@ android {
         applicationId    = "com.mktech.contactsapp"
         minSdk           = 26
         targetSdk        = 35
-        versionCode      = 4
-        versionName      = "1.3"
+        versionCode      = 5
+        versionName      = "1.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables { useSupportLibrary = true }
@@ -53,8 +53,11 @@ android {
         compose = true
     }
 
-    // ✅ No longer needed with Kotlin 2.x + compose plugin — remove this block
-    // composeOptions { kotlinCompilerExtensionVersion = "1.5.10" }
+    bundle {
+        language {
+            enableSplit = false  // ← deliver ALL language resources in every install
+        }
+    }
 
     packaging {
         resources {
@@ -109,7 +112,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:0.36.0")
 
     // ── Firebase BOM ──────────────────────────────────────────────────────────
-    // ✅ BOM manages ALL Firebase versions — never add firebase-* versions manually
+    // BOM manages ALL Firebase versions — never add firebase-* versions manually
     implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
     implementation("com.google.firebase:firebase-analytics-ktx")      // no version — BOM controls it
     implementation("com.google.firebase:firebase-crashlytics-ktx")    // no version — BOM controls it

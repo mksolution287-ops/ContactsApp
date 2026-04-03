@@ -45,4 +45,14 @@ class CallLogRepository(private val callLogDao: CallLogDao) {
         timestamp: Long,
         windowMs: Long
     ): CallLog? = callLogDao.getLogByNumberAndTimeWindow(phone, timestamp, windowMs)
+
+
+    suspend fun deleteCallLogsByPhone(phoneNumber: String) {
+        callLogDao.deleteByPhone(phoneNumber)
+    }
+
+    suspend fun deleteMissedCallLogs()   = callLogDao.deleteMissedCallLogs()
+    suspend fun deleteIncomingCallLogs() = callLogDao.deleteIncomingCallLogs()
+    suspend fun deleteOutgoingCallLogs() = callLogDao.deleteOutgoingCallLogs()
+
 }

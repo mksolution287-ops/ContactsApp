@@ -539,6 +539,12 @@ private fun LanguagePickerScreen(
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            // ── Flag emoji ────────────────────────────────────────────────
+                            Text(
+                                text = lang.flag,
+                                fontSize = 28.sp,
+                                modifier = Modifier.padding(end = 14.dp)
+                            )
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = lang.nativeName,
@@ -607,7 +613,6 @@ private fun LanguagePickerScreen(
                 }
             }
         }
-
         NativeAdCard()
     }
 }

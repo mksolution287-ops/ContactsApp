@@ -234,6 +234,12 @@ fun SettingsScreen(
                                         }
                                     )
                                     Spacer(Modifier.width(8.dp))
+                                    // ── Flag emoji ────────────────────────────────────────────
+                                    Text(
+                                        text = lang.flag,
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                    Spacer(Modifier.width(10.dp))
                                     Column {
                                         Text(lang.nativeName, fontWeight = FontWeight.Medium)
                                         if (lang.nativeName != lang.displayName) {

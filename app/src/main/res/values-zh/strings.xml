@@ -25,6 +25,11 @@
     <string name="just_now">刚刚</string>
     <string name="yesterday">昨天</string>
 
+    <string name="filter_all_label">全部</string>
+    <string name="filter_missed_label">未接来电</string>
+    <string name="filter_incoming_label">来电</string>
+    <string name="filter_outgoing_label">去电</string>
+
     <!-- Settings screen -->
     <string name="default_app">默认应用</string>
     <string name="set_as_default_contacts_app">设为默认联系人应用</string>

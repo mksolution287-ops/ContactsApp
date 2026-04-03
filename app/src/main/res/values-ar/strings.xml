@@ -25,6 +25,12 @@
     <string name="just_now">الآن</string>
     <string name="yesterday">أمس</string>
 
+    <string name="filter_all_label">الكل</string>
+    <string name="filter_missed_label">المكالمات الفائتة</string>
+    <string name="filter_incoming_label">الواردة</string>
+    <string name="filter_outgoing_label">الصادرة</string>
+
+
     <!-- Settings screen -->
     <string name="default_app">التطبيق الافتراضي</string>
     <string name="set_as_default_contacts_app">تعيين كتطبيق جهات اتصال افتراضي</string>

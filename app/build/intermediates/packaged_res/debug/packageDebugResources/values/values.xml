@@ -39,9 +39,13 @@
     <string name="end_call">End</string>
     <string name="favorites">Favorites</string>
     <string name="filter_all">All (%1$d)</string>
+    <string name="filter_all_label">all</string>
     <string name="filter_incoming">Incoming (%1$d)</string>
+    <string name="filter_incoming_label">incoming</string>
     <string name="filter_missed">Missed (%1$d)</string>
+    <string name="filter_missed_label">missed</string>
     <string name="filter_outgoing">Outgoing (%1$d)</string>
+    <string name="filter_outgoing_label">outgoing</string>
     <string name="gcm_defaultSenderId" translatable="false">222409537385</string>
     <string name="google_api_key" translatable="false">AIzaSyBPBAPJuHMJ-rCeW5h8wGHuHYpxWNmZ9Qw</string>
     <string name="google_app_id" translatable="false">1:222409537385:android:af3a8e9d50475c2a56aff8</string>

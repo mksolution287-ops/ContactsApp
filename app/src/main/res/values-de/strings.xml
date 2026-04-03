@@ -25,6 +25,11 @@
     <string name="just_now">Gerade eben</string>
     <string name="yesterday">Gestern</string>
 
+    <string name="filter_all_label">alle</string>
+    <string name="filter_missed_label">verpasst</string>
+    <string name="filter_incoming_label">eingehend</string>
+    <string name="filter_outgoing_label">ausgehend</string>
+
     <!-- Settings screen -->
     <string name="default_app">Standard-App</string>
     <string name="set_as_default_contacts_app">Als Standard-Kontakte-App festlegen</string>

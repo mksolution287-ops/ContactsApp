@@ -49,6 +49,14 @@ public final class CallLogDao_Impl implements CallLogDao {
 
   private final SharedSQLiteStatement __preparedStmtOfUpdateProfileImageByPhone;
 
+  private final SharedSQLiteStatement __preparedStmtOfDeleteByPhone;
+
+  private final SharedSQLiteStatement __preparedStmtOfDeleteMissedCallLogs;
+
+  private final SharedSQLiteStatement __preparedStmtOfDeleteIncomingCallLogs;
+
+  private final SharedSQLiteStatement __preparedStmtOfDeleteOutgoingCallLogs;
+
   public CallLogDao_Impl(@NonNull final RoomDatabase __db) {
     this.__db = __db;
     this.__insertionAdapterOfCallLog = new EntityInsertionAdapter<CallLog>(__db) {
@@ -104,6 +112,38 @@ public final class CallLogDao_Impl implements CallLogDao {
       @NonNull
       public String createQuery() {
         final String _query = "UPDATE call_logs SET profileImageUri = ? WHERE phoneNumber = ?";
+        return _query;
+      }
+    };
+    this.__preparedStmtOfDeleteByPhone = new SharedSQLiteStatement(__db) {
+      @Override
+      @NonNull
+      public String createQuery() {
+        final String _query = "DELETE FROM call_logs WHERE phoneNumber = ?";
+        return _query;
+      }
+    };
+    this.__preparedStmtOfDeleteMissedCallLogs = new SharedSQLiteStatement(__db) {
+      @Override
+      @NonNull
+      public String createQuery() {
+        final String _query = "DELETE FROM call_logs WHERE callType = 'MISSED'";
+        return _query;
+      }
+    };
+    this.__preparedStmtOfDeleteIncomingCallLogs = new SharedSQLiteStatement(__db) {
+      @Override
+      @NonNull
+      public String createQuery() {
+        final String _query = "DELETE FROM call_logs WHERE callType = 'INCOMING'";
+        return _query;
+      }
+    };
+    this.__preparedStmtOfDeleteOutgoingCallLogs = new SharedSQLiteStatement(__db) {
+      @Override
+      @NonNull
+      public String createQuery() {
+        final String _query = "DELETE FROM call_logs WHERE callType = 'OUTGOING'";
         return _query;
       }
     };
@@ -230,6 +270,101 @@ public final class CallLogDao_Impl implements CallLogDao {
           }
         } finally {
           __preparedStmtOfUpdateProfileImageByPhone.release(_stmt);
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object deleteByPhone(final String phoneNumber,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        final SupportSQLiteStatement _stmt = __preparedStmtOfDeleteByPhone.acquire();
+        int _argIndex = 1;
+        _stmt.bindString(_argIndex, phoneNumber);
+        try {
+          __db.beginTransaction();
+          try {
+            _stmt.executeUpdateDelete();
+            __db.setTransactionSuccessful();
+            return Unit.INSTANCE;
+          } finally {
+            __db.endTransaction();
+          }
+        } finally {
+          __preparedStmtOfDeleteByPhone.release(_stmt);
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object deleteMissedCallLogs(final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        final SupportSQLiteStatement _stmt = __preparedStmtOfDeleteMissedCallLogs.acquire();
+        try {
+          __db.beginTransaction();
+          try {
+            _stmt.executeUpdateDelete();
+            __db.setTransactionSuccessful();
+            return Unit.INSTANCE;
+          } finally {
+            __db.endTransaction();
+          }
+        } finally {
+          __preparedStmtOfDeleteMissedCallLogs.release(_stmt);
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object deleteIncomingCallLogs(final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        final SupportSQLiteStatement _stmt = __preparedStmtOfDeleteIncomingCallLogs.acquire();
+        try {
+          __db.beginTransaction();
+          try {
+            _stmt.executeUpdateDelete();
+            __db.setTransactionSuccessful();
+            return Unit.INSTANCE;
+          } finally {
+            __db.endTransaction();
+          }
+        } finally {
+          __preparedStmtOfDeleteIncomingCallLogs.release(_stmt);
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object deleteOutgoingCallLogs(final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        final SupportSQLiteStatement _stmt = __preparedStmtOfDeleteOutgoingCallLogs.acquire();
+        try {
+          __db.beginTransaction();
+          try {
+            _stmt.executeUpdateDelete();
+            __db.setTransactionSuccessful();
+            return Unit.INSTANCE;
+          } finally {
+            __db.endTransaction();
+          }
+        } finally {
+          __preparedStmtOfDeleteOutgoingCallLogs.release(_stmt);
         }
       }
     }, $completion);

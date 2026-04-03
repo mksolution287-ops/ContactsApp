@@ -43,6 +43,7 @@ fun CallLogsScreen(
     onCallBack: (String) -> Unit,
     onDeleteLog: (Long) -> Unit,
     onClearAll: () -> Unit,
+    onClearByFilter: (CallLogFilter) -> Unit,
     onSyncLogs: () -> Unit,
     onContactClick: (String) -> Unit
 ) {
@@ -163,6 +164,13 @@ fun CallLogsScreen(
                 Icon(Icons.Default.Sync, contentDescription = stringResource(R.string.sync_call_logs),
                     tint = MaterialTheme.colorScheme.primary)
             }
+//            if (allLogs.isNotEmpty()) {
+//                IconButton(onClick = { showClearDialog = true }) {
+//                    Icon(Icons.Default.DeleteSweep, contentDescription = stringResource(R.string.clear_all),
+//                        tint = MaterialTheme.colorScheme.onSurfaceVariant)
+//                }
+//            }
+            // Action buttons row — replace the existing clear IconButton
             if (allLogs.isNotEmpty()) {
                 IconButton(onClick = { showClearDialog = true }) {
                     Icon(Icons.Default.DeleteSweep, contentDescription = stringResource(R.string.clear_all),
@@ -211,14 +219,40 @@ fun CallLogsScreen(
         }
     }
 
+//    if (showClearDialog) {
+//        AlertDialog(
+//            onDismissRequest = { showClearDialog = false },
+//            title = { Text(stringResource(R.string.clear_call_history_title)) },
+//            text  = { Text(stringResource(R.string.clear_call_history_message)) },
+//            confirmButton = {
+//                TextButton(
+//                    onClick = { showClearDialog = false; onClearAll() },
+//                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
+//                ) { Text(stringResource(R.string.clear_all)) }
+//            },
+//            dismissButton = {
+//                TextButton(onClick = { showClearDialog = false }) { Text(stringResource(R.string.cancel)) }
+//            }
+//        )
+//    }
     if (showClearDialog) {
+        val filterLabel = when (filter) {
+            CallLogFilter.ALL      -> stringResource(R.string.filter_all_label)   // "all"
+            CallLogFilter.MISSED   -> stringResource(R.string.filter_missed_label)
+            CallLogFilter.INCOMING -> stringResource(R.string.filter_incoming_label)
+            CallLogFilter.OUTGOING -> stringResource(R.string.filter_outgoing_label)
+        }
         AlertDialog(
             onDismissRequest = { showClearDialog = false },
             title = { Text(stringResource(R.string.clear_call_history_title)) },
-            text  = { Text(stringResource(R.string.clear_call_history_message)) },
+            text  = { Text("Clear $filterLabel call history? This cannot be undone.") },
             confirmButton = {
                 TextButton(
-                    onClick = { showClearDialog = false; onClearAll() },
+                    onClick = {
+                        showClearDialog = false
+                        if (filter == CallLogFilter.ALL) onClearAll()
+                        else onClearByFilter(filter)
+                    },
                     colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
                 ) { Text(stringResource(R.string.clear_all)) }
             },
