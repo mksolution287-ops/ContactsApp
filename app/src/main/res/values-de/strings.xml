@@ -182,4 +182,7 @@
 
     <string name="sim_preferences">SIM-Einstellungen</string>
     <string name="sim_preferences_subtitle">SIM-Karten und Mobilfunknetz verwalten</string>
+
+    <string name="confirm">Bestätigen</string>
+
 </resources>

@@ -60,6 +60,9 @@ object AdManager {
     var isInterstitialShowing = false
         private set
 
+    @Volatile
+    var skipNextInterstitial: Boolean = false
+
     // ── Remote Config defaults ────────────────────────────────────────────
     private val remoteConfigDefaults = mapOf(
         KEY_ADS_ENABLED          to true,
@@ -258,8 +261,28 @@ object AdManager {
     }
 
     // ── Show immediately after splash, bypasses counter ──────────────────
+//    fun immediateInterstitialAd(activity: Activity?) {
+//        if (!_adsEnabled.value) return
+//        if (interstitialAd == null) {
+//            Log.w("AdManager", "Splash ad not ready yet")
+//            return
+//        }
+//        showInterstitial(activity) {
+//            preloadInterstitial(activity ?: return@showInterstitial)
+//        }
+//    }
+
+    // ── Show immediately after splash, bypasses counter ──────────────────
     fun immediateInterstitialAd(activity: Activity?) {
         if (!_adsEnabled.value) return
+
+        // 🚫 One-shot skip — used after language change + recreate(), etc.
+        if (skipNextInterstitial) {
+            Log.d("AdManager", "Skipping immediate interstitial — skipNextInterstitial was set")
+            skipNextInterstitial = false
+            return
+        }
+
         if (interstitialAd == null) {
             Log.w("AdManager", "Splash ad not ready yet")
             return

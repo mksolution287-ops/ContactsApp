@@ -40,6 +40,7 @@ string clear_all_confirm
 string clear_call_history_message
 string clear_call_history_title
 string com.google.firebase.crashlytics.mapping_file_id
+string confirm
 string confirm_before_delete
 string confirm_delete
 string confirm_delete_subtitle
@@ -171,4 +172,5 @@ string yesterday
 style Theme.ContactsApp
 xml backup_rules
 xml data_extraction_rules
+xml gma_ad_services_config
 xml locales_config

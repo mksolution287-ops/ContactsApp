@@ -183,4 +183,6 @@
     <string name="sim_preferences">SIM 偏好设置</string>
     <string name="sim_preferences_subtitle">管理 SIM 卡和移动网络</string>
 
+    <string name="confirm">确认</string>
+
 </resources>

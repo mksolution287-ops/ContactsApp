@@ -4584,6 +4584,7 @@ string common_google_play_services_wear_update_text
 string common_open_on_phone
 string common_signin_button_text
 string common_signin_button_text_long
+string confirm
 string confirm_before_delete
 string confirm_delete
 string confirm_delete_subtitle
@@ -4826,6 +4827,7 @@ string notifications_permission_title
 string offline_dialog_image_description
 string offline_dialog_text
 string offline_notification_title
+string offline_notification_title_with_advertiser
 string offline_opt_in_confirm
 string offline_opt_in_decline
 string offline_opt_in_message

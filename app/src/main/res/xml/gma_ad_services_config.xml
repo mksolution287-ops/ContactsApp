@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ad-services-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <attribution-reporting allowAllToAccess="true" />
+    <custom-audiences allowAllToAccess="true" />
+    <topics allowAllToAccess="true" />
+    <protected-signals allowAllToAccess="true" />
+</ad-services-config>

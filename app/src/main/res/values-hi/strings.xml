@@ -184,4 +184,6 @@
 
     <string name="sim_preferences">सिम प्राथमिकताएँ</string>
     <string name="sim_preferences_subtitle">सिम कार्ड और मोबाइल नेटवर्क प्रबंधित करें</string>
+
+    <string name="confirm">पुष्टि करें</string>
 </resources>

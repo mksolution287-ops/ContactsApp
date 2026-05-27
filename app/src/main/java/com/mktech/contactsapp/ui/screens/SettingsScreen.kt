@@ -7,14 +7,19 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.telecom.TelecomManager
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,21 +28,25 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import com.mktech.contactsapp.R
 import com.mktech.contactsapp.data.model.AccentColor
 import com.mktech.contactsapp.data.model.AppLanguage
 import com.mktech.contactsapp.data.model.AppSettings
 import com.mktech.contactsapp.data.model.AppTheme
+import kotlinx.coroutines.delay
 
 @Composable
 fun SettingsScreen(
@@ -207,59 +216,13 @@ fun SettingsScreen(
         }
 
         if (showLanguagePicker) {
-            AlertDialog(
-                onDismissRequest = { showLanguagePicker = false },
-                title = {
-                    Text(stringResource(R.string.select_language), fontWeight = FontWeight.Bold)
+            LanguagePickerDialog(
+                currentLanguage = settings.language,
+                onLanguageSelected = { lang ->
+                    onLanguageChange(lang)
+                    showLanguagePicker = false
                 },
-                text = {
-                    LazyColumn {
-                        item {
-                            AppLanguage.values().forEach { lang ->
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            onLanguageChange(lang)
-                                            showLanguagePicker = false
-                                        }
-                                        .padding(vertical = 12.dp, horizontal = 8.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    RadioButton(
-                                        selected = settings.language == lang,
-                                        onClick = {
-                                            onLanguageChange(lang)
-                                            showLanguagePicker = false
-                                        }
-                                    )
-                                    Spacer(Modifier.width(8.dp))
-                                    // ── Flag emoji ────────────────────────────────────────────
-                                    Text(
-                                        text = lang.flag,
-                                        style = MaterialTheme.typography.titleMedium
-                                    )
-                                    Spacer(Modifier.width(10.dp))
-                                    Column {
-                                        Text(lang.nativeName, fontWeight = FontWeight.Medium)
-                                        if (lang.nativeName != lang.displayName) {
-                                            Text(
-                                                lang.displayName,
-                                                style = MaterialTheme.typography.bodySmall,
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                confirmButton = {
-                    TextButton(onClick = { showLanguagePicker = false }) {
-                        Text(stringResource(R.string.cancel))
-                    }
-                }
+                onDismiss = { showLanguagePicker = false }
             )
         }
 
@@ -554,5 +517,241 @@ private fun SettingsInfoRow(
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LanguagePickerDialog(
+    currentLanguage: AppLanguage,
+    onLanguageSelected: (AppLanguage) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var selectedLanguage by remember { mutableStateOf(currentLanguage) }
+    var visible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) { delay(80); visible = true }
+
+    val headerAlpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+        animationSpec = tween(600), label = "header"
+    )
+    val headerOffset by animateFloatAsState(
+        targetValue = if (visible) 0f else -30f,
+        animationSpec = tween(600, easing = EaseOut), label = "header_offset"
+    )
+    val buttonAlpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+        animationSpec = tween(600, delayMillis = 500), label = "button"
+    )
+
+    BasicAlertDialog(
+        onDismissRequest = onDismiss,
+        modifier = Modifier.fillMaxSize(),
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+            decorFitsSystemWindows = false
+        )
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0x99000000))
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) { onDismiss() },
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) { /* consume */ },
+                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+                color = Color(0xFF0A1628)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 20.dp)
+                        .padding(top = 16.dp, bottom = 20.dp)
+                ) {
+                    // Drag handle
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .size(width = 40.dp, height = 4.dp)
+                            .clip(RoundedCornerShape(2.dp))
+                            .background(Color(0xFF263D5C))
+                    )
+
+                    Spacer(Modifier.height(20.dp))
+
+                    // Header
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .alpha(headerAlpha)
+                            .offset(y = headerOffset.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .background(
+                                    Brush.linearGradient(
+                                        colors = listOf(Color(0xFF1565C0), Color(0xFF42A5F5))
+                                    ),
+                                    RoundedCornerShape(12.dp)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                Icons.Default.Language,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(22.dp)
+                            )
+                        }
+                        Spacer(Modifier.width(12.dp))
+                        Column {
+                            Text(
+                                text = stringResource(R.string.select_language),
+                                color = Color.White,
+                                fontSize = 17.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                            Text(
+                                text = stringResource(R.string.set_as_default_subtitle),
+                                color = Color(0xFF90CAF9),
+                                fontSize = 13.sp
+                            )
+                        }
+                    }
+
+                    Spacer(Modifier.height(16.dp))
+
+                    // Language list
+                    val languages = AppLanguage.values().filter { it != AppLanguage.SYSTEM }
+
+                    LazyColumn(
+                        modifier = Modifier
+                            .weight(1f)
+                            .alpha(headerAlpha),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(vertical = 4.dp)
+                    ) {
+                        itemsIndexed(languages) { index, lang ->
+                            val cardAlpha by animateFloatAsState(
+                                targetValue = if (visible) 1f else 0f,
+                                animationSpec = tween(500, delayMillis = 150 + index * 60),
+                                label = "card_$index"
+                            )
+                            val cardOffset by animateFloatAsState(
+                                targetValue = if (visible) 0f else 24f,
+                                animationSpec = tween(500, delayMillis = 150 + index * 60, easing = EaseOut),
+                                label = "offset_$index"
+                            )
+                            val isSelected = selectedLanguage == lang
+
+                            Surface(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .alpha(cardAlpha)
+                                    .offset(y = cardOffset.dp)
+                                    .clickable { selectedLanguage = lang },
+                                shape = RoundedCornerShape(16.dp),
+                                color = if (isSelected) Color(0xFF1565C0).copy(alpha = 0.28f)
+                                else Color(0xFF0D1B2A),
+                                border = if (isSelected)
+                                    BorderStroke(1.5.dp, Color(0xFF42A5F5))
+                                else null
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = lang.flag,
+                                        fontSize = 26.sp,
+                                        modifier = Modifier.padding(end = 12.dp)
+                                    )
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            text = lang.nativeName,
+                                            color = Color.White,
+                                            fontSize = 15.sp,
+                                            fontWeight = FontWeight.SemiBold
+                                        )
+                                        if (lang.nativeName != lang.displayName) {
+                                            Text(
+                                                text = lang.displayName,
+                                                color = Color(0xFF607D8B),
+                                                fontSize = 13.sp
+                                            )
+                                        }
+                                    }
+                                    if (isSelected) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(24.dp)
+                                                .background(Color(0xFF1976D2), CircleShape),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Icon(
+                                                Icons.Default.Check,
+                                                contentDescription = null,
+                                                tint = Color.White,
+                                                modifier = Modifier.size(14.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    Spacer(Modifier.height(16.dp))
+
+                    // Confirm button
+                    Button(
+                        onClick = { onLanguageSelected(selectedLanguage) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(52.dp)
+                            .alpha(buttonAlpha),
+                        shape = RoundedCornerShape(14.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2))
+                    ) {
+                        Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            text = stringResource(R.string.confirm),
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+
+                    Spacer(Modifier.height(4.dp))
+
+                    TextButton(
+                        onClick = onDismiss,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .alpha(buttonAlpha)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.cancel),
+                            color = Color(0xFF546E7A),
+                            fontSize = 14.sp
+                        )
+                    }
+                    Spacer(Modifier.height(4.dp))
+                }
+            }
+        }
     }
 }

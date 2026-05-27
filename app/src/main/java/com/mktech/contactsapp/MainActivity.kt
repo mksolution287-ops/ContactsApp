@@ -57,10 +57,13 @@ import com.mktech.contactsapp.data.model.AppLanguage
 import com.mktech.contactsapp.util.LocaleHelper
 import kotlinx.coroutines.delay
 import android.telephony.PhoneNumberUtils
+import androidx.annotation.RequiresApi
+import androidx.compose.ui.platform.LocalConfiguration
 import com.mktech.contactsapp.ui.components.BannerAd
 import com.mktech.contactsapp.ui.components.NativeAdCard
 import com.mktech.contactsapp.ui.onboarding.OnboardingActivity
 import com.mktech.contactsapp.util.AdManager
+import com.mktech.contactsapp.util.AppOpenAdManager
 
 // ── Permission metadata ───────────────────────────────────────────────────────
 
@@ -102,6 +105,7 @@ class MainActivity : BaseActivity() {
     private var dialIntentNumber by mutableStateOf<String?>(null)
     private var shouldAutoCall by mutableStateOf(false)
 
+    @RequiresApi(Build.VERSION_CODES.M)
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         registerPhoneAccount(this)
@@ -156,7 +160,6 @@ class MainActivity : BaseActivity() {
                         dialIntentNumber = null
                     }
                 }
-
                 val permissions = buildList {
                     add(Manifest.permission.POST_NOTIFICATIONS)
                     add(Manifest.permission.READ_CONTACTS)
@@ -245,6 +248,8 @@ class MainActivity : BaseActivity() {
                                     // Set skip_splash BEFORE recreate() so the next
                                     // onCreate reads it as true and skips the splash
                                     prefs.edit().putBoolean("skip_splash", true).apply()
+                                    // 🚫 Skip the interstitial that would otherwise fire after splash
+                                    AdManager.skipNextInterstitial = true
                                     activity.recreate()
                                 }
                             )
@@ -296,10 +301,13 @@ class MainActivity : BaseActivity() {
                                                 ?: return@SetDefaultScreen
                                             if (!roleManager.isRoleAvailable(RoleManager.ROLE_DIALER)) return@SetDefaultScreen
                                             if (roleManager.isRoleHeld(RoleManager.ROLE_DIALER)) return@SetDefaultScreen
+                                            AppOpenAdManager.skipNextAd = true
                                             defaultDialerLauncher.launch(
                                                 roleManager.createRequestRoleIntent(RoleManager.ROLE_DIALER)
                                             )
                                         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                            AppOpenAdManager.skipNextAd = true
+
                                             defaultDialerLauncher.launch(
                                                 Intent(TelecomManager.ACTION_CHANGE_DEFAULT_DIALER).apply {
                                                     putExtra(
@@ -386,6 +394,7 @@ private fun isDefaultDialer(context: Context): Boolean {
     } catch (e: Exception) { false }
 }
 
+@RequiresApi(Build.VERSION_CODES.M)
 private fun registerPhoneAccount(context: Context) {
     val telecomManager = context.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
     val handle = PhoneAccountHandle(
@@ -581,7 +590,7 @@ private fun LanguagePickerScreen(
                 }
             }
 
-            Spacer(Modifier.height(16.dp))
+//            Spacer(Modifier.height(16.dp))
 
             Column(
                 modifier = Modifier
@@ -613,7 +622,7 @@ private fun LanguagePickerScreen(
                 }
             }
         }
-        NativeAdCard()
+        NativeAdCard(modifier = Modifier.requiredWidth(LocalConfiguration.current.screenWidthDp.dp))
     }
 }
 
@@ -1039,7 +1048,7 @@ private fun PermissionScreen(
                 }
             }
         }
-        BannerAd()
+        BannerAd(modifier = Modifier.requiredWidth(LocalConfiguration.current.screenWidthDp.dp))
     }
 }
 
@@ -1223,6 +1232,6 @@ private fun SetDefaultScreen(
                 }
             }
         }
-        BannerAd()
+        BannerAd(modifier = Modifier.requiredWidth(LocalConfiguration.current.screenWidthDp.dp))
     }
 }

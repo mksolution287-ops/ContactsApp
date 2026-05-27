@@ -18,8 +18,8 @@ android {
         applicationId    = "com.mktech.contactsapp"
         minSdk           = 26
         targetSdk        = 35
-        versionCode      = 5
-        versionName      = "1.4"
+        versionCode      = 6
+        versionName      = "1.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables { useSupportLibrary = true }
@@ -55,7 +55,7 @@ android {
 
     bundle {
         language {
-            enableSplit = false  // ← deliver ALL language resources in every install
+            enableSplit = false
         }
     }
 
@@ -76,11 +76,18 @@ dependencies {
 
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.firebase:firebase-config:23.0.1")       // firebase remote config
-    implementation("com.google.android.gms:play-services-ads:23.0.0")
+    implementation("com.google.android.gms:play-services-ads:24.3.0")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("com.google.android.material:material:1.13.0")
 //    implementation("androidx.activity:activity:1.13.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1") //for ads
+
+    //meta ads
+    implementation("com.facebook.android:audience-network-sdk:6.21.0")
+    // AdMob Mediation Adapter for Meta
+    implementation("com.google.ads.mediation:facebook:6.21.0.3")
+    implementation ("com.facebook.infer.annotation:infer-annotation:0.18.0")
+
     // ── Compose BOM ───────────────────────────────────────────────────────────
     // Single BOM controls ALL compose library versions — never pin them individually
     val composeBom = platform("androidx.compose:compose-bom:2025.01.00")
@@ -97,7 +104,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.8.5")
 
     // ── Room ──────────────────────────────────────────────────────────────────
-    val roomVersion = "2.6.1"
+    val roomVersion = "2.7.1"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")

@@ -1,7 +1,624 @@
+//package com.mktech.contactsapp.ui.navigation
+//
+//import android.annotation.SuppressLint
+//import android.app.Activity
+//import android.content.Context
+//import android.util.Log
+//import androidx.compose.animation.*
+//import androidx.compose.foundation.layout.*
+//import androidx.compose.material.icons.Icons
+//import androidx.compose.material.icons.filled.*
+//import androidx.compose.material3.*
+//import androidx.compose.runtime.*
+//import androidx.compose.ui.Alignment
+//import androidx.compose.ui.Modifier
+//import androidx.compose.ui.graphics.vector.ImageVector
+//import androidx.compose.ui.text.font.FontWeight
+//import androidx.compose.ui.unit.dp
+//import androidx.navigation.*
+//import androidx.navigation.NavType
+//import androidx.navigation.compose.*
+//import com.mktech.contactsapp.data.model.CallLog
+//import com.mktech.contactsapp.ui.screens.*
+//import androidx.compose.runtime.derivedStateOf
+//import androidx.compose.ui.platform.LocalContext
+//import androidx.compose.ui.res.stringResource
+//import androidx.lifecycle.Lifecycle
+//import androidx.lifecycle.compose.LocalLifecycleOwner
+//import androidx.lifecycle.repeatOnLifecycle
+//import com.mktech.contactsapp.ui.viewmodel.ContactViewModel
+//import com.mktech.contactsapp.data.AnalyticsTracker
+//import com.mktech.contactsapp.data.repository.SettingsRepository
+//import kotlinx.coroutines.launch
+//import com.mktech.contactsapp.R
+//import com.mktech.contactsapp.ui.components.BannerAd
+//import com.mktech.contactsapp.util.AdManager
+//
+//// ── Route constants ──────────────────────────────────────────────────────────
+//object Routes {
+//    const val CONTACTS       = "contacts"
+//    const val RECENTS        = "recents"
+//    const val DIALER         = "dialer"
+//    const val SETTINGS       = "settings"
+//    const val CONTACT_DETAIL = "contact_detail/{contactId}"
+//    fun contactDetail(id: Long?) = "contact_detail/${id ?: -1L}"
+//}
+//
+//data class BottomNavItem(
+//    val route: String,
+//    val label: String,
+//    val icon: ImageVector,
+//    val badgeCount: Int = 0
+//)
+//
+//@SuppressLint("MissingPermission", "SuspiciousIndentation")
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun ContactNavigation(
+//    navController: NavHostController,
+//    viewModel: ContactViewModel,
+//) {
+//    val contacts    by viewModel.contacts.collectAsState()
+//    val searchQuery by viewModel.searchQuery.collectAsState()
+//    val showFavOnly by viewModel.showFavoritesOnly.collectAsState()
+//    val isLoading   by viewModel.isLoading.collectAsState()
+//    val missedCount by viewModel.missedCallCount.collectAsState()
+//    val dialNumber  by viewModel.dialPadNumber.collectAsState()
+//    val settings    by viewModel.settings.collectAsState()
+//    val context     = LocalContext.current
+//
+//    val allLogs    by viewModel.allResolvedCallLogs.collectAsState()
+//    val missedLogs by viewModel.missedResolvedCalls.collectAsState()
+//    val activity = LocalContext.current as? Activity
+//
+//    // ── Track screen views on every route change ─────────────────────────────
+//    val currentBack by navController.currentBackStackEntryAsState()
+//    val currentRoute = currentBack?.destination?.route
+//    val settingsRepository = SettingsRepository(context)
+//
+//    LaunchedEffect(currentRoute) {
+//        when (currentRoute) {
+//            Routes.CONTACTS -> AnalyticsTracker.logScreenView("ContactList",   "ContactListScreen")
+//            Routes.RECENTS  -> AnalyticsTracker.logScreenView("Recents",       "CallLogsScreen")
+//            Routes.DIALER   -> AnalyticsTracker.logScreenView("Dialer",        "DialPadScreen")
+//            Routes.SETTINGS -> AnalyticsTracker.logScreenView("Settings",      "SettingsScreen")
+//            Routes.CONTACT_DETAIL -> AnalyticsTracker.logScreenView("ContactDetail", "ContactDetailScreen")
+//        }
+//    }
+//
+//    val bottomItems = listOf(
+//        BottomNavItem(Routes.CONTACTS, stringResource(R.string.contacts), Icons.Default.People),
+//        BottomNavItem(Routes.RECENTS,  stringResource(R.string.recents),  Icons.Default.History, missedCount),
+//        BottomNavItem(Routes.DIALER,   stringResource(R.string.dialer),   Icons.Default.Dialpad),
+//        BottomNavItem(Routes.SETTINGS, stringResource(R.string.settings), Icons.Default.Settings)
+//    )
+//
+//    val showBottomBar = currentRoute in listOf(
+//        Routes.CONTACTS, Routes.RECENTS, Routes.DIALER, Routes.SETTINGS
+//    )
+//
+//    Scaffold(
+//        topBar = {
+//            when (currentRoute) {
+//                Routes.CONTACTS -> ContactsTopBar(
+//                    searchQuery       = searchQuery,
+//                    showFavoritesOnly = showFavOnly,
+//                    onSearchChange    = { query ->
+//                        viewModel.updateSearchQuery(query)
+//                        // Log search only when user has typed at least 2 chars
+//                        if (query.length >= 2) {
+//                            AnalyticsTracker.logSearchUsed(contacts.size)
+//                        }
+//                    },
+//                    onToggleFavorites = {
+//                        viewModel.toggleFavoritesFilter()
+//                        AnalyticsTracker.logFilterToggled(!showFavOnly) // toggled state
+//                        //interstitial ad
+//                        AdManager.trackAction(context, activity)
+//                    },
+//                    onSyncContacts = {
+//                        viewModel.loadDeviceContacts()
+//                        viewModel.loadDeviceCallLogs()
+//                        AnalyticsTracker.logEvent("contacts_synced")   // sync tapped
+//                    }
+//                )
+//                Routes.RECENTS  -> SimpleTopBar(stringResource(R.string.recents))
+//                Routes.DIALER   -> SimpleTopBar(stringResource(R.string.dialer))
+//                Routes.SETTINGS -> SimpleTopBar(stringResource(R.string.settings))
+//                else            -> {}
+//            }
+//        },
+//        bottomBar = {
+//            if (showBottomBar) {
+//                Column {
+//                    NavigationBar(tonalElevation = 4.dp) {
+//                        bottomItems.forEach { item ->
+//                            NavigationBarItem(
+//                                selected = currentRoute == item.route,
+//                                onClick = {
+//                                    AnalyticsTracker.logBottomNavTapped(item.route)
+//                                    if (item.route == Routes.DIALER && currentRoute != Routes.DIALER) {
+//                                        viewModel.dialPadClear()
+//                                    }
+//                                    navController.navigate(item.route) {
+//                                        popUpTo(Routes.CONTACTS) { saveState = true }
+//                                        launchSingleTop = true
+//                                        restoreState    = true
+//                                    }
+//                                    //interstitial ad
+//                                    AdManager.trackAction(context, activity)
+//                                },
+//                                icon = {
+//                                    if (item.badgeCount > 0) {
+//                                        BadgedBox(badge = {
+//                                            Badge { Text(item.badgeCount.toString()) }
+//                                        }) {
+//                                            Icon(item.icon, contentDescription = item.label)
+//                                        }
+//                                    } else {
+//                                        Icon(item.icon, contentDescription = item.label)
+//                                    }
+//                                },
+//                                label = { Text(item.label) }
+//                            )
+//                        }
+//                    }
+//                    // Banner ad at TOP of the bottom bar area
+//                    BannerAd(modifier = Modifier
+//                        .fillMaxWidth()
+//                    )
+//                }
+//            }
+//        }
+//    ) { padding ->
+//        NavHost(
+//            navController    = navController,
+//            startDestination = Routes.RECENTS,
+//            modifier         = Modifier.padding(padding)
+//        ) {
+//
+//
+//            // ── Contacts list ────────────────────────────────────────────
+//            composable(Routes.CONTACTS) {
+//                ContactListScreen(
+//                    contacts          = contacts,
+//                    showFavoritesOnly = showFavOnly,
+//                    isLoading         = isLoading,
+//                    settings          = settings,
+//                    onContactClick    = { contact ->
+//                        AnalyticsTracker.logContactOpened(contact.id, contact.isFavorite)
+//                        navController.navigate(Routes.contactDetail(contact.id))
+//                    },
+//                    onToggleFavorite  = { id, currentState ->
+//                        AnalyticsTracker.logFavoriteToggled(id, !currentState)
+//                        viewModel.toggleFavorite(id, currentState)
+//                        //interstitial ad
+//                        AdManager.trackAction(context, activity)
+//                    },
+//                    onAddContact      = {
+//                        AnalyticsTracker.logEvent("add_contact_tapped", mapOf("source" to "contacts_fab"))
+//                        navController.navigate(Routes.contactDetail(null))
+//                        //interstitial ad
+//                        AdManager.trackAction(context, activity)
+//                    },
+//                    onCallContact     = { number ->
+//                        AnalyticsTracker.logContactCalled(hasImage = false)
+//                        viewModel.makeCall(context = context, number)
+//                    },
+//                    onSyncContacts = {viewModel.loadDeviceContactsOnce()}
+//                )
+//            }
+//
+//            // ── Recents / Call logs ──────────────────────────────────────
+//            composable(Routes.RECENTS) {
+//
+//                // Track how many missed calls are visible on entry
+//                LaunchedEffect(missedCount) {
+//                    if (missedCount > 0) {
+//                        AnalyticsTracker.logEvent("missed_calls_viewed",
+//                            mapOf("missed_count" to missedCount.toString()))
+//                    }
+//                }
+//
+//                val lifecycleOwner = LocalLifecycleOwner.current
+//
+//                        LaunchedEffect(lifecycleOwner) {
+//                            lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+//                                viewModel.loadDeviceCallLogs()  // auto-sync every time screen resumes
+//                            }
+//                        }
+//
+//                CallLogsScreen(
+//                    allLogs    = allLogs,
+//                    missedLogs = missedLogs,
+//                    onCallBack = { number ->
+//                        AnalyticsTracker.logEvent("callback_tapped",
+//                            mapOf("source" to "recents"))
+//                        viewModel.makeCall(context = context, number)
+//                    },
+//                    onDeleteLog = { log ->
+//                        AnalyticsTracker.logEvent("call_log_deleted")
+//                        viewModel.deleteCallLog(log)
+//                        //interstitial ad
+//                        AdManager.trackAction(context, activity)
+//                    },
+//                    onClearAll  = {
+//                        AnalyticsTracker.logEvent("call_logs_cleared_all")
+//                        viewModel.clearAllCallLogs()
+//                        //interstitial ad
+//                        AdManager.trackAction(context, activity)
+//                    },
+//                    onClearByFilter = { filter ->                           // ← new
+//                        AnalyticsTracker.logEvent("call_logs_cleared_by_filter",
+//                            mapOf("filter" to filter.name))
+//                        viewModel.clearCallLogsByFilter(filter)
+//                        AdManager.trackAction(context, activity)
+//                    },
+//                    onSyncLogs  = {
+//                        AnalyticsTracker.logEvent("call_logs_synced")
+//                        viewModel.loadDeviceCallLogs()
+//                    },
+////                    onContactClick = { phoneNumber ->
+////                        AnalyticsTracker.logEvent("recents_contact_tapped",
+////                            mapOf("source" to "recents_list"))
+////                        val scope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main)
+////                        scope.launch {
+////                            val contact = viewModel.contactRepository.getContactByPhone(phoneNumber)
+////                            if (contact != null) {
+////                                AnalyticsTracker.logContactOpened(contact.id, contact.isFavorite)
+////                                viewModel.dialPadClear()
+////                                navController.navigate(Routes.contactDetail(contact.id))
+////                            } else {
+////                                AnalyticsTracker.logEvent("new_contact_from_recents")
+////                                viewModel.dialPadSetNumber(phoneNumber)
+////                                navController.navigate(Routes.contactDetail(-1L))
+////                            }
+////                        }
+////                    }
+//                    onContactClick = { phoneNumber ->
+//                        AnalyticsTracker.logEvent("recents_contact_tapped",
+//                            mapOf("source" to "recents_list"))
+//                        val scope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main)
+//                        scope.launch {
+//                            val contact = viewModel.contactRepository.getContactByPhone(phoneNumber)
+//
+//                            // Only treat as a known contact if last 10 digits truly match
+//                            // Prevents "957" matching "+919876543210" via substring
+//                            val isExactMatch = contact?.phoneNumber
+//                                ?.replace(Regex("[^0-9+]"), "")
+//                                ?.let { storedClean ->
+//                                    val dialedClean = phoneNumber.replace(Regex("[^0-9+]"), "")
+//                                    storedClean == dialedClean ||
+//                                            storedClean.takeLast(10) == dialedClean.takeLast(10)
+//                                } ?: false
+//
+//                            if (contact != null && isExactMatch) {
+//                                AnalyticsTracker.logContactOpened(contact.id, contact.isFavorite)
+//                                viewModel.dialPadClear()
+//                                navController.navigate(Routes.contactDetail(contact.id))
+//                            } else {
+//                                AnalyticsTracker.logEvent("new_contact_from_recents")
+//                                viewModel.dialPadSetNumber(phoneNumber)
+//                                navController.navigate(Routes.contactDetail(-1L))
+//                            }
+//                        }
+//                    }
+//                )
+//            }
+//
+//            // ── Dial pad ─────────────────────────────────────────────────
+//            composable(Routes.DIALER) {
+//                val dialNumber by viewModel.dialPadNumber.collectAsState()
+//
+//                // Track when user has typed a full-length number (10+ digits)
+//                LaunchedEffect(dialNumber) {
+//                    if (dialNumber.length == 10) {
+//                        AnalyticsTracker.logEvent("dialpad_full_number_entered")
+//                    }
+//                }
+//
+////                val matchingContacts by remember {
+////                    derivedStateOf {
+////                        if (dialNumber.isNotEmpty()) viewModel.getMatchingContacts(dialNumber)
+////                        else emptyList()
+////                    }
+////                }
+//                val matchingContacts by remember {
+//                    derivedStateOf {
+//                        val isSpecialCode = dialNumber.any { it == '*' || it == '#' || it == '+' }
+//                        if (dialNumber.isNotEmpty() && !isSpecialCode) {
+//                            viewModel.getMatchingContacts(dialNumber)
+//                        } else {
+//                            emptyList()
+//                        }
+//                    }
+//                }
+//
+//                // Track when dialpad suggestions appear
+//                LaunchedEffect(matchingContacts.size) {
+//                    if (matchingContacts.isNotEmpty()) {
+//                        AnalyticsTracker.logEvent("dialpad_suggestions_shown",
+//                            mapOf("suggestion_count" to matchingContacts.size.toString()))
+//                    }
+//                }
+//
+//                DialPadScreen(
+//                    number    = dialNumber,
+//                    onKeyPress = { key ->
+//                        viewModel.dialPadAppend(key)
+//                        AnalyticsTracker.logEvent("dialpad_key_pressed") // fires per key
+//                    },
+//                    onDelete  = {
+//                        viewModel.dialPadDelete()
+//                        AnalyticsTracker.logEvent("dialpad_backspace")
+//                    },
+//                    onCall    = {
+//                        if (dialNumber.isNotEmpty()) {
+//                            AnalyticsTracker.logEvent("dialpad_call_initiated",
+//                                mapOf("number_length" to dialNumber.length.toString()))
+//                            viewModel.makeCall(context, dialNumber)
+//                        }
+//                    },
+//                    onSaveContact = {
+//                        AnalyticsTracker.logEvent("save_contact_from_dialpad")
+//                        navController.navigate(Routes.contactDetail(-1L))
+//                        //immediate ad
+//                        AdManager.immediateInterstitialAd(activity)
+//                    },
+//                    matchingContacts = matchingContacts,
+//                    settings         = settings,
+//                    onContactClick   = { contact ->
+//                        AnalyticsTracker.logContactOpened(contact.id, contact.isFavorite)
+////                        navController.navigate(Routes.contactDetail(contact.id))
+//                        viewModel.dialPadSetNumber(contact.phoneNumber)
+//                    },
+//                    onCallContact    = { phoneNumber ->
+//                        AnalyticsTracker.logEvent("quick_call_from_suggestion",
+//                            mapOf("source" to "dialpad_suggestion"))
+//                        viewModel.makeCall(context, phoneNumber)
+//                    }
+//                )
+//            }
+//
+//            // ── Settings ─────────────────────────────────────────────────
+//            composable(Routes.SETTINGS) {
+//                SettingsScreen(
+//                    settings            = settings,
+//                    onThemeChange       = { theme ->
+//                        AnalyticsTracker.logEvent("setting_changed",
+//                            mapOf("setting" to "theme", "value" to theme.toString()))
+//                        viewModel.setTheme(theme)
+//                        //interstitial ad
+//                        AdManager.trackAction(context, activity)
+//                    },
+//                    onAccentColorChange = { color ->
+//                        AnalyticsTracker.logEvent("setting_changed",
+//                            mapOf("setting" to "accent_color", "value" to color.toString()))
+//                        viewModel.setAccentColor(color)
+//                        //interstitial ad
+//                        AdManager.trackAction(context, activity)
+//                    },
+//                    onSortOrderChange   = { sort ->
+//                        AnalyticsTracker.logEvent("setting_changed",
+//                            mapOf("setting" to "sort_order", "value" to sort.toString()))
+//                        viewModel.setSortOrder(sort)
+//                        //interstitial ad
+//                        AdManager.trackAction(context, activity)
+//                    },
+//                    onShowPhoneChange   = { show ->
+//                        AnalyticsTracker.logEvent("setting_changed",
+//                            mapOf("setting" to "show_phone", "value" to show.toString()))
+//                        viewModel.setShowPhone(show)
+//                        //interstitial ad
+//                        AdManager.trackAction(context, activity)
+//                    },
+//                    onConfirmDeleteChange = { confirm ->
+//                        AnalyticsTracker.logEvent("setting_changed",
+//                            mapOf("setting" to "confirm_delete", "value" to confirm.toString()))
+//                        viewModel.setConfirmDelete(confirm)
+//                        //interstitial ad
+//                        AdManager.trackAction(context, activity)
+//                    },
+////                    onLanguageChange = { lang ->
+////                        AnalyticsTracker.logEvent("setting_changed",
+////                            mapOf("setting" to "language", "value" to lang.code))
+////                        viewModel.setLanguage(lang)
+////                        val prefs = context.getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+////                        prefs.edit().putBoolean("skip_splash", true).apply()
+////                        activity?.recreate()   // ← applies new locale immediately
+////                        //interstitial ad
+////                        AdManager.trackAction(context, activity)
+////                    }
+//                    onLanguageChange = { lang ->
+//                        AnalyticsTracker.logEvent("setting_changed",
+//                            mapOf("setting" to "language", "value" to lang.code))
+//                        viewModel.setLanguage(lang)
+//                        val prefs = context.getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+//                        prefs.edit()
+//                            .putBoolean("skip_splash", true)
+//                            .putString("pending_destination", Routes.RECENTS)  // land on Recents after recreate
+//                            .apply()
+//                        activity?.recreate()   // ← applies new locale immediately
+//                        // 🚫 No interstitial — we're tearing down and rebuilding the activity
+//                    }
+//                )
+//            }
+//
+//            // ── Contact detail / edit ────────────────────────────────────
+//            composable(
+//                route     = Routes.CONTACT_DETAIL,
+//                arguments = listOf(navArgument("contactId") {
+//                    type = NavType.LongType; defaultValue = -1L
+//                })
+//            ) { back ->
+//                val contactId     = back.arguments?.getLong("contactId") ?: -1L
+//                val isNew         = contactId == -1L
+//                val scope         = rememberCoroutineScope()
+//                var contact       by remember { mutableStateOf<com.mktech.contactsapp.data.model.Contact?>(null) }
+//                var loading       by remember { mutableStateOf(!isNew) }
+//                val prefilledPhone by viewModel.dialPadNumber.collectAsState()
+//                var callHistory   by remember { mutableStateOf<List<CallLog>>(emptyList()) }
+//
+//                // Track whether opened as new or existing
+//                LaunchedEffect(contactId) {
+//                    if (isNew) {
+//                        AnalyticsTracker.logScreenView("NewContact", "ContactDetailScreen")
+//                        AnalyticsTracker.logEvent("new_contact_screen_opened",
+//                            mapOf("has_prefilled_phone" to prefilledPhone.isNotEmpty().toString()))
+//                    } else {
+//                        AnalyticsTracker.logScreenView("EditContact", "ContactDetailScreen")
+//                        loading = true
+//                        contact = viewModel.getContactById(contactId)
+//                        AnalyticsTracker.logContactOpened(contactId, contact?.isFavorite ?: false)
+//                        loading = false
+//                    }
+//                }
+//
+//                if (loading) {
+//                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+//                        CircularProgressIndicator()
+//                    }
+//                } else {
+//                    ContactDetailScreen(
+//                        contact        = contact,
+//                        isNewContact   = isNew,
+//                        prefilledPhone = if (isNew) prefilledPhone else null,
+//                        callHistory    = callHistory,
+//                        onSave = { updated ->
+//                            scope.launch {
+//                                Log.d("ContactSave", "onSave called isNew=$isNew contact=$updated")
+//                                if (isNew) {
+//                                    AnalyticsTracker.logContactAdded()
+//                                    viewModel.addContact(updated)
+//                                    viewModel.dialPadClear()
+//                                    //immediate ad
+//                                    AdManager.immediateInterstitialAd( activity)
+//                                } else {
+//                                    AnalyticsTracker.logEvent("contact_updated",
+//                                        mapOf("contact_id" to updated.id.toString()))
+//                                    Log.d("ContactSave", "Calling updateContact id=${updated.id}")
+//                                    viewModel.updateContact(updated)
+//                                    //immediate ad
+//                                    AdManager.immediateInterstitialAd( activity)
+//                                }
+//                                navController.popBackStack()
+//                            }
+//                        },
+//                        onDelete = {
+//                            scope.launch {
+//                                contact?.let {
+//                                    AnalyticsTracker.logEvent("contact_deleted",
+//                                        mapOf("contact_id" to it.id.toString()))
+//                                    viewModel.deleteContact(it)
+//                                    //interstitial ad
+//                                    AdManager.trackAction(context, activity)
+//                                }
+//                                navController.popBackStack()
+//                            }
+//                        },
+//                        onBack = {
+//                            AnalyticsTracker.logEvent("contact_detail_back_pressed",
+//                                mapOf("was_new" to isNew.toString()))
+//                            navController.popBackStack()
+//                        },
+//                        onCallNow = @androidx.annotation.RequiresPermission(android.Manifest.permission.CALL_PHONE) { number ->
+//                            AnalyticsTracker.logContactCalled(hasImage = contact?.profileImageUri != null)
+//                            viewModel.makeCall(context, number)
+//                        }
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//// ── Top bars ──────────────────────────────────────────────────────────────────
+//
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//private fun ContactsTopBar(
+//    searchQuery: String,
+//    showFavoritesOnly: Boolean,
+//    onSearchChange: (String) -> Unit,
+//    onToggleFavorites: () -> Unit,
+//    onSyncContacts: () -> Unit
+//) {
+//    var searching by remember { mutableStateOf(false) }
+//
+//    TopAppBar(
+//        title = {
+//            AnimatedContent(targetState = searching, label = "search") { s ->
+//                if (s) {
+//                    TextField(
+//                        value         = searchQuery,
+//                        onValueChange = onSearchChange,
+//                        modifier      = Modifier.fillMaxWidth(),
+//                        placeholder   = { Text(stringResource(R.string.search_contacts)) },
+//                        singleLine    = true,
+//                        colors        = TextFieldDefaults.colors(
+//                            focusedContainerColor   = androidx.compose.ui.graphics.Color.Transparent,
+//                            unfocusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
+//                            focusedIndicatorColor   = androidx.compose.ui.graphics.Color.Transparent,
+//                            unfocusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent
+//                        )
+//                    )
+//                } else {
+//                    Text(stringResource(R.string.contacts), fontWeight = FontWeight.Bold,
+//                        style = MaterialTheme.typography.headlineSmall)
+//                }
+//            }
+//        },
+//        actions = {
+//            IconButton(onClick = {
+//                val opening = !searching
+//                searching = opening
+//                if (!searching) onSearchChange("")
+//                AnalyticsTracker.logEvent(
+//                    if (opening) "search_opened" else "search_closed"
+//                )
+//            }) {
+//                Icon(
+//                    if (searching) Icons.Default.Close else Icons.Default.Search,
+//                    contentDescription = "Search"
+//                )
+//            }
+//            IconButton(onClick = onToggleFavorites) {
+//                Icon(
+//                    if (showFavoritesOnly) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+//                    contentDescription = "Favorites",
+//                    tint = if (showFavoritesOnly) MaterialTheme.colorScheme.error
+//                    else MaterialTheme.colorScheme.onSurfaceVariant
+//                )
+//            }
+//            IconButton(onClick = onSyncContacts) {
+//                Icon(Icons.Default.Sync, contentDescription = "Sync")
+//            }
+//        },
+//        colors = TopAppBarDefaults.topAppBarColors(
+//            containerColor = MaterialTheme.colorScheme.background
+//        )
+//    )
+//}
+//
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//private fun SimpleTopBar(title: String) {
+//    TopAppBar(
+//        title = {
+//            Text(title, fontWeight = FontWeight.Bold,
+//                style = MaterialTheme.typography.headlineSmall)
+//        },
+//        colors = TopAppBarDefaults.topAppBarColors(
+//            containerColor = MaterialTheme.colorScheme.background
+//        )
+//    )
+//}
+
 package com.mktech.contactsapp.ui.navigation
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
@@ -95,6 +712,37 @@ fun ContactNavigation(
     val showBottomBar = currentRoute in listOf(
         Routes.CONTACTS, Routes.RECENTS, Routes.DIALER, Routes.SETTINGS
     )
+
+    // After a language change from Settings, jump to the pending destination
+    // (consumes the flag set right before activity.recreate())
+//    LaunchedEffect(Unit) {
+//        val prefs = context.getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+//        val pending = prefs.getString("pending_destination", null)
+//        if (pending != null) {
+//            prefs.edit().remove("pending_destination").apply()
+//            navController.navigate(pending) {
+//                popUpTo(navController.graph.startDestinationId) { inclusive = false }
+//                launchSingleTop = true
+//            }
+//        }
+//    }
+
+    // After a language change from Settings, jump to the pending destination
+// (consumes the flag set right before activity.recreate())
+    LaunchedEffect(currentBack) {
+        // currentBack becomes non-null only after NavHost has called setGraph()
+        if (currentBack == null) return@LaunchedEffect
+
+        val prefs = context.getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+        val pending = prefs.getString("pending_destination", null)
+        if (pending != null) {
+            prefs.edit().remove("pending_destination").apply()
+            navController.navigate(pending) {
+                popUpTo(navController.graph.startDestinationId) { inclusive = false }
+                launchSingleTop = true
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -220,11 +868,11 @@ fun ContactNavigation(
 
                 val lifecycleOwner = LocalLifecycleOwner.current
 
-                        LaunchedEffect(lifecycleOwner) {
-                            lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                                viewModel.loadDeviceCallLogs()  // auto-sync every time screen resumes
-                            }
-                        }
+                LaunchedEffect(lifecycleOwner) {
+                    lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                        viewModel.loadDeviceCallLogs()  // auto-sync every time screen resumes
+                    }
+                }
 
                 CallLogsScreen(
                     allLogs    = allLogs,
@@ -256,23 +904,6 @@ fun ContactNavigation(
                         AnalyticsTracker.logEvent("call_logs_synced")
                         viewModel.loadDeviceCallLogs()
                     },
-//                    onContactClick = { phoneNumber ->
-//                        AnalyticsTracker.logEvent("recents_contact_tapped",
-//                            mapOf("source" to "recents_list"))
-//                        val scope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main)
-//                        scope.launch {
-//                            val contact = viewModel.contactRepository.getContactByPhone(phoneNumber)
-//                            if (contact != null) {
-//                                AnalyticsTracker.logContactOpened(contact.id, contact.isFavorite)
-//                                viewModel.dialPadClear()
-//                                navController.navigate(Routes.contactDetail(contact.id))
-//                            } else {
-//                                AnalyticsTracker.logEvent("new_contact_from_recents")
-//                                viewModel.dialPadSetNumber(phoneNumber)
-//                                navController.navigate(Routes.contactDetail(-1L))
-//                            }
-//                        }
-//                    }
                     onContactClick = { phoneNumber ->
                         AnalyticsTracker.logEvent("recents_contact_tapped",
                             mapOf("source" to "recents_list"))
@@ -315,12 +946,6 @@ fun ContactNavigation(
                     }
                 }
 
-//                val matchingContacts by remember {
-//                    derivedStateOf {
-//                        if (dialNumber.isNotEmpty()) viewModel.getMatchingContacts(dialNumber)
-//                        else emptyList()
-//                    }
-//                }
                 val matchingContacts by remember {
                     derivedStateOf {
                         val isSpecialCode = dialNumber.any { it == '*' || it == '#' || it == '+' }
@@ -367,7 +992,6 @@ fun ContactNavigation(
                     settings         = settings,
                     onContactClick   = { contact ->
                         AnalyticsTracker.logContactOpened(contact.id, contact.isFavorite)
-//                        navController.navigate(Routes.contactDetail(contact.id))
                         viewModel.dialPadSetNumber(contact.phoneNumber)
                     },
                     onCallContact    = { phoneNumber ->
@@ -421,9 +1045,13 @@ fun ContactNavigation(
                         AnalyticsTracker.logEvent("setting_changed",
                             mapOf("setting" to "language", "value" to lang.code))
                         viewModel.setLanguage(lang)
-//                        activity?.recreate()   // ← applies new locale immediately
-                        //interstitial ad
-                        AdManager.trackAction(context, activity)
+                        val prefs = context.getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+                        prefs.edit()
+                            .putBoolean("skip_splash", true)
+                            .putString("pending_destination", Routes.RECENTS)  // land on Recents after recreate
+                            .apply()
+                        activity?.recreate()   // ← applies new locale immediately
+                        // 🚫 No interstitial — we're tearing down and rebuilding the activity
                     }
                 )
             }

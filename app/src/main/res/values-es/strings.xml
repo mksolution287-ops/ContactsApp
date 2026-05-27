@@ -183,5 +183,7 @@
     <string name="sim_preferences">Preferencias de SIM</string>
     <string name="sim_preferences_subtitle">Administrar tarjetas SIM y red móvil</string>
 
+    <string name="confirm">Confirmar</string>
+
 
 </resources>

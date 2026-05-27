@@ -174,4 +174,7 @@
 
     <string name="sim_preferences">Préférences SIM</string>
     <string name="sim_preferences_subtitle">Gérer les cartes SIM et le réseau mobile</string>
+
+    <string name="confirm">Confirmer</string>
+
 </resources>

@@ -183,4 +183,6 @@
     <string name="sim_preferences">SIM設定</string>
     <string name="sim_preferences_subtitle">SIMカードとモバイルネットワークを管理</string>
 
+    <string name="confirm">確認</string>
+
 </resources>

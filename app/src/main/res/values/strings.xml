@@ -186,4 +186,6 @@
 
     <string name="sim_preferences">SIM Preferences</string>
     <string name="sim_preferences_subtitle">Manage SIM cards and mobile network</string>
+
+    <string name="confirm">Confirm</string>
 </resources>

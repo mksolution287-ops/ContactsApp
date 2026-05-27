@@ -186,5 +186,7 @@
     <string name="sim_preferences">تفضيلات شريحة SIM</string>
     <string name="sim_preferences_subtitle">إدارة بطاقات SIM وشبكة الهاتف المحمول</string>
 
+    <string name="confirm">تأكيد</string>
+
 
 </resources>
