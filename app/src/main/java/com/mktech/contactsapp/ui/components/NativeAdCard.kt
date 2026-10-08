@@ -1,5 +1,6 @@
 package com.mktech.contactsapp.ui.components
 
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.ImageView
@@ -46,30 +47,25 @@ fun NativeAdCard(modifier: Modifier = Modifier) {
             modifier = modifier
                 .fillMaxWidth(),
             factory = { ctx ->
-                val adView = LayoutInflater.from(ctx)
+                val themedCtx = ContextThemeWrapper(ctx, R.style.Theme_ContactsApp)
+                val adView = LayoutInflater.from(themedCtx)
                     .inflate(R.layout.native_ad_view, null) as NativeAdView
-
-                // Wire up all the views to the NativeAdView
-                adView.headlineView    = adView.findViewById(R.id.ad_headline)
-                adView.bodyView        = adView.findViewById(R.id.ad_body)
-                adView.iconView        = adView.findViewById(R.id.ad_app_icon)
+                adView.headlineView     = adView.findViewById(R.id.ad_headline)
+                adView.bodyView         = adView.findViewById(R.id.ad_body)
+                adView.iconView         = adView.findViewById(R.id.ad_app_icon)
                 adView.callToActionView = adView.findViewById(R.id.ad_call_to_action)
-
                 adView
             },
             update = { adView ->
                 val ad = AdManager.getNativeAd() ?: return@AndroidView
-
                 // Populate each view with ad content
                 (adView.headlineView as? TextView)?.text = ad.headline
                 (adView.bodyView    as? TextView)?.text = ad.body
                 (adView.callToActionView as? Button)?.text = ad.callToAction
-
                 ad.icon?.drawable?.let { icon ->
                     (adView.iconView as? ImageView)?.setImageDrawable(icon)
                 }
-
-                // CRITICAL: must call this to register all views for click tracking
+                // must call this to register all views for click tracking
                 adView.setNativeAd(ad)
             }
         )

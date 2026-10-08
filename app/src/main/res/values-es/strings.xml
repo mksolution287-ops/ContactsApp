@@ -185,5 +185,72 @@
 
     <string name="confirm">Confirmar</string>
 
+    <string name="set_as_default_1">Establecer Contactos como aplicación predeterminada</string>
+    <string name="set_as_default_desc">Para que funcione correctamente, Contactos debe ser tu aplicación predeterminada. Esto nos permite mostrar información del llamante, bloquear llamadas y mensajes de spam y gestionar tus llamadas sin problemas.</string>
+    <string name="alex">Alex</string>
+    <string name="sam">Sam</string>
+    <string name="jordan">Jordan</string>
+    <string name="taylor">Taylor</string>
+    <string name="casey">Casey</string>
+    <string name="rieley">Rieley</string>
+    <string name="morgan">Morgan</string>
+    <string name="jamie">Jamie</string>
+    <string name="avery">Avery</string>
+    <string name="quinn">Quinn</string>
+    <string name="drew">Drew</string>
+    <string name="blake">Blake</string>
+    <string name="men">Hombres</string>
+    <string name="women">Mujeres</string>
+    <string name="cool">Cool</string>
+    <string name="happy">Feliz</string>
+    <string name="formal">Formal</string>
+    <string name="headwear">Tocados</string>
+    <string name="funny">Divertido</string>
+    <string name="call_avatar">Avatar de llamada</string>
+    <string name="none">Ninguno</string>
+    <string name="default_look">Aspecto predeterminado</string>
+    <string name="unavailable_avatars">No hay avatares disponibles.</string>
+    <string name="retry">Reintentar</string>
+    <string name="categories">Categorías</string>
+    <string name="avatars_title">%1$s avatares</string>
+    <string name="apply">Aplicar</string>
+    <string name="mobile">MÓVIL</string>
+    <string name="view_contact">Ver contacto</string>
+    <string name="message">Mensaje</string>
+    <string name="call_again">Llamar de nuevo</string>
+    <string name="block">Bloquear</string>
+    <string name="unblock">Desbloquear</string>
+
+    <string name="recent_calls_desc">No hay historial de llamadas recientes</string>
+    <string name="unknown_caller">Desconocido</string>
+    <string name="delete_contact_confirmation">¿Eliminar %1$s? Esto no se puede deshacer.</string>
+    <string name="caller_id">Identificador de llamadas</string>
+    <string name="caller_id_desc">Mostrar una ventana emergente con el nombre del llamante durante las llamadas</string>
+    <string name="allow_overlay_permission">Permite «mostrar sobre otras aplicaciones» para habilitar esto</string>
+    <string name="call_avatar_title">Avatar en la pantalla de llamada</string>
+    <string name="none_default">Ninguno (Predeterminado)</string>
+    <string name="custom_avatar_selected">Avatar personalizado seleccionado</string>
+
+
+    <string name="default_phone_app">Aplicación de teléfono predeterminada</string>
+    <string name="default_phone_app_desc">Establécela como tu aplicación de teléfono predeterminada para bloquear spam y gestionar llamadas.</string>
+    <string name="caller_id_spam_app">ID de llamadas y spam</string>
+    <string name="caller_id_spam_app_desc">Activa la identificación de llamadas para detectar spam y mostrar el nombre de los llamantes.</string>
+    <string name="privacy_policy_desc">Tu privacidad es nuestra prioridad: nunca vendemos, compartimos ni hacemos un uso indebido de tus datos.
+Para más información, lee nuestra</string>
+    <string name="continue_btn">Continuar</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title_1_line1">Conversaciones fluidas</string>
+    <string name="onboarding_title_1_line2">y protegidas</string>
+    <string name="onboarding_subtitle_1">Conéctate fácilmente en cualquier momento. Cada conversación está protegida de extremo a extremo.</string>
+
+    <string name="onboarding_title_2_line1">Identifica al llamante</string>
+    <string name="onboarding_title_2_line2">en segundos</string>
+    <string name="onboarding_subtitle_2">Conéctate fácilmente en cualquier momento. Cada conversación está protegida de extremo a extremo.</string>
+
+    <string name="onboarding_title_3_line1">Detén las llamadas no deseadas</string>
+    <string name="onboarding_title_3_line2">al instante</string>
+    <string name="onboarding_subtitle_3">Bloquea las llamadas de spam o no deseadas con un solo clic. Disfruta de una experiencia tranquila y sin interrupciones.</string>
 
 </resources>

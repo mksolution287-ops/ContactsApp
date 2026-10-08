@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import com.mktech.contactsapp.data.CallManager
 import com.mktech.contactsapp.data.CallNotificationManager
 import com.mktech.contactsapp.data.repository.SettingsRepository
+import com.mktech.contactsapp.ui.avatar.CallAvatar
 import com.mktech.contactsapp.ui.theme.ContactsAppTheme
 import kotlinx.coroutines.delay
 
@@ -192,7 +194,7 @@ fun IncomingCallScreen(
             // Top section
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(top = 80.dp)
+                modifier = Modifier.padding(top = 56.dp)
             ) {
                 Text(
                     stringResource(R.string.incoming_call),
@@ -200,36 +202,28 @@ fun IncomingCallScreen(
                     fontSize = 13.sp,
                     letterSpacing = 2.sp
                 )
-                Spacer(Modifier.height(40.dp))
+                Spacer(Modifier.height(24.dp))
 
                 // Pulsing avatar
-                Box(contentAlignment = Alignment.Center) {
+                Box(
+                    modifier = Modifier.size(260.dp),   // fixed slot, so the pulse never moves the text below
+                    contentAlignment = Alignment.Center
+                ) {
                     Box(
                         Modifier
-                            .size((100 * pulseScale).dp)
+                            .size(240.dp)
+                            .graphicsLayer { scaleX = pulseScale; scaleY = pulseScale }
                             .background(Color.White.copy(alpha = 0.06f), CircleShape)
                     )
                     Box(
                         Modifier
-                            .size((85 * pulseScale).dp)
-                            .background(Color.White.copy(alpha = 0.1f), CircleShape)
+                            .size(228.dp)
+                            .graphicsLayer { scaleX = pulseScale; scaleY = pulseScale }
+                            .background(Color.White.copy(alpha = 0.10f), CircleShape)
                     )
-                    Surface(
-                        modifier = Modifier.size(76.dp),
-                        shape    = CircleShape,
-                        color    = Color(0xFF1E3A5F)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Icon(
-                                Icons.Default.Person, null,
-                                tint = Color.White,
-                                modifier = Modifier.size(42.dp)
-                            )
-                        }
-                    }
+                    CallAvatar(avatarSize = 220.dp, circleSize = 140.dp, iconSize = 76.dp)
                 }
-
-                Spacer(Modifier.height(28.dp))
+                Spacer(Modifier.height(16.dp))
                 Text(
                     callerName,
                     color      = Color.White,
@@ -403,19 +397,7 @@ fun ActiveCallScreen(
                     Spacer(Modifier.height(28.dp))
 
                     // Avatar
-                    Surface(
-                        modifier = Modifier.size(86.dp),
-                        shape    = CircleShape,
-                        color    = Color(0xFF1E3A5F)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Icon(
-                                Icons.Default.Person, null,
-                                tint = Color.White,
-                                modifier = Modifier.size(48.dp)
-                            )
-                        }
-                    }
+                    CallAvatar(avatarSize = 150.dp, circleSize = 100.dp, iconSize = 60.dp)
 
                     Spacer(Modifier.height(20.dp))
 
@@ -550,7 +532,7 @@ fun ActiveCallScreen(
                         icon   = Icons.Default.VolumeUp,
                         label  = if (isSpeaker) stringResource(R.string.earpiece) else stringResource(R.string.speaker),
                         active = isSpeaker,
-                        onClick = { CallManager.toggleSpeaker() }  // ← listener updates isSpeaker automatically
+                        onClick = { CallManager.toggleSpeaker() }
                     )
 
                     // More (hold + add call stacked)

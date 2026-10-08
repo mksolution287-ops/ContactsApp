@@ -18,6 +18,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -35,8 +37,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -58,12 +63,28 @@ import com.mktech.contactsapp.util.LocaleHelper
 import kotlinx.coroutines.delay
 import android.telephony.PhoneNumberUtils
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import com.mktech.contactsapp.ui.components.BannerAd
 import com.mktech.contactsapp.ui.components.NativeAdCard
-import com.mktech.contactsapp.ui.onboarding.OnboardingActivity
+import com.mktech.contactsapp.ui.screens.LanguagePickerContent
 import com.mktech.contactsapp.util.AdManager
 import com.mktech.contactsapp.util.AppOpenAdManager
+import kotlinx.coroutines.launch
+import android.provider.Settings
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.runtime.saveable.rememberSaveable
 
 // ── Permission metadata ───────────────────────────────────────────────────────
 
@@ -73,6 +94,14 @@ private data class PermissionInfo(
     val description: String,
     val color: Color
 )
+
+private data class OnboardingPage(
+    val image: Int,   // drawable resource id, e.g. R.drawable.onboarding_image_1
+    val titleLine1: Int,
+    val titleLine2: Int,
+    val subtitle: Int
+)
+
 
 private val permissionMeta = mapOf(
     "READ_CONTACTS"         to PermissionInfo(Icons.Default.Contacts,    "Contacts",       "View and manage your contacts",         Color(0xFF4FC3F7)),
@@ -182,8 +211,7 @@ class MainActivity : BaseActivity() {
                 val languageAlreadyChosen = remember { prefs.contains("language") }
                 var languagePicked by remember { mutableStateOf(languageAlreadyChosen) }
 
-                val onboardingDone = remember { prefs.getBoolean("onboarding_done", false) }
-
+                var onboardingDone by remember { mutableStateOf(prefs.getBoolean("onboarding_done", false)) }
                 val isDefaultDialer = remember { mutableStateOf(isDefaultDialer(this)) }
 
                 val defaultDialerLauncher = rememberLauncherForActivityResult(
@@ -222,7 +250,7 @@ class MainActivity : BaseActivity() {
                 val currentScreen = when {
                     showSplash                                 -> "splash"
                     !languagePicked                            -> "language"
-//                    !onboardingDone                            -> "onboarding"
+                    !onboardingDone                            -> "onboarding"
                     !isDefaultDialer.value && !defaultSkipped -> "set_default"
                     !requiredPermissionsGranted                -> "permission"
                     else                                       -> "main"
@@ -254,18 +282,12 @@ class MainActivity : BaseActivity() {
                                 }
                             )
 
-//                            "onboarding" -> {
-//                                LaunchedEffect(Unit) {
-//                                    startActivity(Intent(activity, OnboardingActivity::class.java))
-//                                    activity.finish()
-//                                }
-//                                Box(
-//                                    modifier = Modifier.fillMaxSize(),
-//                                    contentAlignment = Alignment.Center
-//                                ) {
-//                                    CircularProgressIndicator()
-//                                }
-//                            }
+                            "onboarding" -> OnboardingScreen(
+                                onFinish = {
+                                    prefs.edit().putBoolean("onboarding_done", true).apply()
+                                    onboardingDone = true
+                                }
+                            )
 
                             "permission" -> {
                                 var deniedCount by remember { mutableStateOf(0) }
@@ -295,31 +317,8 @@ class MainActivity : BaseActivity() {
 
                             "set_default" -> SetDefaultScreen(
                                 onSetDefault = {
-                                    try {
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                                            val roleManager = activity.getSystemService(RoleManager::class.java)
-                                                ?: return@SetDefaultScreen
-                                            if (!roleManager.isRoleAvailable(RoleManager.ROLE_DIALER)) return@SetDefaultScreen
-                                            if (roleManager.isRoleHeld(RoleManager.ROLE_DIALER)) return@SetDefaultScreen
-                                            AppOpenAdManager.skipNextAd = true
-                                            defaultDialerLauncher.launch(
-                                                roleManager.createRequestRoleIntent(RoleManager.ROLE_DIALER)
-                                            )
-                                        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                            AppOpenAdManager.skipNextAd = true
-
-                                            defaultDialerLauncher.launch(
-                                                Intent(TelecomManager.ACTION_CHANGE_DEFAULT_DIALER).apply {
-                                                    putExtra(
-                                                        TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME,
-                                                        activity.packageName
-                                                    )
-                                                }
-                                            )
-                                        }
-                                    } catch (e: Exception) {
-                                        e.printStackTrace()
-                                    }
+                                    isDefaultDialer.value = isDefaultDialer(activity)
+                                    defaultSkipped = true
                                 },
                                 onSkip = { defaultSkipped = true }
                             )
@@ -426,204 +425,7 @@ private fun sanitizeNumber(number: String): String {
 private fun LanguagePickerScreen(
     onLanguageSelected: (AppLanguage) -> Unit
 ) {
-    var visible by remember { mutableStateOf(false) }
-    var selectedLanguage by remember { mutableStateOf(AppLanguage.ENGLISH) }
-
-    LaunchedEffect(Unit) { delay(100); visible = true }
-
-    val headerAlpha by animateFloatAsState(
-        targetValue = if (visible) 1f else 0f,
-        animationSpec = tween(700), label = "header"
-    )
-    val headerOffset by animateFloatAsState(
-        targetValue = if (visible) 0f else -40f,
-        animationSpec = tween(700, easing = EaseOut), label = "header_offset"
-    )
-    val buttonAlpha by animateFloatAsState(
-        targetValue = if (visible) 1f else 0f,
-        animationSpec = tween(700, delayMillis = 600), label = "button"
-    )
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(Color(0xFF0A1628), Color(0xFF050A14))
-                )
-            )
-    ) {
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 28.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(Modifier.height(20.dp))
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .alpha(headerAlpha)
-                    .offset(y = headerOffset.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(60.dp)
-                        .background(
-                            Brush.linearGradient(
-                                colors = listOf(Color(0xFF1565C0), Color(0xFF42A5F5))
-                            ),
-                            CircleShape
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        Icons.Default.Language,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(44.dp)
-                    )
-                }
-
-                Spacer(Modifier.height(15.dp))
-
-                Text(
-                    text = "Choose Language",
-                    color = Color.White,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = (-0.3).sp
-                )
-
-                Spacer(Modifier.height(10.dp))
-
-                Text(
-                    text = "Select your preferred language\nto continue",
-                    color = Color(0xFF90CAF9),
-                    fontSize = 15.sp,
-                    textAlign = TextAlign.Center,
-                    lineHeight = 22.sp
-                )
-            }
-
-            Spacer(Modifier.height(15.dp))
-
-            LazyColumn(
-                modifier = Modifier
-                    .weight(1f)
-                    .alpha(headerAlpha),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-                contentPadding = PaddingValues(vertical = 8.dp)
-            ) {
-                val languages = AppLanguage.values().filter { it != AppLanguage.SYSTEM }
-                itemsIndexed(languages) { index, lang ->
-                    val cardAlpha by animateFloatAsState(
-                        targetValue = if (visible) 1f else 0f,
-                        animationSpec = tween(500, delayMillis = 200 + index * 80),
-                        label = "lang_card_$index"
-                    )
-                    val cardOffset by animateFloatAsState(
-                        targetValue = if (visible) 0f else 30f,
-                        animationSpec = tween(500, delayMillis = 200 + index * 80, easing = EaseOut),
-                        label = "lang_offset_$index"
-                    )
-
-                    val isSelected = selectedLanguage == lang
-
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .alpha(cardAlpha)
-                            .offset(y = cardOffset.dp)
-                            .clickable { selectedLanguage = lang },
-                        shape = RoundedCornerShape(16.dp),
-                        color = if (isSelected) Color(0xFF1565C0).copy(alpha = 0.3f)
-                        else Color(0xFF0D1B2A),
-                        border = if (isSelected)
-                            androidx.compose.foundation.BorderStroke(1.5.dp, Color(0xFF42A5F5))
-                        else null
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            // ── Flag emoji ────────────────────────────────────────────────
-                            Text(
-                                text = lang.flag,
-                                fontSize = 28.sp,
-                                modifier = Modifier.padding(end = 14.dp)
-                            )
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = lang.nativeName,
-                                    color = Color.White,
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                                if (lang.nativeName != lang.displayName) {
-                                    Text(
-                                        text = lang.displayName,
-                                        color = Color(0xFF607D8B),
-                                        fontSize = 13.sp
-                                    )
-                                }
-                            }
-
-                            if (isSelected) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                        .background(Color(0xFF1976D2), CircleShape),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Icon(
-                                        Icons.Default.Check,
-                                        contentDescription = null,
-                                        tint = Color.White,
-                                        modifier = Modifier.size(14.dp)
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-//            Spacer(Modifier.height(16.dp))
-
-            Column(
-                modifier = Modifier
-                    .alpha(buttonAlpha)
-                    .padding(bottom = 10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Button(
-                    onClick = { onLanguageSelected(selectedLanguage) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF1976D2)
-                    )
-                ) {
-                    Icon(
-                        Icons.Default.ArrowForward,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(Modifier.width(10.dp))
-                    Text(
-                        text = "Continue",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
-            }
-        }
-        NativeAdCard(modifier = Modifier.requiredWidth(LocalConfiguration.current.screenWidthDp.dp))
-    }
+    LanguagePickerContent(onLanguageSelected = onLanguageSelected)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1061,177 +863,566 @@ private fun SetDefaultScreen(
     onSetDefault: () -> Unit,
     onSkip: () -> Unit
 ) {
-    var visible by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) { delay(100); visible = true }
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
-    val headerAlpha by animateFloatAsState(
-        targetValue = if (visible) 1f else 0f,
-        animationSpec = tween(700), label = "alpha"
-    )
-    val headerOffset by animateFloatAsState(
-        targetValue = if (visible) 0f else -40f,
-        animationSpec = tween(700, easing = EaseOut), label = "offset"
-    )
-    val infiniteTransition = rememberInfiniteTransition(label = "pulse")
-    val pulseScale by infiniteTransition.animateFloat(
-        initialValue = 1f, targetValue = 1.12f,
-        animationSpec = infiniteRepeatable(tween(1200, easing = EaseInOut), RepeatMode.Reverse),
-        label = "pulse"
-    )
-    val pulseAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.2f, targetValue = 0.45f,
-        animationSpec = infiniteRepeatable(tween(1200, easing = EaseInOut), RepeatMode.Reverse),
-        label = "pulse_alpha"
+    val screeningAvailable = remember { isCallScreeningRoleAvailable(context) }
+    var isDialerGranted by remember { mutableStateOf(isDialerRoleGranted(context)) }
+    var isCallScreeningGranted by remember { mutableStateOf(isCallScreeningRoleGranted(context)) }
+
+// User switched these off in the UI (the system role itself can't be revoked from code)
+    var dialerOptOut by rememberSaveable { mutableStateOf(false) }
+    var screeningOptOut by rememberSaveable { mutableStateOf(false) }
+
+// What the switches show
+    val dialerOn = isDialerGranted && !dialerOptOut
+    val screeningOn = isCallScreeningGranted && !screeningOptOut
+
+    val allGranted = dialerOn && (screeningOn || !screeningAvailable)
+
+    fun refreshRoles() {
+        isDialerGranted = isDialerRoleGranted(context)
+        isCallScreeningGranted = isCallScreeningRoleGranted(context)
+        // If another app took the role, reset the opt-out so the state is clean
+        if (!isDialerGranted) dialerOptOut = false
+        if (!isCallScreeningGranted) screeningOptOut = false
+    }
+
+    // Re-check whenever the user comes back (e.g. from system Default apps settings)
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) refreshRoles()
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
+    val dialerRoleLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { refreshRoles() }
+
+    val callScreeningLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { refreshRoles() }
+
+    // requestDialerRole() and requestCallScreeningRole() stay exactly as they are
+
+    fun requestDialerRole() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val rm = context.getSystemService(RoleManager::class.java)
+                if (rm != null && rm.isRoleAvailable(RoleManager.ROLE_DIALER) && !rm.isRoleHeld(RoleManager.ROLE_DIALER)) {
+                    dialerRoleLauncher.launch(rm.createRequestRoleIntent(RoleManager.ROLE_DIALER))
+                }
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                dialerRoleLauncher.launch(
+                    Intent(TelecomManager.ACTION_CHANGE_DEFAULT_DIALER).apply {
+                        putExtra(TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME, context.packageName)
+                    }
+                )
+            }
+        } catch (e: Exception) { e.printStackTrace() }
+    }
+
+    fun requestCallScreeningRole() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val rm = context.getSystemService(RoleManager::class.java)
+                if (rm != null && rm.isRoleAvailable(RoleManager.ROLE_CALL_SCREENING) && !rm.isRoleHeld(RoleManager.ROLE_CALL_SCREENING)) {
+                    callScreeningLauncher.launch(rm.createRequestRoleIntent(RoleManager.ROLE_CALL_SCREENING))
+                }
+            }
+        } catch (e: Exception) { e.printStackTrace() }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 24.dp)
+    ) {
+        Spacer(Modifier.height(48.dp))
+
+        // ── Illustration (approximated — swap for a real asset if you have one) ──
+
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(200.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(painterResource(R.drawable.default_screen_image), null, modifier = Modifier.fillMaxSize())
+            }
+        }
+
+        Spacer(Modifier.height(28.dp))
+
+        Text(
+            text = stringResource(R.string.set_as_default_1),
+            color = Color.Black,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(Modifier.height(10.dp))
+        Text(
+            text = stringResource(R.string.set_as_default_desc),
+            color = Color.Black.copy(0.7f),
+            fontSize = 14.sp,
+            textAlign = TextAlign.Center,
+            lineHeight = 20.sp,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(Modifier.height(28.dp))
+
+        DefaultAppToggleRow(
+            icon = Icons.Default.Call,
+            iconBg = Color(0xFF1976D2),
+            title = stringResource(R.string.default_phone_app),
+            subtitle = stringResource(R.string.default_phone_app_desc),
+            checked = dialerOn,
+            onCheckedChange = { wantOn ->
+                if (wantOn) {
+                    if (isDialerGranted) dialerOptOut = false   // already default, just switch back on
+                    else requestDialerRole()
+                } else {
+                    dialerOptOut = true                         // disable in place, no navigation
+                }
+            }
+        )
+
+        if (screeningAvailable) {
+            Spacer(Modifier.height(14.dp))
+            DefaultAppToggleRow(
+                icon = Icons.Default.Shield,
+                iconBg = Color(0xFF43A047),
+                title = stringResource(R.string.caller_id_spam_app),
+                subtitle = stringResource(R.string.caller_id_spam_app_desc),
+                checked = screeningOn,
+                onCheckedChange = { wantOn ->
+                    if (wantOn) {
+                        if (isCallScreeningGranted) screeningOptOut = false
+                        else requestCallScreeningRole()
+                    } else {
+                        screeningOptOut = true
+                    }
+                }
+            )
+        }
+
+        Spacer(Modifier.height(28.dp))
+
+        val privacyUrl = "https://sites.google.com/view/mksolutioncontactdilaerprivacy/home"
+        val annotatedPrivacy = buildAnnotatedString {
+            append(stringResource(R.string.privacy_policy_desc))
+            pushStringAnnotation(tag = "privacy", annotation = privacyUrl)
+            withStyle(SpanStyle(color = Color(0xFF64B5F6))) { append(stringResource(R.string.privacy_policy)) }
+            pop()
+        }
+        ClickableText(
+            text = annotatedPrivacy,
+            style = LocalTextStyle.current.copy(
+                color = Color.Black.copy(alpha = 0.7f),
+                fontSize = 12.sp,
+                textAlign = TextAlign.Center,
+                lineHeight = 18.sp
+            ),
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { offset ->
+                annotatedPrivacy.getStringAnnotations("privacy", offset, offset).firstOrNull()?.let {
+                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it.item)))
+                }
+            }
+        )
+
+        Spacer(Modifier.height(24.dp))
+
+        Button(
+            onClick = { if (allGranted) onSetDefault() },
+            enabled = allGranted,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(54.dp),
+            shape = RoundedCornerShape(28.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF1976D2),
+                disabledContainerColor = Color(0xFF1976D2).copy(alpha = 0.35f)
+            )
+        ) {
+            Text(
+                stringResource(R.string.continue_btn),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = if (allGranted) Color.White else Color.White.copy(alpha = 0.5f)
+            )
+        }
+
+        Spacer(Modifier.height(10.dp))
+        BannerAd(Modifier.requiredWidth(LocalConfiguration.current.screenWidthDp.dp))
+    }
+}
+
+@Composable
+private fun DefaultAppToggleRow(
+    icon: ImageVector,
+    iconBg: Color,
+    title: String,
+    subtitle: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+        Box(
+            modifier = Modifier.size(44.dp).background(iconBg, CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(icon, null, tint = Color.White, modifier = Modifier.size(22.dp))
+        }
+        Spacer(Modifier.width(14.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(title, color = Color.Black, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+            Text(subtitle, color = Color.Black.copy(0.7f), fontSize = 12.sp, lineHeight = 16.sp)
+        }
+        Spacer(Modifier.width(8.dp))
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = Color.White,
+                checkedTrackColor = Color(0xFF1976D2)
+            )
+        )
+    }
+}
+
+// ── Role-check helpers ───────────────────────────────────────────────────────
+
+private fun isDialerRoleGranted(context: Context): Boolean {
+    return try {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            context.getSystemService(RoleManager::class.java)
+                ?.isRoleHeld(RoleManager.ROLE_DIALER) == true
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val tm = context.getSystemService(TelecomManager::class.java)
+            context.packageName == tm?.defaultDialerPackage
+        } else false
+    } catch (e: Exception) { false }
+}
+
+private fun isCallScreeningRoleAvailable(context: Context): Boolean {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return false
+    return try {
+        context.getSystemService(RoleManager::class.java)
+            ?.isRoleAvailable(RoleManager.ROLE_CALL_SCREENING) == true
+    } catch (e: Exception) { false }
+}
+
+private fun isCallScreeningRoleGranted(context: Context): Boolean {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return false
+    return try {
+        val rm = context.getSystemService(RoleManager::class.java) ?: return false
+        rm.isRoleAvailable(RoleManager.ROLE_CALL_SCREENING) &&
+                rm.isRoleHeld(RoleManager.ROLE_CALL_SCREENING)
+    } catch (e: Exception) { false }
+}
+
+private fun openDefaultAppsSettings(context: Context) {
+    try {
+        context.startActivity(Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS))
+    } catch (e: Exception) {
+        try { context.startActivity(Intent(Settings.ACTION_SETTINGS)) } catch (_: Exception) {}
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ONBOARDING SCREEN
+// ─────────────────────────────────────────────────────────────────────────────
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun OnboardingScreen(onFinish: () -> Unit) {
+    val pages = remember {
+        listOf(
+            OnboardingPage(
+                image = R.drawable.onboarding_image_1,
+                titleLine1 = R.string.onboarding_title_1_line1,
+                titleLine2 = R.string.onboarding_title_1_line2,
+                subtitle = R.string.onboarding_subtitle_1
+            ),
+            OnboardingPage(
+                image = R.drawable.onboarding_image_2,
+                titleLine1 = R.string.onboarding_title_2_line1,
+                titleLine2 = R.string.onboarding_title_2_line2,
+                subtitle = R.string.onboarding_subtitle_2
+            ),
+            OnboardingPage(
+                image = R.drawable.onboarding_image_3,
+                titleLine1 = R.string.onboarding_title_3_line1,
+                titleLine2 = R.string.onboarding_title_3_line2,
+                subtitle = R.string.onboarding_subtitle_3
+            )
+        )
+    }
+
+    val pagerState = rememberPagerState(
+        pageCount = { pages.size }
     )
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    val scope = rememberCoroutineScope()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .navigationBarsPadding()
+    ) {
+
+        // Background + Pager + Bottom Controls
         Box(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(Color(0xFF0A1628), Color(0xFF050A14))
-                    )
-                )
         ) {
+            OnboardingBackground(
+                modifier = Modifier.fillMaxSize()
+            )
+
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 28.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.fillMaxSize()
             ) {
-                Spacer(Modifier.height(80.dp))
 
-                Box(
-                    modifier = Modifier.alpha(headerAlpha).offset(y = headerOffset.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size((100 * pulseScale).dp)
-                            .alpha(pulseAlpha)
-                            .background(
-                                Brush.radialGradient(colors = listOf(Color(0xFF1976D2), Color.Transparent)),
-                                CircleShape
-                            )
+                // Pager takes only the available space
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                ) { index ->
+
+                    OnboardingPageContent(
+                        pages[index]
                     )
-                    Box(
-                        modifier = Modifier
-                            .size(90.dp)
-                            .background(
-                                Brush.linearGradient(colors = listOf(Color(0xFF1565C0), Color(0xFF42A5F5))),
-                                CircleShape
-                            ),
-                        contentAlignment = Alignment.Center
+                }
+
+                // Bottom dots + button
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            horizontal = 28.dp,
+                            vertical = 32.dp
+                        ),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    // Page indicators
+                    Row(
+                        modifier = Modifier.weight(1f),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.PhoneAndroid,
-                            contentDescription = null,
-                            tint = Color.White,
-                            modifier = Modifier.size(46.dp)
-                        )
-                    }
-                }
 
-                Spacer(Modifier.height(40.dp))
+                        pages.indices.forEach { index ->
 
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.alpha(headerAlpha)
-                ) {
-                    Text(
-                        stringResource(R.string.set_as_default),
-                        color = Color.White, fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold, letterSpacing = (-0.3).sp
-                    )
-                    Spacer(Modifier.height(12.dp))
-                    Text(
-                        stringResource(R.string.set_default_subtitle),
-                        color = Color(0xFF90CAF9), fontSize = 15.sp,
-                        textAlign = TextAlign.Center, lineHeight = 22.sp
-                    )
-                }
+                            val isActive =
+                                pagerState.currentPage == index
 
-                Spacer(Modifier.height(44.dp))
-
-                val features = listOf(
-                    Triple(Icons.Default.CallEnd,  Color(0xFF81C784), stringResource(R.string.one_tap_call_controls)),
-                    Triple(Icons.Default.Contacts, Color(0xFFFFB74D), stringResource(R.string.unified_contacts)),
-                )
-
-                val featAlpha by animateFloatAsState(
-                    targetValue = if (visible) 1f else 0f,
-                    animationSpec = tween(600, delayMillis = 200), label = "feat"
-                )
-
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.alpha(featAlpha)
-                ) {
-                    features.forEachIndexed { index, (icon, color, title) ->
-                        val cardAlpha by animateFloatAsState(
-                            targetValue = if (visible) 1f else 0f,
-                            animationSpec = tween(500, delayMillis = 200 + index * 100),
-                            label = "card_$index"
-                        )
-                        val cardOffset by animateFloatAsState(
-                            targetValue = if (visible) 0f else 24f,
-                            animationSpec = tween(500, delayMillis = 200 + index * 100, easing = EaseOut),
-                            label = "offset_$index"
-                        )
-                        Surface(
-                            modifier = Modifier.fillMaxWidth().alpha(cardAlpha).offset(y = cardOffset.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            color = Color(0xFF0D1B2A)
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(16.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(46.dp)
-                                        .background(color.copy(alpha = 0.15f), RoundedCornerShape(12.dp)),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Icon(icon, null, tint = color, modifier = Modifier.size(24.dp))
-                                }
-                                Spacer(Modifier.width(14.dp))
-                                Text(title, color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
-                            }
+                            Box(
+                                modifier = Modifier
+                                    .height(6.dp)
+                                    .width(
+                                        if (isActive) {
+                                            22.dp
+                                        } else {
+                                            6.dp
+                                        }
+                                    )
+                                    .clip(
+                                        RoundedCornerShape(3.dp)
+                                    )
+                                    .background(
+                                        if (isActive) {
+                                            Color(0xFF1976D2)
+                                        } else {
+                                            Color(0xFFD8E2EC)
+                                        }
+                                    )
+                            )
                         }
                     }
-                }
 
-                Spacer(Modifier.weight(1f))
+                    // Next / Get Started
+                    val isLastPage =
+                        pagerState.currentPage == pages.lastIndex
 
-                val ctaAlpha by animateFloatAsState(
-                    targetValue = if (visible) 1f else 0f,
-                    animationSpec = tween(700, delayMillis = 700), label = "cta"
-                )
+                    Text(
+                        text = if (isLastPage) {
+                            "Get Started"
+                        } else {
+                            "Next"
+                        },
+                        color = Color(0xFF0D1B2A),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.clickable {
 
-                Column(
-                    modifier = Modifier.alpha(ctaAlpha).padding(bottom = 12.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Button(
-                        onClick = onSetDefault,
-                        modifier = Modifier.fillMaxWidth().height(56.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2))
-                    ) {
-                        Icon(Icons.Default.PhoneAndroid, null, modifier = Modifier.size(18.dp))
-                        Spacer(Modifier.width(10.dp))
-                        Text(stringResource(R.string.set_as_default_dialer), fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
-                    }
-                    TextButton(onClick = onSkip) {
-                        Text(stringResource(R.string.skip_for_now), color = Color(0xFF546E7A), fontSize = 14.sp)
-                    }
+                            if (isLastPage) {
+
+                                onFinish()
+
+                            } else {
+
+                                scope.launch {
+                                    pagerState.animateScrollToPage(
+                                        pagerState.currentPage + 1
+                                    )
+                                }
+                            }
+                        }
+                    )
                 }
             }
         }
-        BannerAd(modifier = Modifier.requiredWidth(LocalConfiguration.current.screenWidthDp.dp))
+
+        // Native ad gets its own space
+        NativeAdCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        )
+    }
+}
+
+@Composable
+private fun OnboardingPageContent(page: OnboardingPage) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(Modifier.height(72.dp))
+
+        Box(modifier = Modifier.size(340.dp), contentAlignment = Alignment.Center) {
+            Image(
+                painter = painterResource(page.image),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+
+        Spacer(Modifier.height(40.dp))
+
+        Text(stringResource(page.titleLine1), color = Color(0xFF0D1B2A), fontSize = 24.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+        Text(stringResource(page.titleLine2), color = Color(0xFF1976D2), fontSize = 24.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+
+        Spacer(Modifier.height(14.dp))
+
+        Text(
+            text = stringResource(page.subtitle),
+            color = Color(0xFF78889B),
+            fontSize = 14.sp,
+            textAlign = TextAlign.Center,
+            lineHeight = 20.sp
+        )
+    }
+}
+
+@Composable
+private fun OnboardingBackground(modifier: Modifier = Modifier) {
+    Box(modifier = modifier.background(Color.White)) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val w = size.width
+            val h = size.height
+
+            // ── Soft blue blobs in the corners ──────────────────────────
+            // Top-left: tight, more saturated blob
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = listOf(Color(0xFF9EC5F0).copy(alpha = 0.55f), Color.Transparent),
+                    center = Offset(w * 0.02f, h * 0.02f),
+                    radius = w * 0.55f
+                ),
+                radius = w * 0.55f,
+                center = Offset(w * 0.02f, h * 0.02f)
+            )
+            // Top-left: larger, paler wash spreading right/down
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = listOf(Color(0xFFDCEBFB).copy(alpha = 0.7f), Color.Transparent),
+                    center = Offset(w * 0.15f, h * 0.02f),
+                    radius = w * 0.9f
+                ),
+                radius = w * 0.9f,
+                center = Offset(w * 0.15f, h * 0.02f)
+            )
+            // Right-middle, pale wash
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = listOf(Color(0xFFE3EEFC).copy(alpha = 0.8f), Color.Transparent),
+                    center = Offset(w * 1.05f, h * 0.42f),
+                    radius = w * 0.55f
+                ),
+                radius = w * 0.55f,
+                center = Offset(w * 1.05f, h * 0.42f)
+            )
+            // Bottom-right, pale wash
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = listOf(Color(0xFFDCEBFB).copy(alpha = 0.7f), Color.Transparent),
+                    center = Offset(w * 1.05f, h * 1.0f),
+                    radius = w * 0.75f
+                ),
+                radius = w * 0.75f,
+                center = Offset(w * 1.05f, h * 1.0f)
+            )
+            // Bottom-left: tight, more saturated blob (mirrors top-left)
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = listOf(Color(0xFF9EC5F0).copy(alpha = 0.6f), Color.Transparent),
+                    center = Offset(w * -0.02f, h * 1.02f),
+                    radius = w * 0.6f
+                ),
+                radius = w * 0.6f,
+                center = Offset(w * -0.02f, h * 1.02f)
+            )
+
+            // ── Dot-grid accents ─────────────────────────────────────────
+            val dotColor = Color(0xFFB9C9DC).copy(alpha = 0.6f)
+            val dotRadius = 1.6.dp.toPx()
+            val dotSpacing = 12.dp.toPx()
+
+            fun drawDotGrid(originX: Float, originY: Float, cols: Int, rows: Int) {
+                for (row in 0 until rows) {
+                    for (col in 0 until cols) {
+                        drawCircle(
+                            color = dotColor,
+                            radius = dotRadius,
+                            center = Offset(originX + col * dotSpacing, originY + row * dotSpacing)
+                        )
+                    }
+                }
+            }
+            
+            drawDotGrid(w * 0.82f, h * 0.045f, 4, 4)
+            drawDotGrid(w * 0.05f, h * 0.80f, 4, 4)
+
+            // ── Thin wavy line near the bottom ────────────────────────────
+            val wavePath = Path().apply {
+                moveTo(0f, h * 0.86f)
+                cubicTo(w * 0.25f, h * 0.80f, w * 0.4f, h * 0.94f, w * 0.65f, h * 0.88f)
+                cubicTo(w * 0.85f, h * 0.83f, w * 0.95f, h * 0.92f, w, h * 0.87f)
+            }
+            drawPath(
+                path = wavePath,
+                color = Color(0xFFB9C9DC).copy(alpha = 0.4f),
+                style = Stroke(width = 1.dp.toPx())
+            )
+        }
     }
 }

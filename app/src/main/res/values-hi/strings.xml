@@ -186,4 +186,71 @@
     <string name="sim_preferences_subtitle">सिम कार्ड और मोबाइल नेटवर्क प्रबंधित करें</string>
 
     <string name="confirm">पुष्टि करें</string>
+
+    <string name="set_as_default_1">कॉन्टैक्ट्स को डिफ़ॉल्ट ऐप के रूप में सेट करें</string>
+    <string name="set_as_default_desc">ठीक से काम करने के लिए, कॉन्टैक्ट्स को आपका डिफ़ॉल्ट ऐप होना चाहिए। इससे हम कॉलर की जानकारी दिखा सकते हैं, स्पैम कॉल और संदेश ब्लॉक कर सकते हैं, और आपके कॉल को आसानी से मैनेज कर सकते हैं।</string>
+    <string name="alex">Alex</string>
+    <string name="sam">Sam</string>
+    <string name="jordan">Jordan</string>
+    <string name="taylor">Taylor</string>
+    <string name="casey">Casey</string>
+    <string name="rieley">Rieley</string>
+    <string name="morgan">Morgan</string>
+    <string name="jamie">Jamie</string>
+    <string name="avery">Avery</string>
+    <string name="quinn">Quinn</string>
+    <string name="drew">Drew</string>
+    <string name="blake">Blake</string>
+    <string name="men">पुरुष</string>
+    <string name="women">महिलाएँ</string>
+    <string name="cool">कूल</string>
+    <string name="happy">खुश</string>
+    <string name="formal">औपचारिक</string>
+    <string name="headwear">हेडवियर</string>
+    <string name="funny">मज़ेदार</string>
+    <string name="call_avatar">कॉल अवतार</string>
+    <string name="none">कोई नहीं</string>
+    <string name="default_look">डिफ़ॉल्ट लुक</string>
+    <string name="unavailable_avatars">कोई अवतार उपलब्ध नहीं है।</string>
+    <string name="retry">पुनः प्रयास करें</string>
+    <string name="categories">श्रेणियाँ</string>
+    <string name="avatars_title">%1$s अवतार</string>
+    <string name="apply">लागू करें</string>
+    <string name="mobile">मोबाइल</string>
+    <string name="view_contact">संपर्क देखें</string>
+    <string name="message">संदेश</string>
+    <string name="call_again">फिर से कॉल करें</string>
+    <string name="block">ब्लॉक करें</string>
+    <string name="unblock">अनब्लॉक करें</string>
+
+    <string name="recent_calls_desc">कोई हालिया कॉल इतिहास नहीं</string>
+    <string name="unknown_caller">अज्ञात</string>
+    <string name="delete_contact_confirmation">%1$s को हटाएँ? इसे पूर्ववत नहीं किया जा सकता।</string>
+    <string name="caller_id">कॉलर आईडी</string>
+    <string name="caller_id_desc">कॉल के दौरान कॉलर के नाम के साथ एक पॉपअप दिखाएँ</string>
+    <string name="allow_overlay_permission">इसे सक्षम करने के लिए "अन्य ऐप्स के ऊपर प्रदर्शित करें" की अनुमति दें</string>
+    <string name="call_avatar_title">कॉल स्क्रीन पर अवतार</string>
+    <string name="none_default">कोई नहीं (डिफ़ॉल्ट)</string>
+    <string name="custom_avatar_selected">कस्टम अवतार चयनित</string>
+
+    <string name="default_phone_app">डिफ़ॉल्ट फ़ोन ऐप</string>
+    <string name="default_phone_app_desc">स्पैम ब्लॉक करने और कॉल प्रबंधित करने के लिए इसे अपना डिफ़ॉल्ट फ़ोन ऐप सेट करें।</string>
+    <string name="caller_id_spam_app">कॉलर आईडी और स्पैम ऐप</string>
+    <string name="caller_id_spam_app_desc">स्पैम का पता लगाने और कॉलर के नाम दिखाने के लिए कॉलर आईडी सक्षम करें।</string>
+    <string name="privacy_policy_desc">आपकी गोपनीयता हमारी प्राथमिकता है - हम कभी भी आपके डेटा को बेचते, साझा करते या उसका दुरुपयोग नहीं करते।
+अधिक जानकारी के लिए, हमारी पढ़ें</string>
+    <string name="continue_btn">जारी रखें</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title_1_line1">सुचारू और सुरक्षित</string>
+    <string name="onboarding_title_1_line2">बातचीत</string>
+    <string name="onboarding_subtitle_1">किसी भी समय आसानी से जुड़ें। हर बातचीत एंड-टू-एंड सुरक्षित है।</string>
+
+    <string name="onboarding_title_2_line1">कॉलर की पहचान करें</string>
+    <string name="onboarding_title_2_line2">सेकंडों में</string>
+    <string name="onboarding_subtitle_2">किसी भी समय आसानी से जुड़ें। हर बातचीत एंड-टू-एंड सुरक्षित है।</string>
+
+    <string name="onboarding_title_3_line1">अवांछित कॉल रोकें</string>
+    <string name="onboarding_title_3_line2">तुरंत</string>
+    <string name="onboarding_subtitle_3">एक क्लिक में स्पैम या अवांछित कॉल ब्लॉक करें। शांतिपूर्ण, बिना रुकावट वाले अनुभव का आनंद लें।</string>
 </resources>

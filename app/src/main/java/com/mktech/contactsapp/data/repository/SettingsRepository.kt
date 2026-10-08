@@ -29,6 +29,7 @@ class SettingsRepository(private val context: Context) {
         sortByFirstName = prefs.getBoolean("sort_first_name", true),
         showPhoneNumberInList = prefs.getBoolean("show_phone_in_list", false),
         confirmBeforeDelete = prefs.getBoolean("confirm_delete", true),
+        showFloatingCallerId = prefs.getBoolean("show_floating_caller_id", true),   // ← new
         //for language
         language = AppLanguage.values().find {
             it.code == prefs.getString("language", AppLanguage.SYSTEM.code)
@@ -60,13 +61,16 @@ class SettingsRepository(private val context: Context) {
         _settings.value = _settings.value.copy(confirmBeforeDelete = confirm)
     }
 
+    // ← new
+    fun updateShowFloatingCallerId(show: Boolean) {
+        prefs.edit().putBoolean("show_floating_caller_id", show).apply()
+        _settings.value = _settings.value.copy(showFloatingCallerId = show)
+    }
+
     // for multiple languages
     fun updateLanguage(language: AppLanguage) {
         Log.d(TAG, "updateLanguage() called with language='${language.code}'")
-
         prefs.edit().putString("language", language.code).apply()
-
         _settings.value = _settings.value.copy(language = language)
     }
-
 }

@@ -7,6 +7,8 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.room.Room
 import com.google.android.gms.ads.MobileAds
+import com.google.firebase.messaging.BuildConfig
+import com.google.firebase.messaging.FirebaseMessaging
 import com.mktech.contactsapp.data.local.ContactDatabase
 import com.mktech.contactsapp.data.model.AppLanguage
 import com.mktech.contactsapp.data.repository.CallLogRepository
@@ -14,7 +16,11 @@ import com.mktech.contactsapp.data.repository.ContactRepository
 import com.mktech.contactsapp.data.repository.SettingsRepository
 import com.mktech.contactsapp.util.AdManager
 import com.mktech.contactsapp.util.AppOpenAdManager
+import com.mktech.contactsapp.util.InAppMessagingManager
 import com.mktech.contactsapp.util.LocaleHelper
+import com.mktech.contactsapp.util.NotificationHelper
+import com.mktech.contactsapp.util.OneSignalManager
+import com.mktech.contactsapp.util.OneSignalManager.init
 
 class ContactsApplication : Application() {
 
@@ -59,6 +65,28 @@ class ContactsApplication : Application() {
             appOpenAdManager = AppOpenAdManager(this)
             appOpenAdManager.loadAd(this)
         }
+
+        // ── Push notifications: channel + FCM + OneSignal ────────────────
+        NotificationHelper.createNotificationChannels(this)
+
+        // Log the current FCM token once on startup (also captured on refresh
+        // in MyFirebaseMessagingService.onNewToken).
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d("FCM", "Token: ${task.result}")
+            } else {
+                Log.e("FCM", "Fetching FCM token failed", task.exception)
+            }
+        }
+
+        // OneSignal — set debug = true while wiring this up, then flip to false
+        init(this, debug = BuildConfig.DEBUG)
+
+        // Firebase In-App Messaging — starts un-suppressed; AdManager toggles
+        // suppression on/off around interstitial and app-open ad display so
+        // the two never overlap.
+
+        InAppMessagingManager.init()
 
         // ── Detect fresh install and clear stale prefs ───────────────────
         val prefs = getSharedPreferences("app_settings", Context.MODE_PRIVATE)

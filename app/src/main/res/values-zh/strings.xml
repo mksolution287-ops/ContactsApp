@@ -185,4 +185,70 @@
 
     <string name="confirm">确认</string>
 
+    <string name="set_as_default_1">将“联系人”设为默认应用</string>
+    <string name="set_as_default_desc">为了正常运行，“联系人”需要成为您的默认应用。这样我们就可以显示来电者信息、拦截垃圾电话和短信，并顺利管理您的通话。</string>
+    <string name="alex">Alex</string>
+    <string name="sam">Sam</string>
+    <string name="jordan">Jordan</string>
+    <string name="taylor">Taylor</string>
+    <string name="casey">Casey</string>
+    <string name="rieley">Rieley</string>
+    <string name="morgan">Morgan</string>
+    <string name="jamie">Jamie</string>
+    <string name="avery">Avery</string>
+    <string name="quinn">Quinn</string>
+    <string name="drew">Drew</string>
+    <string name="blake">Blake</string>
+    <string name="men">男性</string>
+    <string name="women">女性</string>
+    <string name="cool">酷</string>
+    <string name="happy">开心</string>
+    <string name="formal">正式</string>
+    <string name="headwear">头饰</string>
+    <string name="funny">搞笑</string>
+    <string name="call_avatar">通话头像</string>
+    <string name="none">无</string>
+    <string name="default_look">默认外观</string>
+    <string name="unavailable_avatars">暂无可用头像。</string>
+    <string name="retry">重试</string>
+    <string name="categories">分类</string>
+    <string name="avatars_title">%1$s 个头像</string>
+    <string name="apply">应用</string>
+    <string name="mobile">手机</string>
+    <string name="view_contact">查看联系人</string>
+    <string name="message">消息</string>
+    <string name="call_again">再次呼叫</string>
+    <string name="block">屏蔽</string>
+    <string name="unblock">取消屏蔽</string>
+
+    <string name="recent_calls_desc">暂无最近通话记录</string>
+    <string name="unknown_caller">未知</string>
+    <string name="delete_contact_confirmation">删除 %1$s？此操作无法撤销。</string>
+    <string name="caller_id">来电显示</string>
+    <string name="caller_id_desc">通话时弹出显示来电者姓名</string>
+    <string name="allow_overlay_permission">请允许“显示在其他应用的上层”以启用此功能</string>
+    <string name="call_avatar_title">通话界面头像</string>
+    <string name="none_default">无（默认）</string>
+    <string name="custom_avatar_selected">已选择自定义头像</string>
+
+    <string name="default_phone_app">默认电话应用</string>
+    <string name="default_phone_app_desc">将其设为默认电话应用，以拦截垃圾电话并管理通话。</string>
+    <string name="caller_id_spam_app">来电显示与防骚扰应用</string>
+    <string name="caller_id_spam_app_desc">启用来电显示以检测垃圾电话并显示来电者姓名。</string>
+    <string name="privacy_policy_desc">您的隐私是我们的首要任务——我们绝不会出售、分享或滥用您的数据。
+如需更多信息，请阅读我们的</string>
+    <string name="continue_btn">继续</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title_1_line1">流畅且受保护的</string>
+    <string name="onboarding_title_1_line2">对话</string>
+    <string name="onboarding_subtitle_1">随时轻松连接。每次对话均采用端到端加密保护。</string>
+
+    <string name="onboarding_title_2_line1">几秒内识别</string>
+    <string name="onboarding_title_2_line2">来电者</string>
+    <string name="onboarding_subtitle_2">随时轻松连接。每次对话均采用端到端加密保护。</string>
+
+    <string name="onboarding_title_3_line1">立即阻止</string>
+    <string name="onboarding_title_3_line2">不需要的来电</string>
+    <string name="onboarding_subtitle_3">一键拦截垃圾电话或不需要的来电。享受宁静、无打扰的体验。</string>
 </resources>

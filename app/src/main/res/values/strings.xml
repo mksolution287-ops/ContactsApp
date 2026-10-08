@@ -185,7 +185,77 @@
     <string name="onboarding_desc_6">Star your most important contacts for quick access. Search across your entire contact list instantly.</string>
 
     <string name="sim_preferences">SIM Preferences</string>
+
     <string name="sim_preferences_subtitle">Manage SIM cards and mobile network</string>
 
     <string name="confirm">Confirm</string>
+
+    <string name="set_as_default_1">Set Contacts as Default App</string>
+    <string name = "set_as_default_desc">To work properly, Contacts needs to be your default app. This lets us show caller info, block spam calls and messages, and manage your calls smoothly.</string>
+    <string name="alex">Alex</string>
+    <string name="sam">Sam</string>
+    <string name="jordan">Jordan</string>
+    <string name="taylor">Taylor</string>
+    <string name="casey">Casey</string>
+    <string name="rieley">Rieley</string>
+    <string name="morgan">Morgan</string>
+    <string name="jamie">Jamie</string>
+    <string name="avery">Avery</string>
+    <string name="quinn">Quinn</string>
+    <string name="drew">Drew</string>
+    <string name="blake">Blake</string>
+    <string name="men">Men</string>
+    <string name="women">Women</string>
+    <string name="cool">Cool</string>
+    <string name="happy">Happy</string>
+    <string name="formal">Formal</string>
+    <string name="headwear">Headwear</string>
+    <string name="funny">Funny</string>
+    <string name="call_avatar">Call Avatar</string>
+    <string name="none">None</string>
+    <string name="default_look">Default Look</string>
+    <string name="unavailable_avatars">No avatars available.</string>
+    <string name="retry">Retry</string>
+    <string name="categories">Categories</string>
+    <string name="avatars_title">%1$s avatars</string>
+    <string name="apply">Apply</string>
+    <string name="mobile">MOBILE</string>
+    <string name="view_contact">View Contact</string>
+    <string name="message">Message</string>
+    <string name="call_again">Call again</string>
+    <string name="block">Block</string>
+    <string name="unblock">Unblock</string>
+
+    <string name="recent_calls_desc">No recent call history</string>
+    <string name="unknown_caller">Unknown</string>
+    <string name="delete_contact_confirmation">Delete %1$s? This cannot be undone.</string>
+    <string name="caller_id">Caller ID</string>
+    <string name="caller_id_desc">Show a popup with the caller\'s name during calls</string>
+    <string name="allow_overlay_permission">
+    Allow "display over other apps" to enable this</string>
+    <string name="call_avatar_title">Avatar on call screen</string>
+    <string name="none_default">None(Default)</string>
+    <string name="custom_avatar_selected">Custom avatar selected</string>
+
+    <string name="default_phone_app">Default Phone App</string>
+    <string name="default_phone_app_desc">Set as your default phone app to block spam and manage calls.</string>
+    <string name="caller_id_spam_app">Caller ID &amp; Spam App</string>
+    <string name="caller_id_spam_app_desc">Enable caller ID to detect spam and show caller names.</string>
+    <string name="privacy_policy_desc">Your Privacy is our priority - We never sell, share or misuse your data.
+For More information, Read our</string>
+    <string name="continue_btn">Continue</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title_1_line1">Smooth &amp; Protected</string>
+    <string name="onboarding_title_1_line2">Conversations</string>
+    <string name="onboarding_subtitle_1">Connect effortlessly anytime. Every conversation is secured end-to-end.</string>
+
+    <string name="onboarding_title_2_line1">Identify Caller in</string>
+    <string name="onboarding_title_2_line2">Seconds</string>
+    <string name="onboarding_subtitle_2">Connect effortlessly anytime. Every conversation is secured end-to-end.</string>
+
+    <string name="onboarding_title_3_line1">Stop Unwanted Calls</string>
+    <string name="onboarding_title_3_line2">Instantly</string>
+    <string name="onboarding_subtitle_3">Block spam or unwanted calls in a single click. Enjoy a peaceful, interruption-free experience.</string>
+
 </resources>

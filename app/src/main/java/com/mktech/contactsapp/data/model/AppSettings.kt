@@ -32,5 +32,6 @@ data class AppSettings(
     val sortByFirstName: Boolean = true,
     val showPhoneNumberInList: Boolean = true,
     val confirmBeforeDelete: Boolean = true,
-    val language: AppLanguage = AppLanguage.SYSTEM
+    val language: AppLanguage = AppLanguage.SYSTEM,
+    val showFloatingCallerId: Boolean = true
 )

@@ -22,7 +22,6 @@ object AdManager {
     private const val TEST_NATIVE_ID       = "ca-app-pub-3940256099942544/2247696110"
     private const val TEST_APP_OPEN_ID     = "ca-app-pub-3940256099942544/9257395921"
 
-
     // ── Remote Config keys ────────────────────────────────────────────────
     private const val KEY_ADS_ENABLED          = "ads_enabled"
     private const val KEY_BANNER_ENABLED       = "banner_ad_enabled"
@@ -35,8 +34,7 @@ object AdManager {
     private const val KEY_NATIVE_AD_UNIT       = "native_ad_unit_id"
     private const val KEY_APP_OPEN_AD_UNIT     = "app_open_ad_unit_id"
 
-
-    // ── State ─────────────────────────────────────────────────────────────
+    // ── State ──────────────────────────────
     private var interstitialAd: InterstitialAd? = null
     private var actionCount = 0
 
@@ -79,6 +77,12 @@ object AdManager {
 
     // ── Init Remote Config and fetch ──────────────────────────────────────
     fun init(context: Context) {
+        MobileAds.setRequestConfiguration(
+            RequestConfiguration.Builder()
+                .setTestDeviceIds(listOf("4F095E69A38FF00B02937165814FE45E","863d0058" +
+                        "048303634511317ff8c7c"))
+                .build()
+        )
         val remoteConfig = Firebase.remoteConfig
         remoteConfig.setConfigSettingsAsync(
             remoteConfigSettings {
@@ -121,15 +125,14 @@ object AdManager {
     }
 
     // ── App Open Ad helpers (called by AppOpenAdManager) ──────────────────
+
     fun isAppOpenAdEnabled(): Boolean {
         val config = Firebase.remoteConfig
         return config.getBoolean(KEY_ADS_ENABLED) &&
                 config.getBoolean(KEY_APP_OPEN_ENABLED)
     }
-
     fun getAppOpenAdUnitId(): String =
         Firebase.remoteConfig.getString(KEY_APP_OPEN_AD_UNIT).ifBlank { TEST_APP_OPEN_ID }
-
 
     // ── Banner ad unit ID from Remote Config ──────────────────────────────
     fun getBannerAdUnitId(): String {
@@ -152,6 +155,17 @@ object AdManager {
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {
                     interstitialAd = ad
+
+                    // 💰 Revenue tracking — fires once per actual impression,
+                    // with the real, publisher-specific value for that impression.
+                    ad.onPaidEventListener = OnPaidEventListener { adValue ->
+                        RevenueTracker.recordPaidEvent(
+                            adFormat = "interstitial",
+                            adUnitId = adUnitId,
+                            adValue = adValue,
+                            responseInfo = ad.responseInfo
+                        )
+                    }
                     Log.d("AdManager", "Interstitial loaded ✅")
                 }
                 override fun onAdFailedToLoad(error: LoadAdError) {
@@ -171,12 +185,6 @@ object AdManager {
         actionCount++
         val triggerCount = config.getLong(KEY_INTERSTITIAL_TRIGGER).toInt()
 
-//        if (actionCount >= triggerCount) {
-//            actionCount = 0
-//            showInterstitial(activity) {
-//                preloadInterstitial(context)
-//            }
-//        }
         if (actionCount >= triggerCount) {
             actionCount = 0
 
@@ -199,18 +207,21 @@ object AdManager {
             return
         }
 
-        isInterstitialShowing = true  // ← ADD THIS
+        isInterstitialShowing = true
+        InAppMessagingManager.setSuppressed(true)
 
         interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
                 interstitialAd = null
                 isInterstitialShowing = false
-                interstitialDismissedAt = System.currentTimeMillis()  // ← ADD THIS too
+                InAppMessagingManager.setSuppressed(false)
+                interstitialDismissedAt = System.currentTimeMillis()
                 onDismiss()
             }
             override fun onAdFailedToShowFullScreenContent(error: AdError) {
                 interstitialAd = null
                 isInterstitialShowing = false
+                InAppMessagingManager.setSuppressed(false)
                 onDismiss()
             }
         }
@@ -235,6 +246,17 @@ object AdManager {
                 nativeAd?.destroy()
                 nativeAd = ad
                 _nativeAdReady.value = true
+
+                // 💰 Revenue tracking for native ads
+                ad.setOnPaidEventListener { adValue ->
+                    RevenueTracker.recordPaidEvent(
+                        adFormat = "native",
+                        adUnitId = adUnitId,
+                        adValue = adValue,
+                        responseInfo = ad.responseInfo
+                    )
+                }
+
                 Log.d("AdManager", "Native ad loaded ✅")
             }
             .withAdListener(object : AdListener() {
@@ -259,18 +281,6 @@ object AdManager {
         nativeAd = null
         _nativeAdReady.value = false
     }
-
-    // ── Show immediately after splash, bypasses counter ──────────────────
-//    fun immediateInterstitialAd(activity: Activity?) {
-//        if (!_adsEnabled.value) return
-//        if (interstitialAd == null) {
-//            Log.w("AdManager", "Splash ad not ready yet")
-//            return
-//        }
-//        showInterstitial(activity) {
-//            preloadInterstitial(activity ?: return@showInterstitial)
-//        }
-//    }
 
     // ── Show immediately after splash, bypasses counter ──────────────────
     fun immediateInterstitialAd(activity: Activity?) {
@@ -301,11 +311,13 @@ object AdManager {
 
         if (interstitialAd != null) {
             isInterstitialShowing = true
+            InAppMessagingManager.setSuppressed(true)
 
             interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
                 override fun onAdDismissedFullScreenContent() {
                     interstitialAd = null
                     isInterstitialShowing = false
+                    InAppMessagingManager.setSuppressed(false)
                     interstitialDismissedAt = System.currentTimeMillis()
                     preloadInterstitial(activity)
                 }
@@ -313,6 +325,7 @@ object AdManager {
                 override fun onAdFailedToShowFullScreenContent(error: AdError) {
                     interstitialAd = null
                     isInterstitialShowing = false
+                    InAppMessagingManager.setSuppressed(false)
                     preloadInterstitial(activity)
                 }
             }

@@ -6,15 +6,32 @@
     <string name="add_call">Add Call</string>
     <string name="add_contact">Add Contact</string>
     <string name="add_to_favorites">Add to Favorites</string>
+    <string name="alex">Alex</string>
     <string name="allow_access">Allow Access</string>
+    <string name="allow_overlay_permission">
+    Allow "display over other apps" to enable this</string>
     <string name="answer">Answer</string>
     <string name="app_name">Contacts</string>
     <string name="appearance">Appearance</string>
+    <string name="apply">Apply</string>
+    <string name="avatars_title">%1$s avatars</string>
+    <string name="avery">Avery</string>
+    <string name="blake">Blake</string>
+    <string name="block">Block</string>
     <string name="call">Call</string>
+    <string name="call_again">Call again</string>
+    <string name="call_avatar">Call Avatar</string>
+    <string name="call_avatar_title">Avatar on call screen</string>
     <string name="call_back">Call back</string>
     <string name="call_ended">Call ended</string>
+    <string name="caller_id">Caller ID</string>
+    <string name="caller_id_desc">Show a popup with the caller\'s name during calls</string>
+    <string name="caller_id_spam_app">Caller ID &amp; Spam App</string>
+    <string name="caller_id_spam_app_desc">Enable caller ID to detect spam and show caller names.</string>
     <string name="calling">Calling…</string>
     <string name="cancel">Cancel</string>
+    <string name="casey">Casey</string>
+    <string name="categories">Categories</string>
     <string name="clear">Clear</string>
     <string name="clear_all">Clear all</string>
     <string name="clear_all_confirm">Clear All</string>
@@ -27,13 +44,21 @@
     <string name="confirm_delete_subtitle">Show dialog before deleting contacts</string>
     <string name="contacts">Contacts</string>
     <string name="contacts_section">Contacts</string>
+    <string name="continue_btn">Continue</string>
+    <string name="cool">Cool</string>
+    <string name="custom_avatar_selected">Custom avatar selected</string>
     <string name="data_privacy_note">Your data stays on your device.\nWe never upload your contacts.</string>
     <string name="decline">Decline</string>
     <string name="default_app" ns1:ignore="MissingTranslation">Default App</string>
+    <string name="default_look">Default Look</string>
+    <string name="default_phone_app">Default Phone App</string>
+    <string name="default_phone_app_desc">Set as your default phone app to block spam and manage calls.</string>
     <string name="delete">Delete</string>
     <string name="delete_contact">Delete Contact</string>
+    <string name="delete_contact_confirmation">Delete %1$s? This cannot be undone.</string>
     <string name="dialer">Dialer</string>
     <string name="dialing">Dialing…</string>
+    <string name="drew">Drew</string>
     <string name="earpiece">Earpiece</string>
     <string name="edit_contact">Edit Contact</string>
     <string name="email_optional">Email (optional)</string>
@@ -47,6 +72,8 @@
     <string name="filter_missed_label">missed</string>
     <string name="filter_outgoing">Outgoing (%1$d)</string>
     <string name="filter_outgoing_label">outgoing</string>
+    <string name="formal">Formal</string>
+    <string name="funny">Funny</string>
     <string name="gcm_defaultSenderId" translatable="false">222409537385</string>
     <string name="google_api_key" translatable="false">AIzaSyBPBAPJuHMJ-rCeW5h8wGHuHYpxWNmZ9Qw</string>
     <string name="google_app_id" translatable="false">1:222409537385:android:af3a8e9d50475c2a56aff8</string>
@@ -54,15 +81,23 @@
     <string name="google_storage_bucket" translatable="false">contact-1e9a6.firebasestorage.app</string>
     <string name="grant_permissions">Grant Permissions</string>
     <string name="hang_up">Hang Up</string>
+    <string name="happy">Happy</string>
+    <string name="headwear">Headwear</string>
     <string name="hold">Hold</string>
     <string name="incoming_call">Incoming Call</string>
     <string name="incoming_call_channel_desc">Shows incoming call notifications</string>
     <string name="incoming_call_channel_name">Incoming Calls</string>
+    <string name="jamie">Jamie</string>
+    <string name="jordan">Jordan</string>
     <string name="just_now">Just now</string>
     <string name="keypad">Keypad</string>
     <string name="language">Language</string>
     <string name="legal">Legal</string>
+    <string name="men">Men</string>
+    <string name="message">Message</string>
+    <string name="mobile">MOBILE</string>
     <string name="more">More</string>
+    <string name="morgan">Morgan</string>
     <string name="mute">Mute</string>
     <string name="name">Name</string>
     <string name="new_contact">New Contact</string>
@@ -72,6 +107,8 @@
     <string name="no_incoming_calls">No incoming calls</string>
     <string name="no_missed_calls">No missed calls</string>
     <string name="no_outgoing_calls">No outgoing calls</string>
+    <string name="none">None</string>
+    <string name="none_default">None(Default)</string>
     <string name="onboarding_desc_1">Call anyone directly from your contact list or dial pad with a single tap. No extra steps.</string>
     <string name="onboarding_desc_2">See who\'s calling with names and photos synced from your contacts automatically.</string>
     <string name="onboarding_desc_3">Swipe right on any recent call to call back instantly. Swipe left to delete it from your history.</string>
@@ -81,9 +118,18 @@
     <string name="onboarding_get_started">Get Started</string>
     <string name="onboarding_next">Next</string>
     <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_subtitle_1">Connect effortlessly anytime. Every conversation is secured end-to-end.</string>
+    <string name="onboarding_subtitle_2">Connect effortlessly anytime. Every conversation is secured end-to-end.</string>
+    <string name="onboarding_subtitle_3">Block spam or unwanted calls in a single click. Enjoy a peaceful, interruption-free experience.</string>
     <string name="onboarding_title_1">Instant Calling</string>
+    <string name="onboarding_title_1_line1">Smooth &amp; Protected</string>
+    <string name="onboarding_title_1_line2">Conversations</string>
     <string name="onboarding_title_2">Smart Caller ID</string>
+    <string name="onboarding_title_2_line1">Identify Caller in</string>
+    <string name="onboarding_title_2_line2">Seconds</string>
     <string name="onboarding_title_3">Swipe to Act</string>
+    <string name="onboarding_title_3_line1">Stop Unwanted Calls</string>
+    <string name="onboarding_title_3_line2">Instantly</string>
     <string name="onboarding_title_4">Themes &amp; Colors</string>
     <string name="onboarding_title_5">Hide Number</string>
     <string name="onboarding_title_6">Favorites &amp; Search</string>
@@ -111,18 +157,27 @@
     <string name="permission_terms_prefix">By tapping Grant Permissions, you accept our</string>
     <string name="phone_number">Phone Number</string>
     <string name="privacy_policy">Privacy Policy</string>
+    <string name="privacy_policy_desc">Your Privacy is our priority - We never sell, share or misuse your data.
+For More information, Read our</string>
     <string name="project_id" translatable="false">contact-1e9a6</string>
+    <string name="quinn">Quinn</string>
     <string name="recent_calls">Recent Calls</string>
+    <string name="recent_calls_desc">No recent call history</string>
     <string name="recents">Recents</string>
     <string name="record_call">Record Call</string>
     <string name="remove_from_favorites">Remove from Favorites</string>
     <string name="required">Required</string>
     <string name="resume">Resume</string>
+    <string name="retry">Retry</string>
+    <string name="rieley">Rieley</string>
+    <string name="sam">Sam</string>
     <string name="save_contact">Save Contact</string>
     <string name="search_contacts">Search contacts…</string>
     <string name="select_language">Select Language</string>
     <string name="set_as_default">Set as Default</string>
+    <string name="set_as_default_1">Set Contacts as Default App</string>
     <string name="set_as_default_contacts_app">Set as default contacts app</string>
+    <string name="set_as_default_desc">To work properly, Contacts needs to be your default app. This lets us show caller info, block spam calls and messages, and manage your calls smoothly.</string>
     <string name="set_as_default_dialer">Set as Default Dialer</string>
     <string name="set_as_default_subtitle">Make this your default contacts and dialer app</string>
     <string name="set_default_subtitle">Make Contacts your default dialer\nto unlock the full calling experience</string>
@@ -140,19 +195,32 @@
     <string name="tagline">Smart calls. Real connections.</string>
     <string name="tap_favorite_to_add">Tap ♥ on a contact to add favorites</string>
     <string name="tap_sync_or_add">Tap sync or + to add contacts</string>
+    <string name="taylor">Taylor</string>
     <string name="terms_and_conditions">Terms &amp; Conditions</string>
     <string name="theme">Theme</string>
     <string name="theme_dark">Dark</string>
     <string name="theme_light">Light</string>
     <string name="theme_system">System</string>
     <string name="today">Today</string>
+    <string name="unavailable_avatars">No avatars available.</string>
+    <string name="unblock">Unblock</string>
     <string name="unified_contacts">Unified Contacts</string>
     <string name="unknown">Unknown</string>
+    <string name="unknown_caller">Unknown</string>
     <string name="unmute">Unmute</string>
+    <string name="view_contact">View Contact</string>
+    <string name="women">Women</string>
     <string name="yesterday">Yesterday</string>
     <style name="Theme.ContactsApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowBackground">@color/splash_background</item>
+    </style>
+    <style name="Theme.ContactsApp.PostCall" parent="Theme.ContactsApp">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
     </style>
 </resources>

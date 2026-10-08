@@ -185,4 +185,70 @@
 
     <string name="confirm">Bestätigen</string>
 
+    <string name="set_as_default_1">Kontakte als Standard-App festlegen</string>
+    <string name="set_as_default_desc">Damit alles richtig funktioniert, muss Kontakte Ihre Standard-App sein. So können wir Anruferinformationen anzeigen, Spam-Anrufe und -Nachrichten blockieren und Ihre Anrufe reibungslos verwalten.</string>
+    <string name="alex">Alex</string>
+    <string name="sam">Sam</string>
+    <string name="jordan">Jordan</string>
+    <string name="taylor">Taylor</string>
+    <string name="casey">Casey</string>
+    <string name="rieley">Rieley</string>
+    <string name="morgan">Morgan</string>
+    <string name="jamie">Jamie</string>
+    <string name="avery">Avery</string>
+    <string name="quinn">Quinn</string>
+    <string name="drew">Drew</string>
+    <string name="blake">Blake</string>
+    <string name="men">Männer</string>
+    <string name="women">Frauen</string>
+    <string name="cool">Cool</string>
+    <string name="happy">Fröhlich</string>
+    <string name="formal">Formell</string>
+    <string name="headwear">Kopfbedeckung</string>
+    <string name="funny">Lustig</string>
+    <string name="call_avatar">Anruf-Avatar</string>
+    <string name="none">Keine</string>
+    <string name="default_look">Standard-Look</string>
+    <string name="unavailable_avatars">Keine Avatare verfügbar.</string>
+    <string name="retry">Erneut versuchen</string>
+    <string name="categories">Kategorien</string>
+    <string name="avatars_title">%1$s Avatare</string>
+    <string name="apply">Anwenden</string>
+    <string name="mobile">MOBIL</string>
+    <string name="view_contact">Kontakt anzeigen</string>
+    <string name="message">Nachricht</string>
+    <string name="call_again">Erneut anrufen</string>
+    <string name="block">Blockieren</string>
+    <string name="unblock">Entsperren</string>
+
+    <string name="recent_calls_desc">Kein aktueller Anrufverlauf</string>
+    <string name="unknown_caller">Unbekannt</string>
+    <string name="delete_contact_confirmation">%1$s löschen? Dies kann nicht rückgängig gemacht werden.</string>
+    <string name="caller_id">Anrufer-ID</string>
+    <string name="caller_id_desc">Während Anrufen ein Popup mit dem Namen des Anrufers anzeigen</string>
+    <string name="allow_overlay_permission">Erlauben Sie „über anderen Apps anzeigen“, um dies zu aktivieren</string>
+    <string name="call_avatar_title">Avatar auf dem Anrufbildschirm</string>
+    <string name="none_default">Keine (Standard)</string>
+    <string name="custom_avatar_selected">Benutzerdefinierter Avatar ausgewählt</string>
+
+    <string name="default_phone_app">Standard-Telefon-App</string>
+    <string name="default_phone_app_desc">Als Standard-Telefon-App festlegen, um Spam zu blockieren und Anrufe zu verwalten.</string>
+    <string name="caller_id_spam_app">Anrufer-ID &amp; Spam-App</string>
+    <string name="caller_id_spam_app_desc">Anrufer-ID aktivieren, um Spam zu erkennen und Anrufernamen anzuzeigen.</string>
+    <string name="privacy_policy_desc">Ihre Privatsphäre hat für uns Priorität – wir verkaufen, teilen oder missbrauchen Ihre Daten niemals.
+Für weitere Informationen lesen Sie unsere</string>
+    <string name="continue_btn">Weiter</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title_1_line1">Reibungslose &amp; geschützte</string>
+    <string name="onboarding_title_1_line2">Gespräche</string>
+    <string name="onboarding_subtitle_1">Verbinden Sie sich jederzeit mühelos. Jedes Gespräch ist Ende-zu-Ende verschlüsselt.</string>
+
+    <string name="onboarding_title_2_line1">Anrufer in</string>
+    <string name="onboarding_title_2_line2">Sekunden erkennen</string>
+    <string name="onboarding_subtitle_2">Verbinden Sie sich jederzeit mühelos. Jedes Gespräch ist Ende-zu-Ende verschlüsselt.</string>
+
+    <string name="onboarding_title_3_line1">Unerwünschte Anrufe</string>
+    <string name="onboarding_title_3_line2">sofort stoppen</string>
+    <string name="onboarding_subtitle_3">Blockieren Sie Spam oder unerwünschte Anrufe mit einem Klick. Genießen Sie eine ruhige, unterbrechungsfreie Erfahrung.</string>
 </resources>

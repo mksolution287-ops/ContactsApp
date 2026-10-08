@@ -8,21 +8,21 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_PHONE_CALL"/>
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.MANAGE_OWN_CALLS" />
-    <uses-permission android:name="android.permission.READ_CALL_LOG" /> <!-- <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" -->
-    <!-- android:maxSdkVersion="32" /> -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <application
         android:name=".ContactsApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -34,11 +34,6 @@
         tools:replace="android:fullBackupContent"
         android:localeConfig="@xml/locales_config"
         tools:targetApi="31">
-
-        <activity
-            android:name=".ui.onboarding.OnboardingActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize"/>
 
         <!-- //AdMob -->
         <meta-data
@@ -71,7 +66,8 @@
         <service
             android:name=".CallService"
             android:exported="true"
-            android:permission="android.permission.BIND_INCALL_SERVICE">
+            android:permission="android.permission.BIND_INCALL_SERVICE"
+            android:foregroundServiceType="phoneCall">
             <intent-filter>
                 <action android:name="android.telecom.InCallService" />
             </intent-filter>
@@ -80,12 +76,22 @@
                 android:name="android.telecom.IN_CALL_SERVICE_UI"
                 android:value="true" />
         </service>
+
         <service
             android:name=".CallConnectionService"
             android:exported="true"
             android:permission="android.permission.BIND_TELECOM_CONNECTION_SERVICE">
             <intent-filter>
                 <action android:name="android.telecom.ConnectionService" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".CallerIdScreeningService"
+            android:permission="android.permission.BIND_SCREENING_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.telecom.CallScreeningService" />
             </intent-filter>
         </service>
 
@@ -100,65 +106,84 @@
             <!-- Launcher -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
             <!-- Dial number — PRIMARY filter, needs APP_DIALER category -->
             <intent-filter>
                 <action android:name="android.intent.action.DIAL" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.APP_DIALER" />
-
                 <data android:scheme="tel" />
+
             </intent-filter>
 
             <!-- Dial with no data (open dialer directly) -->
             <intent-filter>
                 <action android:name="android.intent.action.DIAL" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
             <!-- Voicemail — required for ROLE_DIALER eligibility -->
             <intent-filter>
                 <action android:name="android.intent.action.DIAL" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:scheme="voicemail" />
             </intent-filter>
 
             <!-- Place call -->
             <intent-filter>
                 <action android:name="android.intent.action.CALL" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:scheme="tel" />
             </intent-filter>
 
             <!-- View contacts -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="vnd.android.cursor.dir/contact" />
             </intent-filter>
 
             <!-- Pick contact -->
             <intent-filter>
                 <action android:name="android.intent.action.PICK" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="vnd.android.cursor.dir/contact" />
                 <data android:mimeType="vnd.android.cursor.dir/phone_v2" />
             </intent-filter>
         </activity>
-    </application>
 
+        <activity
+            android:name=".ui.postcall.PostCallActivity"
+            android:theme="@style/Theme.ContactsApp.PostCall"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:exported="false" />
+
+        <!-- FCM service -->
+        <service
+            android:name=".util.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_notification" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/ic_launcher_background" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="fcm_default_channel" />
+
+        <activity
+            android:name=".ui.avatar.AvatarPickerActivity"
+            android:exported="false"/>
+    </application>
 </manifest>

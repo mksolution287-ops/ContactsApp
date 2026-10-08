@@ -12,7 +12,7 @@ val OnPrimary = Color(0xFFFFFFFF)
 val OnSecondary = Color(0xFFFFFFFF)
 val OnBackground = Color(0xFF1A1A1A)
 val OnSurface = Color(0xFF1A1A1A)
-
+val black = Color(0x00000000)
 // Additional Colors
 val Gray50 = Color(0xFFF9FAFB)
 val Gray100 = Color(0xFFF3F4F6)

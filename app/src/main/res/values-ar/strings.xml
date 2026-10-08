@@ -188,5 +188,71 @@
 
     <string name="confirm">تأكيد</string>
 
+    <string name="set_as_default_1">تعيين جهات الاتصال كتطبيق افتراضي</string>
+    <string name="set_as_default_desc">لتعمل بشكل صحيح، يجب أن يكون تطبيق جهات الاتصال هو التطبيق الافتراضي لديك. يتيح لنا ذلك عرض معلومات المتصل، وحظر المكالمات والرسائل المزعجة، وإدارة مكالماتك بسلاسة.</string>
+    <string name="alex">أليكس</string>
+    <string name="sam">سام</string>
+    <string name="jordan">جوردان</string>
+    <string name="taylor">تايلور</string>
+    <string name="casey">كيسي</string>
+    <string name="rieley">رايلي</string>
+    <string name="morgan">مورغان</string>
+    <string name="jamie">جيمي</string>
+    <string name="avery">أفيري</string>
+    <string name="quinn">كوين</string>
+    <string name="drew">درو</string>
+    <string name="blake">بليك</string>
+    <string name="men">رجال</string>
+    <string name="women">نساء</string>
+    <string name="cool">رائع</string>
+    <string name="happy">سعيد</string>
+    <string name="formal">رسمي</string>
+    <string name="headwear">أغطية رأس</string>
+    <string name="funny">مضحك</string>
+    <string name="none">لا شيء</string>
+    <string name="default_look">المظهر الافتراضي</string>
+    <string name="unavailable_avatars">لا توجد صور رمزية متاحة.</string>
+    <string name="retry">إعادة المحاولة</string>
+    <string name="categories">الفئات</string>
+    <string name="avatars_title">صور %1$s الرمزية</string>
+    <string name="apply">تطبيق</string>
+    <string name="mobile">جوال</string>
+    <string name="view_contact">عرض جهة الاتصال</string>
+    <string name="message">رسالة</string>
+    <string name="call_again">إعادة الاتصال</string>
+    <string name="block">حظر</string>
+    <string name="unblock">إلغاء الحظر</string>
+
+    <string name="recent_calls_desc">لا يوجد سجل مكالمات حديثة</string>
+    <string name="unknown_caller">غير معروف</string>
+    <string name="delete_contact_confirmation">حذف %1$s؟ لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="caller_id">معرّف المتصل</string>
+    <string name="caller_id_desc">عرض نافذة منبثقة باسم المتصل أثناء المكالمات</string>
+    <string name="allow_overlay_permission">اسمح بـ "العرض فوق التطبيقات الأخرى" لتفعيل هذه الميزة</string>
+    <string name="call_avatar">صورة المكالمة</string>
+    <string name="call_avatar_title">الصورة الرمزية على شاشة المكالمة</string>
+    <string name="none_default">لا شيء (افتراضي)</string>
+    <string name="custom_avatar_selected">تم اختيار صورة رمزية مخصصة</string>
+
+    <string name="default_phone_app">تطبيق الهاتف الافتراضي</string>
+    <string name="default_phone_app_desc">عيّنه كتطبيق الهاتف الافتراضي لحظر المكالمات المزعجة وإدارة المكالمات.</string>
+    <string name="caller_id_spam_app">معرّف المتصل وتطبيق مكافحة الرسائل المزعجة</string>
+    <string name="caller_id_spam_app_desc">فعّل معرّف المتصل لاكتشاف المكالمات المزعجة وعرض أسماء المتصلين.</string>
+    <string name="privacy_policy_desc">خصوصيتك هي أولويتنا - نحن لا نبيع أو نشارك أو نسيء استخدام بياناتك أبدًا.
+لمزيد من المعلومات، اقرأ</string>
+    <string name="continue_btn">متابعة</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title_1_line1">محادثات سلسة</string>
+    <string name="onboarding_title_1_line2">ومحمية</string>
+    <string name="onboarding_subtitle_1">تواصل بسهولة في أي وقت. كل محادثة محمية بتشفير من طرف إلى طرف.</string>
+
+    <string name="onboarding_title_2_line1">تعرّف على المتصل</string>
+    <string name="onboarding_title_2_line2">في ثوانٍ</string>
+    <string name="onboarding_subtitle_2">تواصل بسهولة في أي وقت. كل محادثة محمية بتشفير من طرف إلى طرف.</string>
+
+    <string name="onboarding_title_3_line1">أوقف المكالمات غير المرغوب فيها</string>
+    <string name="onboarding_title_3_line2">فوراً</string>
+    <string name="onboarding_subtitle_3">احظر المكالمات المزعجة أو غير المرغوب فيها بنقرة واحدة. استمتع بتجربة هادئة خالية من المقاطعات.</string>
 
 </resources>

@@ -1,110 +1,134 @@
 [
     {
-        "merged": "com.mktech.contactsapp-debug-93:/xml_data_extraction_rules.xml.flat",
-        "source": "com.mktech.contactsapp-main-95:/xml/data_extraction_rules.xml"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\mipmap-mdpi\\ic_launcher.webp"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
-        "source": "com.mktech.contactsapp-main-95:/mipmap-xxxhdpi/ic_launcher_round.webp"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\mipmap-hdpi\\ic_launcher_round.webp"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/mipmap-hdpi_ic_launcher_foreground.webp.flat",
-        "source": "com.mktech.contactsapp-main-95:/mipmap-hdpi/ic_launcher_foreground.webp"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\mipmap-mdpi\\ic_launcher_round.webp"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/mipmap-hdpi_ic_launcher_round.webp.flat",
-        "source": "com.mktech.contactsapp-main-95:/mipmap-hdpi/ic_launcher_round.webp"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\mipmap-xhdpi_ic_launcher_foreground.webp.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\mipmap-xhdpi\\ic_launcher_foreground.webp"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/mipmap-mdpi_ic_launcher_foreground.webp.flat",
-        "source": "com.mktech.contactsapp-main-95:/mipmap-mdpi/ic_launcher_foreground.webp"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\drawable_onboarding_image_3.png.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\drawable\\onboarding_image_3.png"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/layout_activity_onboarding.xml.flat",
-        "source": "com.mktech.contactsapp-main-95:/layout/activity_onboarding.xml"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\mipmap-xxhdpi_ic_launcher_foreground.webp.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\mipmap-xxhdpi\\ic_launcher_foreground.webp"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/mipmap-xxxhdpi_ic_launcher_foreground.webp.flat",
-        "source": "com.mktech.contactsapp-main-95:/mipmap-xxxhdpi/ic_launcher_foreground.webp"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\mipmap-xxxhdpi\\ic_launcher.webp"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/drawable_contactapplogo.png.flat",
-        "source": "com.mktech.contactsapp-main-95:/drawable/contactapplogo.png"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\drawable_onboarding_image_2.png.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\drawable\\onboarding_image_2.png"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/mipmap-hdpi_ic_launcher.webp.flat",
-        "source": "com.mktech.contactsapp-main-95:/mipmap-hdpi/ic_launcher.webp"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\drawable_contactapplogo.png.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\drawable\\contactapplogo.png"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/xml_locales_config.xml.flat",
-        "source": "com.mktech.contactsapp-main-95:/xml/locales_config.xml"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\mipmap-xxhdpi\\ic_launcher.webp"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/xml_gma_ad_services_config.xml.flat",
-        "source": "com.mktech.contactsapp-main-95:/xml/gma_ad_services_config.xml"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\mipmap-hdpi\\ic_launcher.webp"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/mipmap-xhdpi_ic_launcher_foreground.webp.flat",
-        "source": "com.mktech.contactsapp-main-95:/mipmap-xhdpi/ic_launcher_foreground.webp"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\mipmap-xhdpi\\ic_launcher_round.webp"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/mipmap-xxhdpi_ic_launcher_foreground.webp.flat",
-        "source": "com.mktech.contactsapp-main-95:/mipmap-xxhdpi/ic_launcher_foreground.webp"
+        "merged": "com.mktech.contactsapp-debug-102:/layout_native_ad_view.xml.flat",
+        "source": "com.mktech.contactsapp-main-104:/layout/native_ad_view.xml"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/mipmap-xhdpi_ic_launcher.webp.flat",
-        "source": "com.mktech.contactsapp-main-95:/mipmap-xhdpi/ic_launcher.webp"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\layout_native_ad_view.xml.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\layout\\native_ad_view.xml"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/drawable_ic_launcher_background.xml.flat",
-        "source": "com.mktech.contactsapp-main-95:/drawable/ic_launcher_background.xml"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\mipmap-xxxhdpi_ic_launcher_foreground.webp.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\mipmap-xxxhdpi\\ic_launcher_foreground.webp"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/layout_native_ad_view.xml.flat",
-        "source": "com.mktech.contactsapp-main-95:/layout/native_ad_view.xml"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\xml_locales_config.xml.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\xml\\locales_config.xml"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/mipmap-xhdpi_ic_launcher_round.webp.flat",
-        "source": "com.mktech.contactsapp-main-95:/mipmap-xhdpi/ic_launcher_round.webp"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\drawable_default_screen_image.png.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\drawable\\default_screen_image.png"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
-        "source": "com.mktech.contactsapp-main-95:/mipmap-xxhdpi/ic_launcher_round.webp"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\layout_activity_onboarding.xml.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\layout\\activity_onboarding.xml"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/xml_backup_rules.xml.flat",
-        "source": "com.mktech.contactsapp-main-95:/xml/backup_rules.xml"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\mipmap-xhdpi\\ic_launcher.webp"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/drawable_ic_launcher_foreground.xml.flat",
-        "source": "com.mktech.contactsapp-main-95:/drawable/ic_launcher_foreground.xml"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\mipmap-xxxhdpi\\ic_launcher_round.webp"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/mipmap-mdpi_ic_launcher_round.webp.flat",
-        "source": "com.mktech.contactsapp-main-95:/mipmap-mdpi/ic_launcher_round.webp"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\xml_data_extraction_rules.xml.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\xml\\data_extraction_rules.xml"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/mipmap-mdpi_ic_launcher.webp.flat",
-        "source": "com.mktech.contactsapp-main-95:/mipmap-mdpi/ic_launcher.webp"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\mipmap-hdpi_ic_launcher_foreground.webp.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\mipmap-hdpi\\ic_launcher_foreground.webp"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "com.mktech.contactsapp-main-95:/mipmap-anydpi-v26/ic_launcher_round.xml"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\drawable_telephone.png.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\drawable\\telephone.png"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/drawable_telephone.png.flat",
-        "source": "com.mktech.contactsapp-main-95:/drawable/telephone.png"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\drawable_onboarding_image_1.png.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\drawable\\onboarding_image_1.png"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "com.mktech.contactsapp-main-95:/mipmap-anydpi-v26/ic_launcher.xml"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\drawable_ic_launcher_background.xml.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\drawable\\ic_launcher_background.xml"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/mipmap-xxhdpi_ic_launcher.webp.flat",
-        "source": "com.mktech.contactsapp-main-95:/mipmap-xxhdpi/ic_launcher.webp"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\mipmap-xxhdpi\\ic_launcher_round.webp"
     },
     {
-        "merged": "com.mktech.contactsapp-debug-93:/mipmap-xxxhdpi_ic_launcher.webp.flat",
-        "source": "com.mktech.contactsapp-main-95:/mipmap-xxxhdpi/ic_launcher.webp"
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\mipmap-mdpi_ic_launcher_foreground.webp.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\mipmap-mdpi\\ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\mipmap-anydpi-v26\\ic_launcher_round.xml"
+    },
+    {
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\drawable_ic_launcher_foreground.xml.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\drawable\\ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\xml_backup_rules.xml.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\xml\\backup_rules.xml"
+    },
+    {
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\drawable_ic_notification.xml.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\drawable\\ic_notification.xml"
+    },
+    {
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\mipmap-anydpi-v26\\ic_launcher.xml"
+    },
+    {
+        "merged": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-debug-102:\\xml_gma_ad_services_config.xml.flat",
+        "source": "C:\\Users\\Welcome\\.gradle\\daemon\\8.11.1\\com.mktech.contactsapp-main-104:\\xml\\gma_ad_services_config.xml"
     }
 ]

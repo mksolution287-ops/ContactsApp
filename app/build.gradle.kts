@@ -17,14 +17,13 @@ android {
     defaultConfig {
         applicationId    = "com.mktech.contactsapp"
         minSdk           = 26
-        targetSdk        = 35
-        versionCode      = 6
-        versionName      = "1.5"
+        targetSdk        = 36
+        versionCode      = 12
+        versionName      = "2.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables { useSupportLibrary = true }
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -34,9 +33,6 @@ android {
             )
         }
     }
-//    composeOptions {
-//        kotlinCompilerExtensionVersion = "1.5.15"
-//    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -67,13 +63,10 @@ android {
 }
 
 dependencies {
-
     // ── Core Android ─────────────────────────────────────────────────────────
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
-
-
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.firebase:firebase-config:23.0.1")       // firebase remote config
     implementation("com.google.android.gms:play-services-ads:24.3.0")
@@ -81,7 +74,6 @@ dependencies {
     implementation("com.google.android.material:material:1.13.0")
 //    implementation("androidx.activity:activity:1.13.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1") //for ads
-
     //meta ads
     implementation("com.facebook.android:audience-network-sdk:6.21.0")
     // AdMob Mediation Adapter for Meta
@@ -108,22 +100,20 @@ dependencies {
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
-
     // ── ViewModel ─────────────────────────────────────────────────────────────
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
-
     // ── Image loading ─────────────────────────────────────────────────────────
     implementation("io.coil-kt:coil-compose:2.7.0")
-
     // ── Permissions ───────────────────────────────────────────────────────────
     implementation("com.google.accompanist:accompanist-permissions:0.36.0")
-
     // ── Firebase BOM ──────────────────────────────────────────────────────────
     // BOM manages ALL Firebase versions — never add firebase-* versions manually
     implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
     implementation("com.google.firebase:firebase-analytics-ktx")      // no version — BOM controls it
     implementation("com.google.firebase:firebase-crashlytics-ktx")    // no version — BOM controls it
-
+    implementation("com.google.firebase:firebase-messaging-ktx")
+    implementation("com.google.firebase:firebase-inappmessaging-display-ktx")
+    implementation("com.onesignal:OneSignal:5.10.0")
     // ── Testing ───────────────────────────────────────────────────────────────
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")

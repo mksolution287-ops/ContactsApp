@@ -1,23 +1,25 @@
 package com.mktech.contactsapp.data
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.ui.res.stringResource
 import androidx.core.app.NotificationCompat
 import com.mktech.contactsapp.CallActionReceiver
 import com.mktech.contactsapp.IncomingCallActivity
 import com.mktech.contactsapp.R
+import android.app.Notification
+import android.content.pm.ServiceInfo
+import androidx.core.app.Person
 
 object CallNotificationManager {
 
     private const val CHANNEL_ID  = "incoming_call_channel"
-    private const val NOTIF_ID    = 1001
-
+    const val NOTIF_ID    = 1001
     fun showIncomingCallNotification(
         context: Context,
         callerName: String,
@@ -25,7 +27,6 @@ object CallNotificationManager {
     ) {
         val nm = context.getSystemService(Context.NOTIFICATION_SERVICE)
                 as NotificationManager
-
         createChannel(nm)
 
         // Full-screen intent → opens IncomingCallActivity
@@ -50,7 +51,7 @@ object CallNotificationManager {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-// Decline action — explicit component
+        // Decline action — explicit component
         val declineIntent = Intent(CallActionReceiver.ACTION_DECLINE).apply {
             setClass(context, CallActionReceiver::class.java)  // ← explicit
         }
@@ -122,8 +123,7 @@ object CallNotificationManager {
     }
 
     fun cancelNotification(context: Context) {
-        val nm = context.getSystemService(Context.NOTIFICATION_SERVICE)
-                as NotificationManager
+        val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         nm.cancel(NOTIF_ID)
     }
 
@@ -139,5 +139,49 @@ object CallNotificationManager {
             }
             nm.createNotificationChannel(channel)
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    fun buildOngoingCallNotification(
+        context: Context,
+        callerName: String,
+        phoneNumber: String
+    ): Notification {
+        createChannel(context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+
+        val person: Person = Person.Builder()
+            .setName(callerName)
+            .build()
+
+        val openPi = PendingIntent.getActivity(
+            context, 3,
+            Intent(context, IncomingCallActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                putExtra("caller_name", callerName)
+                putExtra("phone_number", phoneNumber)
+                putExtra("is_outgoing", true)
+            },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val hangUpPi = PendingIntent.getBroadcast(
+            context, 4,
+            Intent(CallActionReceiver.ACTION_DECLINE).apply {
+                setClass(context, CallActionReceiver::class.java)
+            },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val style = NotificationCompat.CallStyle.forOngoingCall(person, hangUpPi)
+
+        return NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(android.R.drawable.ic_menu_call)
+            .setContentText("$callerName • $phoneNumber")
+            .setStyle(style)
+            .setCategory(NotificationCompat.CATEGORY_CALL)
+            .setContentIntent(openPi)
+            .setOngoing(true)
+            .setAutoCancel(false)
+            .build()
     }
 }

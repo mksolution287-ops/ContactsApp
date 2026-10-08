@@ -100,7 +100,7 @@ fun ContactListScreen(
                         contentPadding = PaddingValues(
                             bottom = 80.dp,
                             top = 4.dp,
-                            end = 4.dp  // make room for scrubber
+                            end = 4.dp
                         ),
                         modifier = Modifier.weight(1f)
                     ) {

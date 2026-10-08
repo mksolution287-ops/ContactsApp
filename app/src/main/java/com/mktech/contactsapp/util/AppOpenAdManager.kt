@@ -4,11 +4,13 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.OnPaidEventListener
 import com.google.android.gms.ads.appopen.AppOpenAd
 import java.util.Date
 
@@ -18,9 +20,37 @@ class AppOpenAdManager(private val application: Application) :
     companion object {
         private const val TAG = "AppOpenAdManager"
         private const val AD_EXPIRY_MS = 4 * 60 * 60 * 1000L
+        private const val HOLD_SAFETY_MS = 3 * 60 * 60 * 1000L
 
         @Volatile
         var skipNextAd: Boolean = false
+
+        // ── Suppression ───────────────────────────────────────────────────
+        @Volatile private var suppressUntil = 0L
+        @Volatile private var heldAt = 0L
+
+        /** Timed block. Use for one-off events (placing a call, SIM picker). */
+        fun suppress(ms: Long = 30_000L) {
+            suppressUntil = SystemClock.elapsedRealtime() + ms
+        }
+
+        /** Block until releaseSuppression() is called. Use while a call or post-call screen is alive. */
+        fun holdSuppression() {
+            heldAt = SystemClock.elapsedRealtime()
+        }
+
+        /** Ends the hold and keeps blocking for a short window afterwards. */
+        fun releaseSuppression(afterMs: Long = 30_000L) {
+            heldAt = 0L
+            suppress(afterMs)
+        }
+
+        fun isSuppressed(): Boolean {
+            val now = SystemClock.elapsedRealtime()
+            // The hold expires after 3 hours as a safety net, in case a release never runs
+            val held = heldAt != 0L && now - heldAt < HOLD_SAFETY_MS
+            return held || now < suppressUntil
+        }
     }
 
     private var appOpenAd: AppOpenAd? = null
@@ -28,6 +58,7 @@ class AppOpenAdManager(private val application: Application) :
     private var isShowingAd = false
     private var loadTime: Long = 0
     private var currentActivity: Activity? = null
+    private var loadedAdUnitId: String = ""
 
     // Tracks whether the app genuinely went to background
     private var wasInBackground = false
@@ -57,6 +88,18 @@ class AppOpenAdManager(private val application: Application) :
                     appOpenAd = ad
                     isLoadingAd = false
                     loadTime = Date().time
+                    loadedAdUnitId = adUnitId
+
+                    // 💰 Revenue tracking for app open ads
+                    ad.onPaidEventListener = OnPaidEventListener { adValue ->
+                        RevenueTracker.recordPaidEvent(
+                            adFormat = "app_open",
+                            adUnitId = adUnitId,
+                            adValue = adValue,
+                            responseInfo = ad.responseInfo
+                        )
+                    }
+
                     Log.d(TAG, "App open ad loaded ✅")
                 }
                 override fun onAdFailedToLoad(error: LoadAdError) {
@@ -69,6 +112,14 @@ class AppOpenAdManager(private val application: Application) :
 
     fun showAdIfAvailable(activity: Activity) {
         if (!AdManager.isAppOpenAdEnabled()) return
+
+        // 🔑 Call-related suppression (call placed, in progress, post-call screen)
+        if (isSuppressed()) {
+            Log.d(TAG, "Skipping app open — suppressed (call flow)")
+            wasInBackground = false   // consume this foreground event so it doesn't fire later
+            return
+        }
+
         if (isShowingAd) return
         if (!wasInBackground) return
 
@@ -84,7 +135,6 @@ class AppOpenAdManager(private val application: Application) :
             Log.d(TAG, "Skipping app open — interstitial is on screen")
             return
         }
-
 
         // 🔑 Soft block — interstitial just dismissed within cooldown window
         if (AdManager.isInterstitialRecentlyActive()) {

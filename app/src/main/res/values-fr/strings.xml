@@ -177,4 +177,71 @@
 
     <string name="confirm">Confirmer</string>
 
+    <string name="set_as_default_1">Définir Contacts comme application par défaut</string>
+    <string name="set_as_default_desc">Pour fonctionner correctement, Contacts doit être votre application par défaut. Cela nous permet d\'afficher les informations de l\'appelant, de bloquer les appels et messages indésirables et de gérer vos appels en douceur.</string>
+    <string name="alex">Alex</string>
+    <string name="sam">Sam</string>
+    <string name="jordan">Jordan</string>
+    <string name="taylor">Taylor</string>
+    <string name="casey">Casey</string>
+    <string name="rieley">Rieley</string>
+    <string name="morgan">Morgan</string>
+    <string name="jamie">Jamie</string>
+    <string name="avery">Avery</string>
+    <string name="quinn">Quinn</string>
+    <string name="drew">Drew</string>
+    <string name="blake">Blake</string>
+    <string name="men">Hommes</string>
+    <string name="women">Femmes</string>
+    <string name="cool">Cool</string>
+    <string name="happy">Joyeux</string>
+    <string name="formal">Formel</string>
+    <string name="headwear">Coiffes</string>
+    <string name="funny">Drôle</string>
+    <string name="call_avatar">Avatar d\'appel</string>
+    <string name="none">Aucun</string>
+    <string name="default_look">Apparence par défaut</string>
+    <string name="unavailable_avatars">Aucun avatar disponible.</string>
+    <string name="retry">Réessayer</string>
+    <string name="categories">Catégories</string>
+    <string name="avatars_title">%1$s avatars</string>
+    <string name="apply">Appliquer</string>
+    <string name="mobile">MOBILE</string>
+    <string name="view_contact">Voir le contact</string>
+    <string name="message">Message</string>
+    <string name="call_again">Rappeler</string>
+    <string name="block">Bloquer</string>
+    <string name="unblock">Débloquer</string>
+
+    <string name="recent_calls_desc">Aucun historique d\'appels récents</string>
+    <string name="unknown_caller">Inconnu</string>
+    <string name="delete_contact_confirmation">Supprimer %1$s ? Cette action est irréversible.</string>
+    <string name="caller_id">Identification de l\'appelant</string>
+    <string name="caller_id_desc">Afficher une fenêtre contextuelle avec le nom de l\'appelant pendant les appels</string>
+    <string name="allow_overlay_permission">Autorisez « afficher par-dessus les autres applications » pour activer cette fonction</string>
+    <string name="call_avatar_title">Avatar sur l\'écran d\'appel</string>
+    <string name="none_default">Aucun (Par défaut)</string>
+    <string name="custom_avatar_selected">Avatar personnalisé sélectionné</string>
+
+    <string name="default_phone_app">Application téléphone par défaut</string>
+    <string name="default_phone_app_desc">Définissez-la comme application téléphone par défaut pour bloquer le spam et gérer les appels.</string>
+    <string name="caller_id_spam_app">Identification de l\'appelant et anti-spam</string>
+    <string name="caller_id_spam_app_desc">Activez l\'identification de l\'appelant pour détecter le spam et afficher le nom des appelants.</string>
+    <string name="privacy_policy_desc">Votre vie privée est notre priorité - nous ne vendons, ne partageons ni n\'utilisons jamais vos données de manière abusive.
+Pour plus d\'informations, lisez notre</string>
+    <string name="continue_btn">Continuer</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title_1_line1">Conversations fluides</string>
+    <string name="onboarding_title_1_line2">&amp; protégées</string>
+    <string name="onboarding_subtitle_1">Connectez-vous facilement à tout moment. Chaque conversation est sécurisée de bout en bout.</string>
+
+    <string name="onboarding_title_2_line1">Identifiez l\'appelant</string>
+    <string name="onboarding_title_2_line2">en quelques secondes</string>
+    <string name="onboarding_subtitle_2">Connectez-vous facilement à tout moment. Chaque conversation est sécurisée de bout en bout.</string>
+
+    <string name="onboarding_title_3_line1">Arrêtez les appels indésirables</string>
+    <string name="onboarding_title_3_line2">instantanément</string>
+    <string name="onboarding_subtitle_3">Bloquez le spam ou les appels indésirables en un seul clic. Profitez d\'une expérience paisible et sans interruption.</string>
+
 </resources>

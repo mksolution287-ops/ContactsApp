@@ -21,6 +21,7 @@ import com.mktech.contactsapp.data.repository.CallLogRepository
 import com.mktech.contactsapp.data.repository.ContactRepository
 import com.mktech.contactsapp.data.repository.SettingsRepository
 import com.mktech.contactsapp.ui.screens.CallLogFilter
+import com.mktech.contactsapp.util.AppOpenAdManager
 import com.mktech.contactsapp.util.DeviceCallLogHelper
 import com.mktech.contactsapp.util.DeviceContactsHelper
 import com.mktech.contactsapp.util.LocaleHelper
@@ -579,6 +580,7 @@ class ContactViewModel(
 
             // ── Step 2: Place the call on Main thread ─────────────────────────
             withContext(Dispatchers.Main) {
+                AppOpenAdManager.suppress()
                 placeCall(context, resolvedNumber)
             }
 
@@ -868,6 +870,7 @@ class ContactViewModel(
     fun setSortOrder(b: Boolean)       { settingsRepository.updateSortOrder(b) }
     fun setShowPhone(b: Boolean)       { settingsRepository.updateShowPhone(b) }
     fun setConfirmDelete(b: Boolean)   { settingsRepository.updateConfirmDelete(b) }
+    fun setShowFloatingCallerId(b: Boolean) { settingsRepository.updateShowFloatingCallerId(b) }
 
     // ── Language ─────────────────────────────────────────────────────────────
     fun setLanguage(language: AppLanguage) {
@@ -879,7 +882,6 @@ class ContactViewModel(
             LocaleHelper.changeLanguage(language.code)
         }
     }
-
 
     // ── Delete contact AND its associated call logs ──────────────────────────
     fun deleteContactWithCallLogs(c: Contact) = viewModelScope.launch {

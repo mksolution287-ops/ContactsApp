@@ -1,11 +1,9 @@
 package com.mktech.contactsapp.ui.screens
 
-import android.Manifest
-import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,15 +30,11 @@ import coil.compose.AsyncImage
 import com.mktech.contactsapp.data.model.CallLog
 import com.mktech.contactsapp.data.model.CallType
 import com.mktech.contactsapp.data.model.Contact
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
-import com.google.accompanist.permissions.shouldShowRationale
 import com.mktech.contactsapp.R
 import com.mktech.contactsapp.ui.components.BannerAd
 import com.mktech.contactsapp.ui.components.NativeAdCard
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContactDetailScreen(
     contact: Contact?,
@@ -60,62 +54,34 @@ fun ContactDetailScreen(
     var showDeleteDialog by remember { mutableStateOf(false) }
     var isEditMode       by remember { mutableStateOf(isNewContact) }
 
-    val activity = LocalContext.current
+    val context = LocalContext.current
 
-    // ── Photo permission ──────────────────────────────────────────────────────
-    val photoPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-        Manifest.permission.READ_MEDIA_IMAGES
-    else
-        Manifest.permission.READ_EXTERNAL_STORAGE
-
-    val photoPermissionState = rememberPermissionState(photoPermission)
-
-    // Track if picker should open once permission is granted
-    var pendingPickerOpen by remember { mutableStateOf(false) }
-
-    val imagePicker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        uri?.let { profileImageUri = it.toString() }
-    }
-
-    // Auto-open picker if permission was just granted after a request
-    LaunchedEffect(photoPermissionState.status.isGranted) {
-        if (photoPermissionState.status.isGranted && pendingPickerOpen) {
-            pendingPickerOpen = false
-            imagePicker.launch("image/*")
+    // ── Photo picker (no storage/media permission needed) ─────────────────────
+    // The picked image is copied into app storage so the URI stays valid
+    // after a device restart (photo picker URIs are only temporary).
+    val imagePicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        uri?.let {
+            try {
+                val file = java.io.File(
+                    context.filesDir,
+                    "contact_${System.currentTimeMillis()}.jpg"
+                )
+                context.contentResolver.openInputStream(it)?.use { input ->
+                    file.outputStream().use { output -> input.copyTo(output) }
+                }
+                profileImageUri = Uri.fromFile(file).toString()
+            } catch (e: Exception) {
+                Log.e("ContactDetail", "Failed to copy picked image", e)
+            }
         }
     }
-
-//    val onPickImage: () -> Unit = {
-//        if (photoPermissionState.status.isGranted) {
-//            imagePicker.launch("image/*")
-//        } else {
-//            pendingPickerOpen = true
-//            photoPermissionState.launchPermissionRequest()
-//            activity.startActivity(
-//                Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-//                    data = android.net.Uri.fromParts("package", activity.packageName, null)
-//                }
-//            )
-//        }
-//    }
-    var photoPermissionDeniedOnce by remember { mutableStateOf(false) }
 
     val onPickImage: () -> Unit = {
-        when {
-            photoPermissionState.status.isGranted -> {
-                imagePicker.launch("image/*")                        // ✅ granted → open picker
-            }
-            !photoPermissionDeniedOnce || photoPermissionState.status.shouldShowRationale -> {
-                pendingPickerOpen = true
-                photoPermissionDeniedOnce = true
-                photoPermissionState.launchPermissionRequest()       // 1st/2nd ask → show dialog
-            }
-            else -> {
-                activity.startActivity(Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                    data = android.net.Uri.fromParts("package", activity.packageName, null)
-                })                          // permanently denied → settings
-            }
-        }
+        imagePicker.launch(
+            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+        )
     }
 
     // ── Populate fields when contact data arrives ─────────────────────────────
@@ -142,7 +108,7 @@ fun ContactDetailScreen(
                     Text(
                         if (isNewContact) stringResource(R.string.new_contact)
                         else if (isEditMode) stringResource(R.string.edit_contact)
-                        else contact?.getDisplayName() ?: "Contact",
+                        else contact?.getDisplayName() ?: stringResource(R.string.app_name),
                         fontWeight = FontWeight.Bold
                     )
                 },
@@ -258,7 +224,7 @@ fun ContactDetailScreen(
                 }
             }
 
-            Column{
+            Column {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -423,7 +389,14 @@ fun ContactDetailScreen(
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
             title = { Text(stringResource(R.string.delete_contact), fontWeight = FontWeight.Bold) },
-            text  = { Text("Delete ${contact?.getDisplayName()}? This cannot be undone.") },
+            text = {
+                Text(
+                    stringResource(
+                        R.string.delete_contact_confirmation,
+                        contact?.getDisplayName().orEmpty()
+                    )
+                )
+            },
             confirmButton = {
                 TextButton(
                     onClick = { showDeleteDialog = false; onDelete() },

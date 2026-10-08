@@ -184,5 +184,71 @@
     <string name="sim_preferences_subtitle">SIMカードとモバイルネットワークを管理</string>
 
     <string name="confirm">確認</string>
+    <string name="set_as_default_1">連絡先をデフォルトアプリに設定</string>
+    <string name="set_as_default_desc">正常に動作させるには、連絡先をデフォルトアプリにする必要があります。これにより、発信者情報の表示、迷惑電話やメッセージのブロック、通話のスムーズな管理が可能になります。</string>
+    <string name="alex">Alex</string>
+    <string name="sam">Sam</string>
+    <string name="jordan">Jordan</string>
+    <string name="taylor">Taylor</string>
+    <string name="casey">Casey</string>
+    <string name="rieley">Rieley</string>
+    <string name="morgan">Morgan</string>
+    <string name="jamie">Jamie</string>
+    <string name="avery">Avery</string>
+    <string name="quinn">Quinn</string>
+    <string name="drew">Drew</string>
+    <string name="blake">Blake</string>
+    <string name="men">男性</string>
+    <string name="women">女性</string>
+    <string name="cool">クール</string>
+    <string name="happy">ハッピー</string>
+    <string name="formal">フォーマル</string>
+    <string name="headwear">ヘッドウェア</string>
+    <string name="funny">おもしろい</string>
+    <string name="call_avatar">通話アバター</string>
+    <string name="none">なし</string>
+    <string name="default_look">デフォルトの見た目</string>
+    <string name="unavailable_avatars">利用可能なアバターがありません。</string>
+    <string name="retry">再試行</string>
+    <string name="categories">カテゴリ</string>
+    <string name="avatars_title">%1$sのアバター</string>
+    <string name="apply">適用</string>
+    <string name="mobile">モバイル</string>
+    <string name="view_contact">連絡先を表示</string>
+    <string name="message">メッセージ</string>
+    <string name="call_again">再通話</string>
+    <string name="block">ブロック</string>
+    <string name="unblock">ブロック解除</string>
+
+    <string name="recent_calls_desc">最近の通話履歴がありません</string>
+    <string name="unknown_caller">不明</string>
+    <string name="delete_contact_confirmation">%1$sを削除しますか？この操作は元に戻せません。</string>
+    <string name="caller_id">発信者ID</string>
+    <string name="caller_id_desc">通話中に発信者の名前をポップアップで表示</string>
+    <string name="allow_overlay_permission">これを有効にするには「他のアプリの上に表示」を許可してください</string>
+    <string name="call_avatar_title">通話画面のアバター</string>
+    <string name="none_default">なし（デフォルト）</string>
+    <string name="custom_avatar_selected">カスタムアバターが選択されました</string>
+
+    <string name="default_phone_app">デフォルトの電話アプリ</string>
+    <string name="default_phone_app_desc">スパムをブロックし、通話を管理するためにデフォルトの電話アプリに設定してください。</string>
+    <string name="caller_id_spam_app">発信者番号表示＆スパム対策アプリ</string>
+    <string name="caller_id_spam_app_desc">スパムを検知し、発信者名を表示するために発信者番号表示を有効にしてください。</string>
+    <string name="privacy_policy_desc">お客様のプライバシーは最優先事項です。当社はお客様のデータを販売、共有、または不正に利用することは決してありません。
+詳細については、当社の</string>
+    <string name="continue_btn">続ける</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title_1_line1">スムーズで保護された</string>
+    <string name="onboarding_title_1_line2">会話</string>
+    <string name="onboarding_subtitle_1">いつでも簡単につながれます。すべての会話はエンドツーエンドで保護されています。</string>
+
+    <string name="onboarding_title_2_line1">発信者を</string>
+    <string name="onboarding_title_2_line2">数秒で特定</string>
+    <string name="onboarding_subtitle_2">いつでも簡単につながれます。すべての会話はエンドツーエンドで保護されています。</string>
+
+    <string name="onboarding_title_3_line1">迷惑な電話を</string>
+    <string name="onboarding_title_3_line2">即座に停止</string>
+    <string name="onboarding_subtitle_3">スパムや迷惑な電話をワンクリックでブロック。静かで中断のない体験をお楽しみください。</string>
 
 </resources>
