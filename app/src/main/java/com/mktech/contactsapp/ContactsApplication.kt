@@ -2,12 +2,12 @@ package com.mktech.contactsapp
 
 import android.app.Application
 import android.content.Context
+import android.content.pm.ApplicationInfo
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.room.Room
 import com.google.android.gms.ads.MobileAds
-import com.google.firebase.messaging.BuildConfig
 import com.google.firebase.messaging.FirebaseMessaging
 import com.mktech.contactsapp.data.local.ContactDatabase
 import com.mktech.contactsapp.data.model.AppLanguage
@@ -19,7 +19,6 @@ import com.mktech.contactsapp.util.AppOpenAdManager
 import com.mktech.contactsapp.util.InAppMessagingManager
 import com.mktech.contactsapp.util.LocaleHelper
 import com.mktech.contactsapp.util.NotificationHelper
-import com.mktech.contactsapp.util.OneSignalManager
 import com.mktech.contactsapp.util.OneSignalManager.init
 
 class ContactsApplication : Application() {
@@ -55,13 +54,15 @@ class ContactsApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        // Initialize AdMob
+        // ── Ads FIRST: start Remote Config + native/interstitial preloading right away.
+        // (Previously this waited for MobileAds.initialize's callback, which delayed
+        // every ad request by the SDK init time.)
+        AdManager.init(this)
+
+        // Initialize AdMob once. AppOpenAdManager loads its ad as soon as app-open ads
+        // are enabled, so it no longer depends on init ordering.
         MobileAds.initialize(this) { initStatus ->
             Log.d("AdMob", "Initialized: ${initStatus.adapterStatusMap}")
-            // ← Init AdManager INSIDE the callback, after MobileAds is ready
-            AdManager.init(this)
-            // AppOpenAdManager registers lifecycle callbacks and loads first ad
-            // Must be initialized AFTER AdManager so Remote Config flags are ready
             appOpenAdManager = AppOpenAdManager(this)
             appOpenAdManager.loadAd(this)
         }
@@ -79,13 +80,14 @@ class ContactsApplication : Application() {
             }
         }
 
-        // OneSignal — set debug = true while wiring this up, then flip to false
-        init(this, debug = BuildConfig.DEBUG)
+        // OneSignal — verbose logging only on debuggable builds.
+        // (The old code imported com.google.firebase.messaging.BuildConfig, which is the
+        // Firebase library's flag, not this app's.)
+        val isDebuggable = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
+        init(this, debug = isDebuggable)
 
         // Firebase In-App Messaging — starts un-suppressed; AdManager toggles
-        // suppression on/off around interstitial and app-open ad display so
-        // the two never overlap.
-
+        // suppression on/off around interstitial ad display so the two never overlap.
         InAppMessagingManager.init()
 
         // ── Detect fresh install and clear stale prefs ───────────────────

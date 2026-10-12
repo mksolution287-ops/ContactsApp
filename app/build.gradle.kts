@@ -18,8 +18,8 @@ android {
         applicationId    = "com.mktech.contactsapp"
         minSdk           = 26
         targetSdk        = 36
-        versionCode      = 12
-        versionName      = "2.0.1"
+        versionCode      = 14
+        versionName      = "2.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables { useSupportLibrary = true }

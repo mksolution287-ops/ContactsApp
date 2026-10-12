@@ -118,7 +118,18 @@ class CallService : InCallService() {
             putExtra("is_outgoing", false)
         }
         startActivity(intent)
-        CallNotificationManager.showIncomingCallNotification(this, callerName, phoneNumber)
+//        CallNotificationManager.showIncomingCallNotification(this, callerName, phoneNumber)
+
+        val notification = CallNotificationManager.buildIncomingCallNotification(this, callerName, phoneNumber)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(
+                CallNotificationManager.NOTIF_ID,
+                notification,
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_PHONE_CALL
+            )
+        } else {
+            startForeground(CallNotificationManager.NOTIF_ID, notification)
+        }
         maybeShowFloatingCallerId(callerName, phoneNumber, isOutgoing = false)
     }
 
@@ -147,10 +158,24 @@ class CallService : InCallService() {
             putExtra("phone_number", phoneNumber)
             putExtra("is_outgoing", true)
         }
+//        startActivity(intent)
+//
+//        CallNotificationManager.showOngoingCallNotification(this, callerName, phoneNumber)
+//        maybeShowFloatingCallerId(callerName, phoneNumber, isOutgoing = true)
+
         startActivity(intent)
 
-        CallNotificationManager.showOngoingCallNotification(this, callerName, phoneNumber)
-        maybeShowFloatingCallerId(callerName, phoneNumber, isOutgoing = true)
+        val notification = CallNotificationManager.buildIncomingCallNotification(this, callerName, phoneNumber)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(
+                CallNotificationManager.NOTIF_ID,
+                notification,
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_PHONE_CALL
+            )
+        } else {
+            startForeground(CallNotificationManager.NOTIF_ID, notification)
+        }
+        maybeShowFloatingCallerId(callerName, phoneNumber, isOutgoing = false)
     }
 
     /**

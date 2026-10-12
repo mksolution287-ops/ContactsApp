@@ -4,6 +4,8 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
 import android.util.Log
 import com.google.android.gms.ads.AdError
@@ -12,6 +14,11 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.OnPaidEventListener
 import com.google.android.gms.ads.appopen.AppOpenAd
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 import java.util.Date
 
 class AppOpenAdManager(private val application: Application) :
@@ -21,6 +28,7 @@ class AppOpenAdManager(private val application: Application) :
         private const val TAG = "AppOpenAdManager"
         private const val AD_EXPIRY_MS = 4 * 60 * 60 * 1000L
         private const val HOLD_SAFETY_MS = 3 * 60 * 60 * 1000L
+        private const val MAX_LOAD_RETRIES = 3
 
         @Volatile
         var skipNextAd: Boolean = false
@@ -59,14 +67,27 @@ class AppOpenAdManager(private val application: Application) :
     private var loadTime: Long = 0
     private var currentActivity: Activity? = null
     private var loadedAdUnitId: String = ""
+    private var loadRetryCount = 0
 
     // Tracks whether the app genuinely went to background
     private var wasInBackground = false
     // Count of started (foreground) activities — app is in background when this hits 0
     private var startedActivityCount = 0
 
+    private val mainHandler = Handler(Looper.getMainLooper())
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
     init {
         application.registerActivityLifecycleCallbacks(this)
+
+        // Remote Config may not be ready when this manager is created, which used to make
+        // the first loadAd() bail out silently. Load as soon as app-open ads become enabled
+        // (fires immediately if they already are, and again if config changes).
+        scope.launch {
+            AdManager.appOpenEnabled
+                .filter { it }
+                .collect { loadAd(application) }
+        }
     }
 
     private fun isAdExpired(): Boolean = Date().time - loadTime > AD_EXPIRY_MS
@@ -78,15 +99,17 @@ class AppOpenAdManager(private val application: Application) :
         isLoadingAd = true
 
         val adUnitId = AdManager.getAppOpenAdUnitId()
+        val appContext = context.applicationContext
 
         AppOpenAd.load(
-            context,
+            appContext,
             adUnitId,
             AdRequest.Builder().build(),
             object : AppOpenAd.AppOpenAdLoadCallback() {
                 override fun onAdLoaded(ad: AppOpenAd) {
                     appOpenAd = ad
                     isLoadingAd = false
+                    loadRetryCount = 0
                     loadTime = Date().time
                     loadedAdUnitId = adUnitId
 
@@ -102,9 +125,16 @@ class AppOpenAdManager(private val application: Application) :
 
                     Log.d(TAG, "App open ad loaded ✅")
                 }
+
                 override fun onAdFailedToLoad(error: LoadAdError) {
                     isLoadingAd = false
-                    Log.e(TAG, "App open ad failed ❌ ${error.message}")
+                    Log.e(TAG, "App open ad failed ❌ code=${error.code} ${error.message}")
+
+                    // Retry with backoff (3s, 6s, 12s) so a single no-fill doesn't leave us empty
+                    if (loadRetryCount < MAX_LOAD_RETRIES) {
+                        val delay = 3000L shl loadRetryCount++
+                        mainHandler.postDelayed({ loadAd(appContext) }, delay)
+                    }
                 }
             }
         )
@@ -144,7 +174,7 @@ class AppOpenAdManager(private val application: Application) :
         }
 
         if (!isAdAvailable()) {
-            loadAd(activity)
+            loadAd(application)
             return
         }
 
@@ -158,14 +188,14 @@ class AppOpenAdManager(private val application: Application) :
                 isShowingAd = false
                 wasInBackground = false  // ← Reset HERE, not in onAdShowed
                 Log.d(TAG, "App open ad dismissed")
-                loadAd(activity)
+                loadAd(application)
             }
             override fun onAdFailedToShowFullScreenContent(error: AdError) {
                 appOpenAd = null
                 isShowingAd = false
                 wasInBackground = false  // ← Also reset on failure
                 Log.e(TAG, "App open ad failed to show ❌ ${error.message}")
-                loadAd(activity)
+                loadAd(application)
             }
         }
 

@@ -1,10 +1,14 @@
 package com.mktech.contactsapp.ui.components
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
@@ -17,6 +21,8 @@ import com.google.android.gms.ads.OnPaidEventListener
 import com.mktech.contactsapp.util.AdManager
 import com.mktech.contactsapp.util.RevenueTracker
 
+private const val BANNER_MAX_RETRIES = 3
+
 @Composable
 fun BannerAd(modifier: Modifier = Modifier) {
     val adsEnabled by AdManager.adsEnabled.collectAsState()
@@ -25,50 +31,65 @@ fun BannerAd(modifier: Modifier = Modifier) {
     if (!adsEnabled || !bannerEnabled) return
 
     val context = LocalContext.current
+    val handler = remember { Handler(Looper.getMainLooper()) }
 
-    AndroidView(
-        modifier = modifier.fillMaxWidth(),
-        factory = { ctx ->
-            val displayMetrics = ctx.resources.displayMetrics
-            val adWidthPixels = displayMetrics.widthPixels
-            val density = displayMetrics.density
-            val adWidth = (adWidthPixels / density).toInt()
+    // Created once per composition so it can be destroyed when the banner leaves the screen.
+    val adView = remember {
+        val displayMetrics = context.resources.displayMetrics
+        val adWidth = (displayMetrics.widthPixels / displayMetrics.density).toInt()
 
-            // Use Large Anchored Adaptive Banner (Recommended by Google)
-            val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(ctx, adWidth)
+        // Anchored Adaptive Banner (recommended by Google)
+        val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, adWidth)
+        val bannerAdUnitId = AdManager.getBannerAdUnitId()   // honors USE_TEST_ADS
 
-            val bannerAdUnitId = AdManager.getBannerAdUnitId()
+        AdView(context).apply {
+            setAdSize(adSize)
+            adUnitId = bannerAdUnitId
 
-            AdView(ctx).apply {
-                setAdSize(adSize)
-                adUnitId = bannerAdUnitId
+            // 💰 Revenue tracking — banners fire this once per refreshed impression
+            setOnPaidEventListener(OnPaidEventListener { adValue ->
+                RevenueTracker.recordPaidEvent(
+                    adFormat = "banner",
+                    adUnitId = bannerAdUnitId,
+                    adValue = adValue,
+                    responseInfo = this.responseInfo
+                )
+            })
 
-                // 💰 Revenue tracking — banners fire this once per refreshed impression
-                setOnPaidEventListener(OnPaidEventListener { adValue ->
-                    RevenueTracker.recordPaidEvent(
-                        adFormat = "banner",
-                        adUnitId = bannerAdUnitId,
-                        adValue = adValue,
-                        responseInfo = this.responseInfo
-                    )
-                })
+            var retryCount = 0
+            adListener = object : AdListener() {
+                override fun onAdLoaded() {
+                    retryCount = 0
+                    Log.d("BannerAd", "✅ Banner LOADED successfully")
+                }
 
-                adListener = object : AdListener() {
-                    override fun onAdLoaded() {
-                        Log.d("BannerAd", "✅ Banner LOADED successfully")
-                    }
-
-                    override fun onAdFailedToLoad(error: LoadAdError) {
-                        Log.e("BannerAd", "❌ Banner FAILED: ${error.code} - ${error.message}")
-                    }
-
-                    override fun onAdImpression() {
-                        Log.d("BannerAd", "Banner impression recorded")
+                override fun onAdFailedToLoad(error: LoadAdError) {
+                    Log.e("BannerAd", "❌ Banner FAILED: ${error.code} - ${error.message}")
+                    // Retry with backoff (3s, 6s, 12s) so one no-fill doesn't leave the slot empty
+                    if (retryCount < BANNER_MAX_RETRIES) {
+                        val delay = 3000L shl retryCount++
+                        handler.postDelayed({ loadAd(AdRequest.Builder().build()) }, delay)
                     }
                 }
 
-                loadAd(AdRequest.Builder().build())
+                override fun onAdImpression() {
+                    Log.d("BannerAd", "Banner impression recorded")
+                }
             }
+
+            loadAd(AdRequest.Builder().build())
         }
+    }
+
+    DisposableEffect(adView) {
+        onDispose {
+            handler.removeCallbacksAndMessages(null)
+            adView.destroy()
+        }
+    }
+
+    AndroidView(
+        modifier = modifier.fillMaxWidth(),
+        factory = { adView }
     )
 }
